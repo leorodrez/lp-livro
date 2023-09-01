@@ -48,8 +48,10 @@ header h2 {
 }
 
 button {
-    padding: 20px 40px;
-    font-size: 1.2em;
+    /*padding: 20px 40px;
+    font-size: 1.2em;*/
+    padding: 25px;
+    font-size: 1.5em;
     cursor: pointer;
     background-color: #007bff;
     color: white;
