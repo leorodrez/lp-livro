@@ -3,6 +3,7 @@ document.getElementById("buyButton").addEventListener("click", function() {
 });
 
 window.onload = function() {
+    Chart.defaults.font.size = 20;
     var ctx = document.getElementById('myPieChart').getContext('2d');
     var myPieChart = new Chart(ctx, {
       type: 'pie', // tipo de gráfico
