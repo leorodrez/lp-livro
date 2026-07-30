@@ -1,0 +1,134 @@
+<template>
+  <style>
+@font-face{font-family:'Manrope';font-style:normal;font-weight:400;font-display:block;src:url(assets/fonts/manrope-400-ext.woff2) format('woff2');unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;}
+@font-face{font-family:'Manrope';font-style:normal;font-weight:400;font-display:block;src:url(assets/fonts/manrope-400-lat.woff2) format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;}
+@font-face{font-family:'Manrope';font-style:normal;font-weight:500;font-display:block;src:url(assets/fonts/manrope-500-ext.woff2) format('woff2');unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;}
+@font-face{font-family:'Manrope';font-style:normal;font-weight:500;font-display:block;src:url(assets/fonts/manrope-500-lat.woff2) format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;}
+@font-face{font-family:'Manrope';font-style:normal;font-weight:600;font-display:block;src:url(assets/fonts/manrope-600-ext.woff2) format('woff2');unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;}
+@font-face{font-family:'Manrope';font-style:normal;font-weight:600;font-display:block;src:url(assets/fonts/manrope-600-lat.woff2) format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;}
+@font-face{font-family:'Manrope';font-style:normal;font-weight:700;font-display:block;src:url(assets/fonts/manrope-700-ext.woff2) format('woff2');unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;}
+@font-face{font-family:'Manrope';font-style:normal;font-weight:700;font-display:block;src:url(assets/fonts/manrope-700-lat.woff2) format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;}
+@font-face{font-family:'Manrope';font-style:normal;font-weight:800;font-display:block;src:url(assets/fonts/manrope-800-ext.woff2) format('woff2');unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;}
+@font-face{font-family:'Manrope';font-style:normal;font-weight:800;font-display:block;src:url(assets/fonts/manrope-800-lat.woff2) format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;}
+@font-face{font-family:'Sora';font-style:normal;font-weight:400;font-display:block;src:url(assets/fonts/sora-400-ext.woff2) format('woff2');unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;}
+@font-face{font-family:'Sora';font-style:normal;font-weight:400;font-display:block;src:url(assets/fonts/sora-400-lat.woff2) format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;}
+@font-face{font-family:'Sora';font-style:normal;font-weight:600;font-display:block;src:url(assets/fonts/sora-600-ext.woff2) format('woff2');unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;}
+@font-face{font-family:'Sora';font-style:normal;font-weight:600;font-display:block;src:url(assets/fonts/sora-600-lat.woff2) format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;}
+@font-face{font-family:'Sora';font-style:normal;font-weight:700;font-display:block;src:url(assets/fonts/sora-700-ext.woff2) format('woff2');unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;}
+@font-face{font-family:'Sora';font-style:normal;font-weight:700;font-display:block;src:url(assets/fonts/sora-700-lat.woff2) format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;}
+@font-face{font-family:'Sora';font-style:normal;font-weight:800;font-display:block;src:url(assets/fonts/sora-800-ext.woff2) format('woff2');unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;}
+@font-face{font-family:'Sora';font-style:normal;font-weight:800;font-display:block;src:url(assets/fonts/sora-800-lat.woff2) format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;}
+#root { width:1080px; height:1080px; position:relative; overflow:hidden; }
+#root * { box-sizing:border-box; margin:0; padding:0; }
+#f01-a-pagina-ground { position:absolute; inset:0; background:#2B2B2B; }
+
+/* the mock page — product UI, so Manrope throughout (brand type semantics) */
+.f01-a-pagina-card {
+  position:absolute; left:150px; top:260px;
+  width:780px; height:560px;
+  background:#FFFFFF; border-radius:14px; padding:40px;
+  font-family:'Manrope',sans-serif; color:#2B2B2B;
+  display:flex; flex-direction:column;
+}
+.f01-a-pagina-nav { height:38px; display:flex; align-items:center; justify-content:space-between; flex:none; }
+.f01-a-pagina-nav-brand { font-size:25px; font-weight:800; letter-spacing:-0.02em; }
+.f01-a-pagina-nav-right { display:flex; align-items:center; gap:20px; }
+.f01-a-pagina-nav-link { font-size:17px; font-weight:500; color:#6B6B6B; }
+.f01-a-pagina-nav-btn { font-size:15px; font-weight:600; color:#FFFFFF; background:#3F4A52; border-radius:100px; padding:9px 18px; }
+.f01-a-pagina-headline {
+  margin-top:26px; height:184px; width:700px; flex:none;
+  font-size:54px; font-weight:800; line-height:1.13; letter-spacing:-0.025em;
+}
+.f01-a-pagina-sub { margin-top:10px; font-size:22px; font-weight:400; color:#6B6B6B; flex:none; }
+.f01-a-pagina-btn {
+  margin-top:20px; height:52px; width:214px; border-radius:100px; flex:none;
+  background:#3F4A52; color:#FFFFFF; font-size:19px; font-weight:600;
+  display:flex; align-items:center; justify-content:center;
+}
+.f01-a-pagina-panel {
+  margin-top:20px; height:94px; border-radius:12px; flex:none;
+  background:#F1F4F5; border:1px solid #E3E8EA;
+  padding:19px 22px; display:flex; flex-direction:column; gap:11px;
+}
+.f01-a-pagina-panel-line { height:12px; border-radius:6px; background:#E3E8EA; }
+
+/* KRO's overlay layer — cyan is the single accent, and it never scales with the
+   page: the product's own UI does not shrink when it shows you more variants */
+.f01-a-pagina-pill {
+  position:absolute; height:34px; border-radius:100px;
+  background:rgba(6,182,212,0.14); border:1px solid rgba(6,182,212,0.4);
+  color:#06B6D4; font-family:'Manrope',sans-serif; font-size:15px; font-weight:600;
+  display:flex; align-items:center; padding:0 16px; white-space:nowrap;
+}
+.f01-a-pagina-modal {
+  position:absolute; width:236px; height:58px;
+  background:#1F1F1F; border:1px solid rgba(6,182,212,0.32); border-radius:12px;
+  font-family:'Manrope',sans-serif; display:flex; align-items:center; gap:11px; padding:0 15px;
+}
+.f01-a-pagina-dot { width:9px; height:9px; border-radius:50%; background:#06B6D4; flex:none; }
+.f01-a-pagina-mtxt { display:flex; flex-direction:column; gap:1px; }
+.f01-a-pagina-mlabel { font-size:12px; font-weight:600; color:#9A9A9A; letter-spacing:0.06em; text-transform:uppercase; }
+.f01-a-pagina-mnum { font-size:21px; font-weight:700; color:#FFFFFF; font-variant-numeric:tabular-nums; line-height:1.1; }
+#f01-a-pagina-colophon {
+  position:absolute; left:60px; top:1000px;
+  font-family:'Manrope',sans-serif; font-size:17px; font-weight:500; color:#929292;
+}
+.f01-a-pagina-crown {
+  position:absolute; height:34px; width:152px; border-radius:100px;
+  background:#06B6D4; color:#07323A;
+  font-family:'Manrope',sans-serif; font-size:15px; font-weight:800; letter-spacing:0.14em;
+  display:flex; align-items:center; justify-content:center;
+}
+.f01-a-pagina-ring { position:absolute; border:3px solid #06B6D4; border-radius:18px; }
+#f01-a-pagina-pill-A { left:150px; top:215px; }
+  </style>
+  <div id="root" data-composition-id="01-a-pagina" data-start="0" data-duration="3.5" data-width="1080" data-height="1080">
+    <div class="clip" data-start="0" data-duration="3.5" data-track-index="0" id="f01-a-pagina-ground"></div>
+    <div class="clip" data-start="0" data-duration="3.5" data-track-index="1" id="f01-a-pagina-stage" style="position:absolute;inset:0;">
+      <div class="f01-a-pagina-card" id="f01-a-pagina-card-A">
+        <div class="f01-a-pagina-nav" id="f01-a-pagina-nav-A">
+          <div class="f01-a-pagina-nav-brand">Nimbus AI</div>
+          <div class="f01-a-pagina-nav-right">
+            <span class="f01-a-pagina-nav-link">Produto</span>
+            <span class="f01-a-pagina-nav-link">Preços</span>
+            <span class="f01-a-pagina-nav-link">Entrar</span>
+            <span class="f01-a-pagina-nav-btn">Começar grátis</span>
+          </div>
+        </div>
+        <div class="f01-a-pagina-headline" id="f01-a-pagina-head-A">Suas reuniões viram anotações. Sozinhas.</div>
+        <div class="f01-a-pagina-sub" id="f01-a-pagina-sub-A">Conecte seu calendário. O resto é com a gente.</div>
+        <div class="f01-a-pagina-btn" id="f01-a-pagina-btn-A">Começar grátis</div>
+        <div class="f01-a-pagina-panel" id="f01-a-pagina-panel-A">
+          <div class="f01-a-pagina-panel-line" style="width:64%"></div>
+          <div class="f01-a-pagina-panel-line" style="width:88%"></div>
+          <div class="f01-a-pagina-panel-line" style="width:46%"></div>
+        </div>
+      </div>
+      <div class="f01-a-pagina-pill" id="f01-a-pagina-pill-A">versão A</div>
+    </div>
+    <div class="clip" data-start="0" data-duration="3.5" data-track-index="2" id="f01-a-pagina-colophon">Conversão inteligente</div>
+  </div>
+  <script src="assets/vendor/gsap.min.js"></script>
+  <script>
+    window.__timelines = window.__timelines || {};
+    var tl = gsap.timeline({ paused: true });
+    gsap.set("#f01-a-pagina-card-A", { transformOrigin: "50% 50%" });
+
+    // Scene 1 (0.0-0.9): the card arrives from depth and stops. Nothing else
+    // happens — the opening stillness is what makes the page read as ordinary.
+    tl.fromTo("#f01-a-pagina-card-A", { scale: 0.93, opacity: 0 },
+      { scale: 1, opacity: 1, duration: 0.45, ease: "power3.out" }, 0);
+
+    // Scene 2 (0.9-2.1): the page's own content settles top-down, each piece on
+    // its own beat; the headline dominates.
+    tl.fromTo(["#f01-a-pagina-nav-A", "#f01-a-pagina-head-A", "#f01-a-pagina-sub-A", "#f01-a-pagina-btn-A", "#f01-a-pagina-panel-A"],
+      { y: 26, opacity: 0 }, { y: 0, opacity: 1, duration: 0.5, ease: "power3.out", stagger: 0.15 }, 0.9);
+
+    // Scene 3 (2.1-3.5): the version label — the first hint a test is running —
+    // then the frame holds until the cut. handoff_out: card A at x0 y0 scale 1.
+    tl.fromTo("#f01-a-pagina-pill-A", { scale: 0.8, opacity: 0, transformOrigin: "0% 50%" },
+      { scale: 1, opacity: 1, duration: 0.42, ease: "power3.out" }, 2.15);
+
+    window.__timelines["01-a-pagina"] = tl;
+  </script>
+</template>
