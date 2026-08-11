@@ -1,0 +1,980 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1350" />
+    <script src="assets/vendor/gsap.min.js"></script>
+    <style>
+@font-face{font-family:'Manrope';font-style:normal;font-weight:400;font-display:block;src:url(assets/fonts/manrope-400-ext.woff2) format('woff2');unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;}
+@font-face{font-family:'Manrope';font-style:normal;font-weight:400;font-display:block;src:url(assets/fonts/manrope-400-lat.woff2) format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;}
+@font-face{font-family:'Manrope';font-style:normal;font-weight:500;font-display:block;src:url(assets/fonts/manrope-500-ext.woff2) format('woff2');unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;}
+@font-face{font-family:'Manrope';font-style:normal;font-weight:500;font-display:block;src:url(assets/fonts/manrope-500-lat.woff2) format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;}
+@font-face{font-family:'Manrope';font-style:normal;font-weight:600;font-display:block;src:url(assets/fonts/manrope-600-ext.woff2) format('woff2');unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;}
+@font-face{font-family:'Manrope';font-style:normal;font-weight:600;font-display:block;src:url(assets/fonts/manrope-600-lat.woff2) format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;}
+@font-face{font-family:'Manrope';font-style:normal;font-weight:700;font-display:block;src:url(assets/fonts/manrope-700-ext.woff2) format('woff2');unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;}
+@font-face{font-family:'Manrope';font-style:normal;font-weight:700;font-display:block;src:url(assets/fonts/manrope-700-lat.woff2) format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;}
+@font-face{font-family:'Manrope';font-style:normal;font-weight:800;font-display:block;src:url(assets/fonts/manrope-800-ext.woff2) format('woff2');unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;}
+@font-face{font-family:'Manrope';font-style:normal;font-weight:800;font-display:block;src:url(assets/fonts/manrope-800-lat.woff2) format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;}
+@font-face{font-family:'Sora';font-style:normal;font-weight:400;font-display:block;src:url(assets/fonts/sora-400-ext.woff2) format('woff2');unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;}
+@font-face{font-family:'Sora';font-style:normal;font-weight:400;font-display:block;src:url(assets/fonts/sora-400-lat.woff2) format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;}
+@font-face{font-family:'Sora';font-style:normal;font-weight:600;font-display:block;src:url(assets/fonts/sora-600-ext.woff2) format('woff2');unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;}
+@font-face{font-family:'Sora';font-style:normal;font-weight:600;font-display:block;src:url(assets/fonts/sora-600-lat.woff2) format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;}
+@font-face{font-family:'Sora';font-style:normal;font-weight:700;font-display:block;src:url(assets/fonts/sora-700-ext.woff2) format('woff2');unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;}
+@font-face{font-family:'Sora';font-style:normal;font-weight:700;font-display:block;src:url(assets/fonts/sora-700-lat.woff2) format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;}
+@font-face{font-family:'Sora';font-style:normal;font-weight:800;font-display:block;src:url(assets/fonts/sora-800-ext.woff2) format('woff2');unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;}
+@font-face{font-family:'Sora';font-style:normal;font-weight:800;font-display:block;src:url(assets/fonts/sora-800-lat.woff2) format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;}
+* { margin:0; padding:0; box-sizing:border-box; }
+html, body { width:1080px; height:1350px; overflow:hidden; background:#191A1C; }
+body { font-family:'Manrope',sans-serif; -webkit-font-smoothing:antialiased; }
+
+#root { position:relative; width:1080px; height:1350px; overflow:hidden; }
+
+/* ── top-level layers: #id only (a class here would not be scoped) ────────── */
+#ground {
+  position:absolute; inset:0;
+  background:
+    radial-gradient(1100px 780px at 50% 22%, rgba(124,58,237,0.10), transparent 62%),
+    radial-gradient(900px 700px at 50% 92%, rgba(6,182,212,0.07), transparent 60%),
+    linear-gradient(180deg, #232326 0%, #191A1C 100%);
+}
+#sc-page, #sc-stage, #sc-brand, #sc-value, #sc-cta { position:absolute; inset:0; }
+
+/* ── the landing page ─────────────────────────────────────────────────────── */
+.lp {
+  position:absolute; left:0; top:0; width:880px;
+  background:#FFFFFF; color:#141416;
+  border-radius:18px; overflow:hidden;
+  font-family:'Manrope',sans-serif;
+}
+.lp-nav {
+  height:78px; padding:0 34px; display:flex; align-items:center; justify-content:space-between;
+  border-bottom:1px solid #E8EAEE;
+}
+.lp-brand { display:flex; align-items:center; gap:10px; font-size:25px; font-weight:800; letter-spacing:-0.02em; }
+.lp-mark { width:22px; height:22px; border-radius:7px; background:linear-gradient(135deg,#7C3AED,#06B6D4); display:block; }
+.lp-nav-links { display:flex; gap:26px; font-size:16px; font-weight:500; color:#3E434B; }
+.lp-nav-actions { display:flex; align-items:center; gap:16px; }
+.lp-nav-ghost { font-size:16px; font-weight:600; color:#3E434B; }
+.lp-nav-btn { font-size:15px; font-weight:700; color:#FFFFFF; background:#141416; border-radius:100px; padding:10px 18px; }
+
+.lp-hero { padding:44px 44px 46px; }
+.lp-eyebrow {
+  display:inline-flex; align-items:center; gap:9px; font-size:15px; font-weight:700;
+  color:#6425C8; background:rgba(124,58,237,0.10); border-radius:100px; padding:8px 16px; letter-spacing:0.01em;
+}
+.lp-eyebrow-dot { width:7px; height:7px; border-radius:50%; background:#7C3AED; }
+.lp-head { margin-top:22px; font-size:58px; font-weight:800; line-height:1.06; letter-spacing:-0.03em; max-width:720px; }
+.lp-sub { margin-top:18px; font-size:22px; font-weight:500; line-height:1.45; color:#3E434B; max-width:640px; }
+.lp-cta-row { margin-top:28px; display:flex; align-items:center; gap:18px; }
+.lp-cta {
+  display:inline-flex; align-items:center; height:56px; padding:0 30px; border-radius:100px;
+  background:#141416; color:#FFFFFF; font-size:19px; font-weight:700;
+}
+.lp-cta2 { font-size:19px; font-weight:600; color:#3E434B; }
+.lp-dash {
+  margin-top:36px; border:1px solid #E8EAEE; border-radius:14px; background:#F4F6F9; overflow:hidden;
+}
+.lp-dash-bar {
+  height:46px; display:flex; align-items:center; gap:8px; padding:0 18px;
+  border-bottom:1px solid #E8EAEE; background:#FFFFFF;
+}
+.lp-dash-dot { width:9px; height:9px; border-radius:50%; background:#D9DEE6; }
+.lp-dash-title { margin-left:12px; font-size:14px; font-weight:600; color:#3E434B; }
+.lp-dash-chip {
+  margin-left:auto; font-size:12px; font-weight:800; letter-spacing:0.06em;
+  color:#08644A; background:rgba(16,185,129,0.14); border-radius:100px; padding:6px 12px;
+}
+.lp-dash-body { display:flex; gap:16px; padding:20px 18px; }
+.lp-dash-col { flex:1; }
+.lp-dash-k { font-size:13px; font-weight:600; color:#3E434B; }
+.lp-dash-v { margin-top:6px; font-size:28px; font-weight:800; letter-spacing:-0.02em; }
+.lp-dash-meter { margin-top:10px; height:6px; border-radius:4px; background:#E3E8EF; overflow:hidden; }
+.lp-dash-meter i { display:block; height:100%; border-radius:4px; background:linear-gradient(90deg,#7C3AED,#06B6D4); }
+
+.lp-logos { padding:26px 44px; border-top:1px solid #E8EAEE; border-bottom:1px solid #E8EAEE; display:flex; align-items:center; gap:28px; }
+.lp-logos-k { font-size:14px; font-weight:600; color:#6B727D; white-space:nowrap; }
+.lp-logos-row { display:flex; gap:22px; flex:1; }
+.lp-logo { flex:1; height:20px; border-radius:5px; background:#E4E8EE; }
+
+.lp-sec { padding:42px 44px; }
+.lp-sec-k { font-size:13px; font-weight:800; letter-spacing:0.14em; color:#6425C8; }
+.lp-sec-h { margin-top:12px; font-size:38px; font-weight:800; letter-spacing:-0.025em; }
+.lp-cards { margin-top:26px; display:flex; gap:16px; }
+.lp-card { flex:1; border:1px solid #E8EAEE; border-radius:14px; padding:22px; background:#FFFFFF; }
+.lp-card-i { display:block; width:34px; height:34px; border-radius:10px; background:linear-gradient(135deg,rgba(124,58,237,0.16),rgba(6,182,212,0.16)); }
+.lp-card-h { margin-top:16px; font-size:20px; font-weight:800; letter-spacing:-0.02em; }
+.lp-card-p { margin-top:8px; font-size:15px; font-weight:500; line-height:1.5; color:#3E434B; }
+
+.lp-split { padding:42px 44px; display:flex; gap:32px; background:#F4F6F9; border-top:1px solid #E8EAEE; }
+.lp-split-l { flex:1.1; }
+.lp-split-h { margin-top:12px; font-size:32px; font-weight:800; line-height:1.15; letter-spacing:-0.025em; }
+.lp-list { margin-top:22px; display:flex; flex-direction:column; gap:14px; }
+.lp-li { display:flex; align-items:center; gap:12px; font-size:16px; font-weight:600; color:#3E434B; }
+.lp-li i { width:18px; height:18px; border-radius:50%; background:rgba(6,182,212,0.18); border:2px solid #06B6D4; flex:none; }
+.lp-split-r { flex:0.9; }
+.lp-code { background:#141416; border-radius:14px; padding:22px; display:flex; flex-direction:column; gap:12px; height:100%; }
+.lp-code-l { height:10px; border-radius:5px; background:rgba(255,255,255,0.15); width:88%; }
+.lp-code-l.s { width:54%; background:rgba(6,182,212,0.42); }
+.lp-code-l.m { width:70%; background:rgba(124,58,237,0.42); }
+
+.lp-proof { padding:42px 44px; }
+.lp-quote { font-size:30px; font-weight:700; line-height:1.3; letter-spacing:-0.02em; max-width:700px; }
+.lp-quote-by { margin-top:18px; display:flex; align-items:center; gap:12px; font-size:15px; font-weight:600; color:#3E434B; }
+.lp-av { width:34px; height:34px; border-radius:50%; background:linear-gradient(135deg,#7C3AED,#06B6D4); }
+.lp-stats { margin-top:30px; display:flex; gap:16px; }
+.lp-stat { flex:1; border:1px solid #E8EAEE; border-radius:14px; padding:20px; }
+.lp-stat b { display:block; font-size:32px; font-weight:800; letter-spacing:-0.02em; }
+.lp-stat span { display:block; margin-top:4px; font-size:14px; font-weight:600; color:#3E434B; }
+
+.lp-final { padding:44px; background:#141416; color:#FFFFFF; display:flex; align-items:center; justify-content:space-between; gap:24px; }
+.lp-final-h { font-size:34px; font-weight:800; letter-spacing:-0.025em; }
+.lp-final .lp-cta { background:linear-gradient(135deg,#7C3AED,#06B6D4); }
+
+/* ── scene 1: the page in its window ──────────────────────────────────────── */
+#vp {
+  position:absolute; left:100px; top:170px; width:880px; height:1010px;
+  border-radius:18px; overflow:hidden;
+  box-shadow:0 40px 90px rgba(0,0,0,0.42);
+}
+#page-eyebrow {
+  position:absolute; left:0; width:1080px; top:96px; text-align:center;
+  font-size:16px; font-weight:700; letter-spacing:0.16em; color:rgba(255,255,255,0.66);
+}
+
+/* ── scene 2-4: the stage ─────────────────────────────────────────────────── */
+.card-wrap {
+  position:absolute; left:0; top:0; width:880px; height:1010px;
+  border-radius:18px; overflow:hidden;
+  box-shadow:0 30px 70px rgba(0,0,0,0.40);
+  transform-origin:0 0;
+}
+#stage-eyebrow {
+  position:absolute; left:0; width:1080px; top:258px; text-align:center;
+  font-size:15px; font-weight:800; letter-spacing:0.18em; color:rgba(255,255,255,0.5);
+}
+#src-pill {
+  position:absolute; left:448px; top:302px; width:184px; height:44px; border-radius:100px;
+  border:1px solid rgba(255,255,255,0.16); background:rgba(255,255,255,0.05);
+  display:flex; align-items:center; justify-content:center; gap:10px;
+  font-size:15px; font-weight:700; color:rgba(255,255,255,0.86); letter-spacing:0.02em;
+}
+#src-pill span { width:8px; height:8px; border-radius:50%; background:#06B6D4; }
+.link { position:absolute; height:2px; transform-origin:0 50%; border-radius:2px;
+  background:linear-gradient(90deg, rgba(124,58,237,0.9), rgba(6,182,212,0.9)); }
+.dot { position:absolute; width:7px; height:7px; border-radius:50%; background:#06B6D4; box-shadow:0 0 10px rgba(6,182,212,0.7); }
+
+.mp {
+  position:absolute; top:858px; width:326px; height:200px;
+  border:1px solid rgba(255,255,255,0.10); border-radius:16px;
+  background:rgba(255,255,255,0.045); padding:16px 18px;
+}
+.mp-head { display:flex; align-items:center; justify-content:space-between; margin-bottom:12px; }
+.mp-tag { font-size:12px; font-weight:800; letter-spacing:0.12em; color:rgba(255,255,255,0.62); }
+.mp-live { width:7px; height:7px; border-radius:50%; background:#06B6D4; }
+.mp-row { display:flex; align-items:baseline; justify-content:space-between; padding:7px 0; border-top:1px solid rgba(255,255,255,0.08); }
+.mp-k { font-size:13px; font-weight:600; color:rgba(255,255,255,0.5); }
+.mp-v { font-size:19px; font-weight:700; color:#FFFFFF; font-variant-numeric:tabular-nums; }
+.mp-r { font-size:26px; font-weight:800; color:#06B6D4; font-variant-numeric:tabular-nums; letter-spacing:-0.01em; }
+.mp-rate { padding-top:10px; }
+
+#win-ring {
+  position:absolute; border-radius:26px; padding:4px;
+  background:linear-gradient(135deg,#7C3AED,#06B6D4);
+  box-shadow:0 0 0 1px rgba(124,58,237,0.28), 0 24px 70px rgba(6,182,212,0.20);
+}
+#win-ring i { display:block; width:100%; height:100%; border-radius:22px; background:#232326; }
+#win-badge {
+  position:absolute; height:46px; border-radius:100px; padding:0 26px;
+  background:linear-gradient(135deg,#7C3AED,#06B6D4); color:#FFFFFF;
+  font-size:16px; font-weight:800; letter-spacing:0.16em;
+  display:flex; align-items:center; justify-content:center; white-space:nowrap;
+}
+#win-metric {
+  position:absolute; left:0; width:1080px; text-align:center;
+  font-family:'Sora',sans-serif; font-size:52px; font-weight:800; letter-spacing:-0.03em; color:#FFFFFF;
+}
+#win-metric-k {
+  position:absolute; left:0; width:1080px; text-align:center;
+  font-size:16px; font-weight:600; color:rgba(255,255,255,0.55);
+}
+
+/* ── scenes 5-7: the brand ────────────────────────────────────────────────── */
+.kro { font-family:'Sora',sans-serif; font-weight:800; letter-spacing:-0.02em; color:#FFFFFF; }
+#brand-mark, #value-mark, #cta-mark {
+  position:absolute; left:0; width:1080px; text-align:center;
+  font-family:'Sora',sans-serif; font-size:34px; font-weight:800; letter-spacing:0.02em; color:#FFFFFF;
+}
+#brand-mark i, #value-mark i, #cta-mark i {
+  display:inline-block; width:11px; height:11px; border-radius:3px; margin-right:10px;
+  background:linear-gradient(135deg,#7C3AED,#06B6D4); vertical-align:middle;
+}
+#brand-l1, #brand-l2 {
+  position:absolute; left:96px; width:888px; text-align:center;
+  font-family:'Sora',sans-serif; color:#FFFFFF;
+}
+#brand-l1 { top:566px; font-size:64px; font-weight:800; line-height:1.12; letter-spacing:-0.035em; }
+#brand-l2 { top:812px; font-size:27px; font-weight:400; line-height:1.5; letter-spacing:-0.01em; color:rgba(255,255,255,0.62); }
+
+#value-h {
+  position:absolute; left:96px; width:888px; top:398px; text-align:center;
+  font-family:'Sora',sans-serif; font-size:56px; font-weight:800; line-height:1.12; letter-spacing:-0.035em; color:#FFFFFF;
+}
+#value-s {
+  position:absolute; left:96px; width:888px; top:632px; text-align:center;
+  font-size:25px; font-weight:500; color:rgba(255,255,255,0.6);
+}
+.flow-node {
+  position:absolute; top:812px; height:74px; border-radius:16px;
+  border:1px solid rgba(255,255,255,0.13); background:rgba(255,255,255,0.05);
+  display:flex; align-items:center; justify-content:center;
+  font-size:16px; font-weight:700; color:rgba(255,255,255,0.9);
+}
+.flow-arrow { position:absolute; top:844px; height:2px; border-radius:2px; background:rgba(255,255,255,0.22); }
+
+#cta-h {
+  position:absolute; left:96px; width:888px; top:476px; text-align:center;
+  font-family:'Sora',sans-serif; font-size:58px; font-weight:800; line-height:1.1; letter-spacing:-0.035em; color:#FFFFFF;
+}
+#cta-btn {
+  position:absolute; left:310px; top:726px; width:460px; height:92px; border-radius:100px;
+  background:linear-gradient(135deg,#7C3AED,#06B6D4);
+  display:flex; align-items:center; justify-content:center;
+  font-family:'Sora',sans-serif; font-size:27px; font-weight:800; color:#FFFFFF; letter-spacing:-0.01em;
+}
+#cta-micro {
+  position:absolute; left:0; width:1080px; top:848px; text-align:center;
+  font-size:19px; font-weight:600; color:rgba(255,255,255,0.5);
+}
+#cta-url {
+  position:absolute; left:0; width:1080px; top:1188px; text-align:center;
+  font-size:20px; font-weight:700; letter-spacing:0.1em; color:rgba(255,255,255,0.42);
+}
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="29.5" data-width="1080" data-height="1350">
+      <div id="ground" class="clip" data-start="0" data-duration="29.5" data-track-index="0"></div>
+
+      <div id="sc-page" class="clip" data-layout-allow-overlap="true" data-start="0" data-duration="4.4" data-track-index="1">
+        <div id="page-eyebrow">UMA LANDING PAGE. UMA SÓ VERSÃO.</div>
+        <div id="vp">
+      <div class="lp" id="lp-full" data-layout-ignore="true">
+
+      <div class="lp-nav">
+        <div class="lp-brand"><span class="lp-mark"></span>Fynta</div>
+        <div class="lp-nav-links">
+          <span>Produto</span><span>Soluções</span><span>Preços</span><span>Docs</span>
+        </div>
+        <div class="lp-nav-actions">
+          <span class="lp-nav-ghost">Entrar</span>
+          <span class="lp-nav-btn">Começar grátis</span>
+        </div>
+      </div>
+      <div class="lp-hero">
+        <div class="lp-eyebrow"><span class="lp-eyebrow-dot"></span>Verificação financeira com IA</div>
+        <div class="lp-head">Verifique qualquer empresa em segundos.</div>
+        <div class="lp-sub">Dados financeiros, societários e de risco, unificados por IA.</div>
+        <div class="lp-cta-row">
+          <span class="lp-cta">Começar grátis</span>
+          <span class="lp-cta2">Falar com vendas</span>
+        </div>
+        <div class="lp-dash">
+          <div class="lp-dash-bar">
+            <span class="lp-dash-dot"></span><span class="lp-dash-dot"></span><span class="lp-dash-dot"></span>
+            <span class="lp-dash-title">Relatório · Aurora Log LTDA</span>
+            <span class="lp-dash-chip">Aprovado</span>
+          </div>
+          <div class="lp-dash-body">
+            <div class="lp-dash-col">
+              <div class="lp-dash-k">Score de risco</div>
+              <div class="lp-dash-v">A+</div>
+              <div class="lp-dash-meter"><i style="width:82%"></i></div>
+            </div>
+            <div class="lp-dash-col">
+              <div class="lp-dash-k">Receita 12m</div>
+              <div class="lp-dash-v">R$ 4,2M</div>
+              <div class="lp-dash-meter"><i style="width:64%"></i></div>
+            </div>
+            <div class="lp-dash-col">
+              <div class="lp-dash-k">Sócios</div>
+              <div class="lp-dash-v">3</div>
+              <div class="lp-dash-meter"><i style="width:38%"></i></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="lp-logos">
+        <span class="lp-logos-k">Usado por times de risco em</span>
+        <div class="lp-logos-row">
+          <span class="lp-logo"></span><span class="lp-logo"></span><span class="lp-logo"></span>
+          <span class="lp-logo"></span><span class="lp-logo"></span>
+        </div>
+      </div>
+      <div class="lp-sec">
+        <div class="lp-sec-k">POR QUE FYNTA</div>
+        <div class="lp-sec-h">Menos planilha. Mais decisão.</div>
+        <div class="lp-cards">
+          <div class="lp-card">
+            <span class="lp-card-i"></span>
+            <div class="lp-card-h">Consulta unificada</div>
+            <div class="lp-card-p">Receita, sócios, processos e restrições em uma chamada só.</div>
+          </div>
+          <div class="lp-card">
+            <span class="lp-card-i"></span>
+            <div class="lp-card-h">Score explicável</div>
+            <div class="lp-card-p">Cada nota vem com o motivo — auditável do começo ao fim.</div>
+          </div>
+          <div class="lp-card">
+            <span class="lp-card-i"></span>
+            <div class="lp-card-h">API em minutos</div>
+            <div class="lp-card-p">Uma rota REST, SDKs prontos e sandbox liberado no cadastro.</div>
+          </div>
+        </div>
+      </div>
+      <div class="lp-split">
+        <div class="lp-split-l">
+          <div class="lp-sec-k">FUNCIONALIDADES</div>
+          <div class="lp-split-h">A IA lê o documento e devolve o dado estruturado.</div>
+          <div class="lp-list">
+            <div class="lp-li"><i></i>Extração de balanços e contratos sociais</div>
+            <div class="lp-li"><i></i>Monitoramento contínuo de carteira</div>
+            <div class="lp-li"><i></i>Alertas de mudança societária</div>
+            <div class="lp-li"><i></i>Trilha de auditoria completa</div>
+          </div>
+        </div>
+        <div class="lp-split-r">
+          <div class="lp-code">
+            <span class="lp-code-l"></span><span class="lp-code-l s"></span><span class="lp-code-l"></span>
+            <span class="lp-code-l m"></span><span class="lp-code-l s"></span><span class="lp-code-l"></span>
+            <span class="lp-code-l m"></span><span class="lp-code-l"></span>
+          </div>
+        </div>
+      </div>
+      <div class="lp-proof">
+        <div class="lp-quote">“Cortamos o tempo de análise de crédito de dois dias para dez minutos.”</div>
+        <div class="lp-quote-by"><span class="lp-av"></span>Head de Risco · fintech de crédito</div>
+        <div class="lp-stats">
+          <div class="lp-stat"><b>-93%</b><span>tempo de análise</span></div>
+          <div class="lp-stat"><b>12k</b><span>empresas / mês</span></div>
+          <div class="lp-stat"><b>99,9%</b><span>uptime</span></div>
+        </div>
+      </div>
+      <div class="lp-final">
+        <div class="lp-final-h">Comece a verificar hoje.</div>
+        <span class="lp-cta">Criar conta grátis</span>
+      </div>
+      </div>
+        </div>
+      </div>
+
+      <div id="sc-stage" class="clip" data-layout-allow-overlap="true" data-start="4.2" data-duration="15.8" data-track-index="2">
+        <div id="stage-eyebrow">TESTE A/B EM EXECUÇÃO</div>
+        <div id="src-pill"><span></span>Tráfego</div>
+        <div class="link" id="link-A"></div>
+        <div class="link" id="link-B"></div>
+        <div class="link" id="link-C"></div>
+        <div class="card-wrap" id="cw-A">      <div class="lp" id="lp-A" data-layout-ignore="true">
+
+      <div class="lp-nav">
+        <div class="lp-brand"><span class="lp-mark"></span>Fynta</div>
+        <div class="lp-nav-links">
+          <span>Produto</span><span>Soluções</span><span>Preços</span><span>Docs</span>
+        </div>
+        <div class="lp-nav-actions">
+          <span class="lp-nav-ghost">Entrar</span>
+          <span class="lp-nav-btn">Começar grátis</span>
+        </div>
+      </div>
+      <div class="lp-hero">
+        <div class="lp-eyebrow"><span class="lp-eyebrow-dot"></span>Verificação financeira com IA</div>
+        <div class="lp-head">Verifique qualquer empresa em segundos.</div>
+        <div class="lp-sub">Dados financeiros, societários e de risco, unificados por IA.</div>
+        <div class="lp-cta-row">
+          <span class="lp-cta">Começar grátis</span>
+          <span class="lp-cta2">Falar com vendas</span>
+        </div>
+        <div class="lp-dash">
+          <div class="lp-dash-bar">
+            <span class="lp-dash-dot"></span><span class="lp-dash-dot"></span><span class="lp-dash-dot"></span>
+            <span class="lp-dash-title">Relatório · Aurora Log LTDA</span>
+            <span class="lp-dash-chip">Aprovado</span>
+          </div>
+          <div class="lp-dash-body">
+            <div class="lp-dash-col">
+              <div class="lp-dash-k">Score de risco</div>
+              <div class="lp-dash-v">A+</div>
+              <div class="lp-dash-meter"><i style="width:82%"></i></div>
+            </div>
+            <div class="lp-dash-col">
+              <div class="lp-dash-k">Receita 12m</div>
+              <div class="lp-dash-v">R$ 4,2M</div>
+              <div class="lp-dash-meter"><i style="width:64%"></i></div>
+            </div>
+            <div class="lp-dash-col">
+              <div class="lp-dash-k">Sócios</div>
+              <div class="lp-dash-v">3</div>
+              <div class="lp-dash-meter"><i style="width:38%"></i></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="lp-logos">
+        <span class="lp-logos-k">Usado por times de risco em</span>
+        <div class="lp-logos-row">
+          <span class="lp-logo"></span><span class="lp-logo"></span><span class="lp-logo"></span>
+          <span class="lp-logo"></span><span class="lp-logo"></span>
+        </div>
+      </div>
+      <div class="lp-sec">
+        <div class="lp-sec-k">POR QUE FYNTA</div>
+        <div class="lp-sec-h">Menos planilha. Mais decisão.</div>
+        <div class="lp-cards">
+          <div class="lp-card">
+            <span class="lp-card-i"></span>
+            <div class="lp-card-h">Consulta unificada</div>
+            <div class="lp-card-p">Receita, sócios, processos e restrições em uma chamada só.</div>
+          </div>
+          <div class="lp-card">
+            <span class="lp-card-i"></span>
+            <div class="lp-card-h">Score explicável</div>
+            <div class="lp-card-p">Cada nota vem com o motivo — auditável do começo ao fim.</div>
+          </div>
+          <div class="lp-card">
+            <span class="lp-card-i"></span>
+            <div class="lp-card-h">API em minutos</div>
+            <div class="lp-card-p">Uma rota REST, SDKs prontos e sandbox liberado no cadastro.</div>
+          </div>
+        </div>
+      </div>
+      <div class="lp-split">
+        <div class="lp-split-l">
+          <div class="lp-sec-k">FUNCIONALIDADES</div>
+          <div class="lp-split-h">A IA lê o documento e devolve o dado estruturado.</div>
+          <div class="lp-list">
+            <div class="lp-li"><i></i>Extração de balanços e contratos sociais</div>
+            <div class="lp-li"><i></i>Monitoramento contínuo de carteira</div>
+            <div class="lp-li"><i></i>Alertas de mudança societária</div>
+            <div class="lp-li"><i></i>Trilha de auditoria completa</div>
+          </div>
+        </div>
+        <div class="lp-split-r">
+          <div class="lp-code">
+            <span class="lp-code-l"></span><span class="lp-code-l s"></span><span class="lp-code-l"></span>
+            <span class="lp-code-l m"></span><span class="lp-code-l s"></span><span class="lp-code-l"></span>
+            <span class="lp-code-l m"></span><span class="lp-code-l"></span>
+          </div>
+        </div>
+      </div>
+      <div class="lp-proof">
+        <div class="lp-quote">“Cortamos o tempo de análise de crédito de dois dias para dez minutos.”</div>
+        <div class="lp-quote-by"><span class="lp-av"></span>Head de Risco · fintech de crédito</div>
+        <div class="lp-stats">
+          <div class="lp-stat"><b>-93%</b><span>tempo de análise</span></div>
+          <div class="lp-stat"><b>12k</b><span>empresas / mês</span></div>
+          <div class="lp-stat"><b>99,9%</b><span>uptime</span></div>
+        </div>
+      </div>
+      <div class="lp-final">
+        <div class="lp-final-h">Comece a verificar hoje.</div>
+        <span class="lp-cta">Criar conta grátis</span>
+      </div>
+      </div></div>
+        <div class="card-wrap" id="cw-C">      <div class="lp" id="lp-C" data-layout-ignore="true">
+
+      <div class="lp-nav">
+        <div class="lp-brand"><span class="lp-mark"></span>Fynta</div>
+        <div class="lp-nav-links">
+          <span>Produto</span><span>Soluções</span><span>Preços</span><span>Docs</span>
+        </div>
+        <div class="lp-nav-actions">
+          <span class="lp-nav-ghost">Entrar</span>
+          <span class="lp-nav-btn">Começar grátis</span>
+        </div>
+      </div>
+      <div class="lp-hero">
+        <div class="lp-eyebrow"><span class="lp-eyebrow-dot"></span>Verificação financeira com IA</div>
+        <div class="lp-head">Due diligence que cabe em um clique.</div>
+        <div class="lp-sub">A IA lê os documentos. Você lê a decisão.</div>
+        <div class="lp-cta-row">
+          <span class="lp-cta">Ver demonstração</span>
+          <span class="lp-cta2">Falar com vendas</span>
+        </div>
+        <div class="lp-dash">
+          <div class="lp-dash-bar">
+            <span class="lp-dash-dot"></span><span class="lp-dash-dot"></span><span class="lp-dash-dot"></span>
+            <span class="lp-dash-title">Relatório · Aurora Log LTDA</span>
+            <span class="lp-dash-chip">Aprovado</span>
+          </div>
+          <div class="lp-dash-body">
+            <div class="lp-dash-col">
+              <div class="lp-dash-k">Score de risco</div>
+              <div class="lp-dash-v">A+</div>
+              <div class="lp-dash-meter"><i style="width:82%"></i></div>
+            </div>
+            <div class="lp-dash-col">
+              <div class="lp-dash-k">Receita 12m</div>
+              <div class="lp-dash-v">R$ 4,2M</div>
+              <div class="lp-dash-meter"><i style="width:64%"></i></div>
+            </div>
+            <div class="lp-dash-col">
+              <div class="lp-dash-k">Sócios</div>
+              <div class="lp-dash-v">3</div>
+              <div class="lp-dash-meter"><i style="width:38%"></i></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="lp-logos">
+        <span class="lp-logos-k">Usado por times de risco em</span>
+        <div class="lp-logos-row">
+          <span class="lp-logo"></span><span class="lp-logo"></span><span class="lp-logo"></span>
+          <span class="lp-logo"></span><span class="lp-logo"></span>
+        </div>
+      </div>
+      <div class="lp-sec">
+        <div class="lp-sec-k">POR QUE FYNTA</div>
+        <div class="lp-sec-h">Menos planilha. Mais decisão.</div>
+        <div class="lp-cards">
+          <div class="lp-card">
+            <span class="lp-card-i"></span>
+            <div class="lp-card-h">Consulta unificada</div>
+            <div class="lp-card-p">Receita, sócios, processos e restrições em uma chamada só.</div>
+          </div>
+          <div class="lp-card">
+            <span class="lp-card-i"></span>
+            <div class="lp-card-h">Score explicável</div>
+            <div class="lp-card-p">Cada nota vem com o motivo — auditável do começo ao fim.</div>
+          </div>
+          <div class="lp-card">
+            <span class="lp-card-i"></span>
+            <div class="lp-card-h">API em minutos</div>
+            <div class="lp-card-p">Uma rota REST, SDKs prontos e sandbox liberado no cadastro.</div>
+          </div>
+        </div>
+      </div>
+      <div class="lp-split">
+        <div class="lp-split-l">
+          <div class="lp-sec-k">FUNCIONALIDADES</div>
+          <div class="lp-split-h">A IA lê o documento e devolve o dado estruturado.</div>
+          <div class="lp-list">
+            <div class="lp-li"><i></i>Extração de balanços e contratos sociais</div>
+            <div class="lp-li"><i></i>Monitoramento contínuo de carteira</div>
+            <div class="lp-li"><i></i>Alertas de mudança societária</div>
+            <div class="lp-li"><i></i>Trilha de auditoria completa</div>
+          </div>
+        </div>
+        <div class="lp-split-r">
+          <div class="lp-code">
+            <span class="lp-code-l"></span><span class="lp-code-l s"></span><span class="lp-code-l"></span>
+            <span class="lp-code-l m"></span><span class="lp-code-l s"></span><span class="lp-code-l"></span>
+            <span class="lp-code-l m"></span><span class="lp-code-l"></span>
+          </div>
+        </div>
+      </div>
+      <div class="lp-proof">
+        <div class="lp-quote">“Cortamos o tempo de análise de crédito de dois dias para dez minutos.”</div>
+        <div class="lp-quote-by"><span class="lp-av"></span>Head de Risco · fintech de crédito</div>
+        <div class="lp-stats">
+          <div class="lp-stat"><b>-93%</b><span>tempo de análise</span></div>
+          <div class="lp-stat"><b>12k</b><span>empresas / mês</span></div>
+          <div class="lp-stat"><b>99,9%</b><span>uptime</span></div>
+        </div>
+      </div>
+      <div class="lp-final">
+        <div class="lp-final-h">Comece a verificar hoje.</div>
+        <span class="lp-cta">Criar conta grátis</span>
+      </div>
+      </div></div>
+        <div id="win-ring"><i></i></div>
+        <div class="card-wrap" id="cw-B">      <div class="lp" id="lp-B" data-layout-ignore="true">
+
+      <div class="lp-nav">
+        <div class="lp-brand"><span class="lp-mark"></span>Fynta</div>
+        <div class="lp-nav-links">
+          <span>Produto</span><span>Soluções</span><span>Preços</span><span>Docs</span>
+        </div>
+        <div class="lp-nav-actions">
+          <span class="lp-nav-ghost">Entrar</span>
+          <span class="lp-nav-btn">Começar grátis</span>
+        </div>
+      </div>
+      <div class="lp-hero">
+        <div class="lp-eyebrow"><span class="lp-eyebrow-dot"></span>Verificação financeira com IA</div>
+        <div class="lp-head">Aprove clientes sem medo de fraude.</div>
+        <div class="lp-sub">Risco, crédito e sócios em um só relatório — em 8 segundos.</div>
+        <div class="lp-cta-row">
+          <span class="lp-cta">Analisar uma empresa</span>
+          <span class="lp-cta2">Falar com vendas</span>
+        </div>
+        <div class="lp-dash">
+          <div class="lp-dash-bar">
+            <span class="lp-dash-dot"></span><span class="lp-dash-dot"></span><span class="lp-dash-dot"></span>
+            <span class="lp-dash-title">Relatório · Aurora Log LTDA</span>
+            <span class="lp-dash-chip">Aprovado</span>
+          </div>
+          <div class="lp-dash-body">
+            <div class="lp-dash-col">
+              <div class="lp-dash-k">Score de risco</div>
+              <div class="lp-dash-v">A+</div>
+              <div class="lp-dash-meter"><i style="width:82%"></i></div>
+            </div>
+            <div class="lp-dash-col">
+              <div class="lp-dash-k">Receita 12m</div>
+              <div class="lp-dash-v">R$ 4,2M</div>
+              <div class="lp-dash-meter"><i style="width:64%"></i></div>
+            </div>
+            <div class="lp-dash-col">
+              <div class="lp-dash-k">Sócios</div>
+              <div class="lp-dash-v">3</div>
+              <div class="lp-dash-meter"><i style="width:38%"></i></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="lp-logos">
+        <span class="lp-logos-k">Usado por times de risco em</span>
+        <div class="lp-logos-row">
+          <span class="lp-logo"></span><span class="lp-logo"></span><span class="lp-logo"></span>
+          <span class="lp-logo"></span><span class="lp-logo"></span>
+        </div>
+      </div>
+      <div class="lp-sec">
+        <div class="lp-sec-k">POR QUE FYNTA</div>
+        <div class="lp-sec-h">Menos planilha. Mais decisão.</div>
+        <div class="lp-cards">
+          <div class="lp-card">
+            <span class="lp-card-i"></span>
+            <div class="lp-card-h">Consulta unificada</div>
+            <div class="lp-card-p">Receita, sócios, processos e restrições em uma chamada só.</div>
+          </div>
+          <div class="lp-card">
+            <span class="lp-card-i"></span>
+            <div class="lp-card-h">Score explicável</div>
+            <div class="lp-card-p">Cada nota vem com o motivo — auditável do começo ao fim.</div>
+          </div>
+          <div class="lp-card">
+            <span class="lp-card-i"></span>
+            <div class="lp-card-h">API em minutos</div>
+            <div class="lp-card-p">Uma rota REST, SDKs prontos e sandbox liberado no cadastro.</div>
+          </div>
+        </div>
+      </div>
+      <div class="lp-split">
+        <div class="lp-split-l">
+          <div class="lp-sec-k">FUNCIONALIDADES</div>
+          <div class="lp-split-h">A IA lê o documento e devolve o dado estruturado.</div>
+          <div class="lp-list">
+            <div class="lp-li"><i></i>Extração de balanços e contratos sociais</div>
+            <div class="lp-li"><i></i>Monitoramento contínuo de carteira</div>
+            <div class="lp-li"><i></i>Alertas de mudança societária</div>
+            <div class="lp-li"><i></i>Trilha de auditoria completa</div>
+          </div>
+        </div>
+        <div class="lp-split-r">
+          <div class="lp-code">
+            <span class="lp-code-l"></span><span class="lp-code-l s"></span><span class="lp-code-l"></span>
+            <span class="lp-code-l m"></span><span class="lp-code-l s"></span><span class="lp-code-l"></span>
+            <span class="lp-code-l m"></span><span class="lp-code-l"></span>
+          </div>
+        </div>
+      </div>
+      <div class="lp-proof">
+        <div class="lp-quote">“Cortamos o tempo de análise de crédito de dois dias para dez minutos.”</div>
+        <div class="lp-quote-by"><span class="lp-av"></span>Head de Risco · fintech de crédito</div>
+        <div class="lp-stats">
+          <div class="lp-stat"><b>-93%</b><span>tempo de análise</span></div>
+          <div class="lp-stat"><b>12k</b><span>empresas / mês</span></div>
+          <div class="lp-stat"><b>99,9%</b><span>uptime</span></div>
+        </div>
+      </div>
+      <div class="lp-final">
+        <div class="lp-final-h">Comece a verificar hoje.</div>
+        <span class="lp-cta">Criar conta grátis</span>
+      </div>
+      </div></div>
+      <div class="mp" id="mp-A">
+        <div class="mp-head"><span class="mp-tag">VARIANTE A</span><span class="mp-live"></span></div>
+        <div class="mp-row"><span class="mp-k">Visitors</span><span class="mp-v" id="n-vis-A">0</span></div>
+        <div class="mp-row"><span class="mp-k">Conversions</span><span class="mp-v" id="n-cnv-A">0</span></div>
+        <div class="mp-row mp-rate"><span class="mp-k">Conv. rate</span><span class="mp-r" id="n-rate-A">0.00%</span></div>
+      </div>
+      <div class="mp" id="mp-B">
+        <div class="mp-head"><span class="mp-tag">VARIANTE B</span><span class="mp-live"></span></div>
+        <div class="mp-row"><span class="mp-k">Visitors</span><span class="mp-v" id="n-vis-B">0</span></div>
+        <div class="mp-row"><span class="mp-k">Conversions</span><span class="mp-v" id="n-cnv-B">0</span></div>
+        <div class="mp-row mp-rate"><span class="mp-k">Conv. rate</span><span class="mp-r" id="n-rate-B">0.00%</span></div>
+      </div>
+      <div class="mp" id="mp-C">
+        <div class="mp-head"><span class="mp-tag">VARIANTE C</span><span class="mp-live"></span></div>
+        <div class="mp-row"><span class="mp-k">Visitors</span><span class="mp-v" id="n-vis-C">0</span></div>
+        <div class="mp-row"><span class="mp-k">Conversions</span><span class="mp-v" id="n-cnv-C">0</span></div>
+        <div class="mp-row mp-rate"><span class="mp-k">Conv. rate</span><span class="mp-r" id="n-rate-C">0.00%</span></div>
+      </div>
+      <span class="dot" id="dot-A0"></span>
+      <span class="dot" id="dot-A1"></span>
+      <span class="dot" id="dot-A2"></span>
+      <span class="dot" id="dot-A3"></span>
+      <span class="dot" id="dot-A4"></span>
+      <span class="dot" id="dot-A5"></span>
+      <span class="dot" id="dot-A6"></span>
+      <span class="dot" id="dot-A7"></span>
+      <span class="dot" id="dot-A8"></span>
+      <span class="dot" id="dot-A9"></span>
+      <span class="dot" id="dot-A10"></span>
+      <span class="dot" id="dot-B0"></span>
+      <span class="dot" id="dot-B1"></span>
+      <span class="dot" id="dot-B2"></span>
+      <span class="dot" id="dot-B3"></span>
+      <span class="dot" id="dot-B4"></span>
+      <span class="dot" id="dot-B5"></span>
+      <span class="dot" id="dot-B6"></span>
+      <span class="dot" id="dot-B7"></span>
+      <span class="dot" id="dot-B8"></span>
+      <span class="dot" id="dot-B9"></span>
+      <span class="dot" id="dot-B10"></span>
+      <span class="dot" id="dot-C0"></span>
+      <span class="dot" id="dot-C1"></span>
+      <span class="dot" id="dot-C2"></span>
+      <span class="dot" id="dot-C3"></span>
+      <span class="dot" id="dot-C4"></span>
+      <span class="dot" id="dot-C5"></span>
+      <span class="dot" id="dot-C6"></span>
+      <span class="dot" id="dot-C7"></span>
+      <span class="dot" id="dot-C8"></span>
+      <span class="dot" id="dot-C9"></span>
+      <span class="dot" id="dot-C10"></span>
+        <div id="win-badge">VERSÃO CAMPEÃ</div>
+        <div id="win-metric">+42%</div>
+        <div id="win-metric-k">de taxa de conversão vs. variante A</div>
+      </div>
+
+      <div id="sc-brand" class="clip" data-start="19.8" data-duration="4" data-track-index="3">
+        <div id="brand-mark"><i></i>KRO AI</div>
+        <div id="brand-l1">A melhor versão da<br/>sua página já existe.</div>
+        <div id="brand-l2">Nós ajudamos ela a nascer<br/>para aumentar suas conversões.</div>
+      </div>
+
+      <div id="sc-value" class="clip" data-start="23.6" data-duration="3" data-track-index="4">
+        <div id="value-mark"><i></i>KRO AI</div>
+        <div id="value-h">Automatize seus<br/>testes A/B.</div>
+        <div id="value-s">Encontre a versão campeã da sua página.</div>
+        <div class="flow-node" id="fn-0">Página</div>
+        <div class="flow-node" id="fn-1">Variantes</div>
+        <div class="flow-node" id="fn-2">Teste</div>
+        <div class="flow-node" id="fn-3">Campeã</div>
+        <div class="flow-arrow" id="fa-0"></div>
+        <div class="flow-arrow" id="fa-1"></div>
+        <div class="flow-arrow" id="fa-2"></div>
+      </div>
+
+      <div id="sc-cta" class="clip" data-start="26.4" data-duration="3.1000000000000014" data-track-index="5">
+        <div id="cta-mark"><i></i>KRO AI</div>
+        <div id="cta-h">Teste gratuitamente<br/>por 14 dias.</div>
+        <div id="cta-btn">Começar teste grátis</div>
+        <div id="cta-micro">Comece agora. Sem risco.</div>
+        <div id="cta-url">USEKRO.AI</div>
+      </div>
+    </div>
+    <script>
+
+      window.__timelines = window.__timelines || {};
+      var tl = gsap.timeline({ paused: true });
+      var K = ["A", "B", "C"];
+      var CARD_X = [30,376,722], CARD_CX = [193,539,885];
+
+      function fmt(n) { return Math.round(n).toLocaleString("en-US"); }
+      function pct(n) { return n.toFixed(2) + "%"; }
+
+      // ── SCENE 1 · the page ────────────────────────────────────────────────
+      // Open on one real page. Pan it once so the viewer registers "this is a
+      // whole site", then come back to the hero — the hero is what multiplies.
+      gsap.set("#vp", { transformOrigin: "50% 50%" });
+      gsap.set("#lp-full", { y: 0 });
+      tl.fromTo("#vp", { opacity: 0, y: 54, scale: 0.965 },
+        { opacity: 1, y: 0, scale: 1, duration: 0.72, ease: "power3.out" }, 0.05);
+      tl.fromTo("#page-eyebrow", { opacity: 0, y: 12 },
+        { opacity: 1, y: 0, duration: 0.5, ease: "power2.out" }, 0.35);
+      tl.to("#lp-full", { y: -1250, duration: 1.5, ease: "power2.inOut" }, 1.25);
+      tl.to("#lp-full", { y: 0, duration: 1.0, ease: "power3.inOut" }, 2.95);
+      tl.to("#page-eyebrow", { opacity: 0, duration: 0.3, ease: "power2.in" }, 3.9);
+      tl.set("#page-eyebrow", { opacity: 0 }, 4.2);
+      tl.to("#sc-page", { opacity: 0, filter: "blur(9px)", duration: 0.32, ease: "power2.in" }, 4.08);
+      tl.set("#sc-page", { opacity: 0 }, 4.4);
+
+      // ── SCENE 2 · the variants are born ───────────────────────────────────
+      // The hero card enters at exactly the window's coordinates, so the dissolve
+      // out of scene 1 reads as the same object, not a new one.
+      var HERO_TOP = 170, HERO_LEFT = 100;
+      gsap.set(["#cw-A", "#cw-B", "#cw-C"], { x: HERO_LEFT, y: HERO_TOP, scale: 1 });
+      gsap.set(["#cw-B", "#cw-C"], { autoAlpha: 0 });
+      gsap.set("#sc-stage", { opacity: 0 });
+      gsap.set(["#stage-eyebrow", "#src-pill"], { opacity: 0 });
+      gsap.set([".link"], { opacity: 0, scaleX: 0 });
+      gsap.set([".mp"], { opacity: 0, y: 18 });
+      gsap.set([".dot"], { opacity: 0 });
+      gsap.set(["#win-ring", "#win-badge", "#win-metric", "#win-metric-k"], { opacity: 0 });
+      gsap.set("#win-ring", {
+        x: 301, y: 254,
+        width: 478, height: 547, scale: 0.97, transformOrigin: "50% 50%"
+      });
+      gsap.set("#win-badge", { x: 422, y: 194, width: 236, scale: 0.8, transformOrigin: "50% 50%" });
+      gsap.set("#win-metric", { y: 1043 });
+      gsap.set("#win-metric-k", { y: 1115 });
+
+      tl.to("#sc-stage", { opacity: 1, duration: 0.3, ease: "power2.out" }, 4.2);
+
+      // a short push-in on the hero before it divides — the camera picks the
+      // subject before the mechanism acts on it
+      tl.to("#cw-A", { scale: 1.05, x: HERO_LEFT - 22, y: HERO_TOP - 16, duration: 0.6, ease: "power2.inOut" }, 4.45);
+
+      // A travels to its slot; B and C are still stacked underneath it
+      var slotY = 466, s = 0.3704545454545455;
+      tl.to("#cw-A", { x: CARD_X[0], y: slotY, scale: s, duration: 1.0, ease: "power3.inOut" }, 5.15);
+      tl.to("#cw-B", { x: CARD_X[1], y: slotY, scale: s, duration: 1.0, ease: "power3.inOut" }, 5.35);
+      tl.to("#cw-C", { x: CARD_X[2], y: slotY, scale: s, duration: 1.0, ease: "power3.inOut" }, 5.35);
+      // they emerge FROM A rather than appearing beside it
+      tl.to("#cw-B", { autoAlpha: 1, duration: 0.42, ease: "power2.out" }, 5.5);
+      tl.to("#cw-C", { autoAlpha: 1, duration: 0.42, ease: "power2.out" }, 5.62);
+
+      // the split lines make the parentage explicit
+      var srcY = 346;
+      [0, 1, 2].forEach(function (i) {
+        var el = "#link-" + K[i];
+        var dx = CARD_CX[i] - 540, dy = slotY - srcY;
+        var len = Math.sqrt(dx * dx + dy * dy);
+        var ang = Math.atan2(dy, dx) * 180 / Math.PI;
+        gsap.set(el, { x: 540, y: srcY, width: len, rotation: ang, transformOrigin: "0 50%" });
+        tl.to(el, { opacity: 0.85, scaleX: 1, duration: 0.5, ease: "power2.out" }, 5.7 + i * 0.07);
+        tl.to(el, { opacity: 0.18, duration: 0.5, ease: "power2.inOut" }, 7.0);
+      });
+
+      tl.to("#stage-eyebrow", { opacity: 1, duration: 0.4, ease: "power2.out" }, 6.5);
+      tl.to("#src-pill", { opacity: 1, duration: 0.4, ease: "power2.out" }, 6.6);
+
+      // ── SCENE 3 · the test runs ───────────────────────────────────────────
+      K.forEach(function (k, i) {
+        gsap.set("#mp-" + k, { x: CARD_X[i] });
+        tl.to("#mp-" + k, { opacity: 1, y: 0, duration: 0.5, ease: "power3.out" }, 7.3 + i * 0.1);
+      });
+
+      // traffic: dots leave the source and land on each card. Their lateral
+      // spread is index-derived, never random — the render must be reproducible.
+      K.forEach(function (k, ci) {
+        for (var i = 0; i < 11; i++) {
+          var el = "#dot-" + k + i;
+          var jx = ((i * 37) % 61) - 30;
+          var at = 8.5 + i * 0.34 + ci * 0.11;
+          gsap.set(el, { x: 540 - 3, y: 342 });
+          tl.fromTo(el, { opacity: 0, x: 540 - 3, y: 342 },
+            { opacity: 1, duration: 0.16, ease: "power1.out" }, at);
+          tl.to(el, {
+            x: CARD_CX[ci] - 3 + jx, y: slotY + 26,
+            duration: 0.78, ease: "power2.inOut"
+          }, at);
+          tl.to(el, { opacity: 0, duration: 0.22, ease: "power2.in" }, at + 0.66);
+        }
+      });
+
+      // counters. Visitors and conversions rise together; the rate is tweened on
+      // its own curve so B visibly overtakes C partway, instead of simply ending
+      // higher — the overtake is what sells "the winner isn't the biggest crowd".
+      var VIS = { A: 1284, B: 1196, C: 1267 };
+      var CNV = { A: 61, B: 81, C: 69 };
+      var RATE = { A: 4.75, B: 6.77, C: 5.45 };
+      var REASE = { A: "power2.out", B: "power1.in", C: "power2.out" };
+      K.forEach(function (k) {
+        var pv = { v: 0 }, pc = { v: 0 }, pr = { v: 0 };
+        tl.to(pv, { v: VIS[k], duration: 4.6, ease: "power1.out",
+          onUpdate: function () { document.getElementById("n-vis-" + k).textContent = fmt(pv.v); } }, 8.7);
+        tl.to(pc, { v: CNV[k], duration: 4.6, ease: "power1.out",
+          onUpdate: function () { document.getElementById("n-cnv-" + k).textContent = fmt(pc.v); } }, 8.7);
+        tl.to(pr, { v: RATE[k], duration: 4.4, ease: REASE[k],
+          onUpdate: function () { document.getElementById("n-rate-" + k).textContent = pct(pr.v); } }, 8.9);
+      });
+
+      // ── SCENE 4 · the winner ──────────────────────────────────────────────
+      // A and C recede — dimmed, blurred, slightly smaller. B is not "celebrated";
+      // it is simply the one left in focus, which is what a result feels like.
+      tl.to(["#cw-A", "#cw-C"], { autoAlpha: 0.18, filter: "blur(5px)", duration: 0.7, ease: "power2.inOut" }, 14.5);
+      tl.to(["#mp-A", "#mp-C"], { autoAlpha: 0, duration: 0.7, ease: "power2.inOut" }, 14.5);
+      tl.to(["#link-A", "#link-C"], { opacity: 0.05, duration: 0.6, ease: "power2.inOut" }, 14.5);
+      tl.to("#link-B", { opacity: 0.5, duration: 0.6, ease: "power2.inOut" }, 14.5);
+      tl.to("#stage-eyebrow", { opacity: 0, duration: 0.4, ease: "power2.in" }, 14.4);
+      tl.to("#src-pill", { opacity: 0, duration: 0.4, ease: "power2.in" }, 14.4);
+
+      // B grows into the frame's centre
+      tl.to("#cw-B", { x: 305, y: 258, scale: 0.5340909090909091, duration: 1.0, ease: "power3.inOut" }, 14.8);
+      tl.to("#mp-B", { x: 377, y: -39, duration: 1.0, ease: "power3.inOut" }, 14.8);
+
+      tl.to("#win-ring", { opacity: 1, scale: 1, duration: 0.55, ease: "power3.out" }, 15.5);
+      tl.to("#win-badge", { opacity: 1, scale: 1, duration: 0.5, ease: "back.out(2.1)" }, 15.95);
+
+      var wm = { v: 0 };
+      tl.to("#win-metric", { opacity: 1, duration: 0.4, ease: "power2.out" }, 16.5);
+      tl.to(wm, { v: 42, duration: 0.85, ease: "power2.out",
+        onUpdate: function () { document.getElementById("win-metric").textContent = "+" + Math.round(wm.v) + "%"; } }, 16.5);
+      tl.to("#win-metric-k", { opacity: 1, duration: 0.4, ease: "power2.out" }, 17.05);
+
+      // the whole stage converges and blurs away — the interface becomes the brand
+      tl.to("#sc-stage", { opacity: 0, scale: 1.08, filter: "blur(14px)", duration: 0.75, ease: "power2.in" }, 19.25);
+      tl.set("#sc-stage", { opacity: 0 }, 20.0);
+      gsap.set("#sc-stage", { transformOrigin: "50% 46%" });
+
+      // ── SCENE 5 · the brand ───────────────────────────────────────────────
+      gsap.set("#sc-brand", { opacity: 0 });
+      gsap.set("#brand-mark", { y: 336 });
+      gsap.set(["#brand-mark", "#brand-l1", "#brand-l2"], { opacity: 0 });
+      tl.to("#sc-brand", { opacity: 1, duration: 0.5, ease: "power2.out" }, 19.8);
+      tl.fromTo("#brand-mark", { y: 352 }, { opacity: 1, y: 336, duration: 0.6, ease: "power3.out" }, 20.15);
+      tl.fromTo("#brand-l1", { y: 34, filter: "blur(8px)" },
+        { opacity: 1, y: 0, filter: "blur(0px)", duration: 0.85, ease: "power3.out" }, 20.6);
+      tl.fromTo("#brand-l2", { y: 22 }, { opacity: 1, y: 0, duration: 0.7, ease: "power3.out" }, 21.5);
+      tl.to("#sc-brand", { opacity: 0, filter: "blur(10px)", duration: 0.4, ease: "power2.in" }, 23.4);
+      tl.set("#sc-brand", { opacity: 0 }, 23.8);
+
+      // ── SCENE 6 · what the product does ───────────────────────────────────
+      gsap.set("#sc-value", { opacity: 0 });
+      gsap.set("#value-mark", { y: 258 });
+      gsap.set(["#value-mark", "#value-h", "#value-s"], { opacity: 0 });
+      var FW = 228, FGAP = 26, FTOT = FW * 4 + FGAP * 3, FX0 = (1080 - FTOT) / 2;
+      [0, 1, 2, 3].forEach(function (i) {
+        gsap.set("#fn-" + i, { x: FX0 + i * (FW + FGAP), width: FW, opacity: 0, y: 14 });
+      });
+      [0, 1, 2].forEach(function (i) {
+        gsap.set("#fa-" + i, { x: FX0 + FW + i * (FW + FGAP) + 4, width: FGAP - 8, opacity: 0 });
+      });
+      tl.to("#sc-value", { opacity: 1, duration: 0.45, ease: "power2.out" }, 23.6);
+      tl.fromTo("#value-mark", { y: 272 }, { opacity: 1, y: 258, duration: 0.5, ease: "power3.out" }, 23.85);
+      tl.fromTo("#value-h", { y: 28, filter: "blur(6px)" },
+        { opacity: 1, y: 0, filter: "blur(0px)", duration: 0.7, ease: "power3.out" }, 24.0);
+      tl.fromTo("#value-s", { y: 18 }, { opacity: 1, y: 0, duration: 0.55, ease: "power3.out" }, 24.45);
+      // the four steps light up in order — the product's loop, stated once
+      [0, 1, 2, 3].forEach(function (i) {
+        tl.to("#fn-" + i, { opacity: 1, y: 0, duration: 0.34, ease: "power3.out" }, 24.85 + i * 0.24);
+        if (i < 3) tl.to("#fa-" + i, { opacity: 1, duration: 0.22, ease: "power2.out" }, 25.05 + i * 0.24);
+      });
+      tl.to("#fn-3", { borderColor: "rgba(6,182,212,0.75)", backgroundColor: "rgba(6,182,212,0.14)", duration: 0.4, ease: "power2.out" }, 25.62);
+      tl.to("#sc-value", { opacity: 0, filter: "blur(10px)", duration: 0.35, ease: "power2.in" }, 26.2);
+      tl.set("#sc-value", { opacity: 0 }, 26.6);
+
+      // ── SCENE 7 · the ask ─────────────────────────────────────────────────
+      gsap.set("#sc-cta", { opacity: 0 });
+      gsap.set("#cta-mark", { y: 330 });
+      gsap.set(["#cta-mark", "#cta-h", "#cta-btn", "#cta-micro", "#cta-url"], { opacity: 0 });
+      gsap.set("#cta-btn", { scale: 0.93, transformOrigin: "50% 50%" });
+      tl.to("#sc-cta", { opacity: 1, duration: 0.45, ease: "power2.out" }, 26.4);
+      tl.fromTo("#cta-mark", { y: 344 }, { opacity: 1, y: 330, duration: 0.5, ease: "power3.out" }, 26.65);
+      tl.fromTo("#cta-h", { y: 30, filter: "blur(6px)" },
+        { opacity: 1, y: 0, filter: "blur(0px)", duration: 0.72, ease: "power3.out" }, 26.85);
+      tl.to("#cta-btn", { opacity: 1, scale: 1, duration: 0.55, ease: "back.out(1.9)" }, 27.5);
+      tl.fromTo("#cta-micro", { y: 12 }, { opacity: 1, y: 0, duration: 0.45, ease: "power2.out" }, 27.95);
+      tl.fromTo("#cta-url", { y: 10 }, { opacity: 1, y: 0, duration: 0.45, ease: "power2.out" }, 28.15);
+      // one restrained pulse on the button, then stillness — the last thing the
+      // eye catches is the action, and it is not asking twice
+      tl.to("#cta-btn", { scale: 1.035, duration: 0.3, ease: "power2.out" }, 28.55);
+      tl.to("#cta-btn", { scale: 1, duration: 0.42, ease: "power2.inOut" }, 28.87);
+
+      window.__timelines["main"] = tl;
+    </script>
+  </body>
+</html>
