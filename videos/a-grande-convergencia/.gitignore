@@ -4,3 +4,4 @@ renders/.*hf-transaction*/
 snapshots/
 .hyperframes/
 assets/audio/bed.wav
+render.log
