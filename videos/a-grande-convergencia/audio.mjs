@@ -204,7 +204,7 @@ for (let b = 0; b * BEAT < 36; b++) {
     const tt = k / SR;
     const env = Math.exp(-tt * 3.4);
     const f = 38 + 26 * Math.exp(-tt * 22);
-    const v = (Math.sin(TAU * f * tt) * 0.9 + Math.sin(TAU * (f * 2) * tt) * 0.16) * env * 0.62;
+    const v = (Math.sin(TAU * f * tt) * 0.9 + Math.sin(TAU * (f * 2) * tt) * 0.16) * env * 0.52;
     add(i0 + k, v, v);
   }
 }
@@ -301,10 +301,10 @@ E(18.0, "impact-bass-1.mp3", 0.26, 1.8);
 );
 
 // O impacto grave e limpo vive na síntese (35,85s). Aqui só o corpo dele.
-E(35.85, "impact-bass-1.mp3", 0.6, 2.1);
+E(35.85, "impact-bass-1.mp3", 0.44, 2.1);
 
 // S08 — uma única confirmação no vazio: "1 vencedora".
-E(38.74, "ping.mp3", 0.2, 1.1);
+E(38.56, "ping.mp3", 0.26, 1.2);
 
 // S09 — o som físico. Depois de 43s de perfeição digital, uma tecla mecânica.
 E(44.62, "key-press.mp3", 0.42, 0.43);
