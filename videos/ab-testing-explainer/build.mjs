@@ -1,0 +1,582 @@
+// A/B testing explainer — 16:9, 32s.
+//
+// One continuous spatial sequence: the stage lives for the whole film and the
+// page objects travel between arrangements, so no shot ever resets the frame to
+// empty. Only the top-level layers are `class="clip"`; everything inside a layer
+// is a plain descendant (a class on a direct child of #root is not scoped by the
+// runtime and renders unstyled).
+//
+// Re-run with `node build.mjs`.
+
+import { writeFileSync, readFileSync } from "node:fs";
+
+const W = 1920;
+const H = 1080;
+const DUR = 32;
+const FONTS = readFileSync("assets/fonts/fonts.css", "utf8").trim();
+
+// ── palette ──────────────────────────────────────────────────────────────────
+const C = {
+  purple: "#7C3AED", // variant A · winning version · primary action
+  cyan: "#06B6D4", // variant B · traffic flow · analytical contrast
+  dark: "#2B2B2B", // environment
+  light: "#FFFFFF",
+  sand: "#D8C0A7", // neutral support
+  deep: "#1C1C1E", // one step under Dark, for depth falloff
+  ink: "#16171A", // the page's own ink
+  inkSoft: "#5A606B",
+  hair: "#E7EAEF",
+  paper: "#FFFFFF",
+};
+
+// ── the landing page object ──────────────────────────────────────────────────
+// Authored once and only ever transformed — A and B are the same object, so the
+// split reads as one page becoming two rather than two pages appearing.
+const PAGE_W = 620;
+const PAGE_H = 840;
+
+// Arrangements the page travels between. rotY gives each plane its own facing so
+// the pair reads as two surfaces in a room, not two rectangles on a slide.
+const POS = {
+  solo: { cx: 1150, cy: 540, s: 1.0, ry: -6 },
+  a: { cx: 700, cy: 520, s: 0.72, ry: 9 },
+  b: { cx: 1220, cy: 520, s: 0.72, ry: -9 },
+  win: { cx: 1240, cy: 515, s: 0.88, ry: -3 },
+  final: { cx: 1320, cy: 540, s: 0.72, ry: -7 },
+};
+const tf = (p) => ({ x: p.cx - W / 2, y: p.cy - H / 2, scale: p.s, rotationY: p.ry });
+
+// Counters live in the wide 16:9 margins, clear of the traffic that comes up the
+// centre from the front of the camera.
+const CNT = { w: 320, h: 214, y: 402, ax: 118, bx: W - 118 - 320 };
+
+// Traffic geometry: one trunk from the front of frame, one fork, two branches.
+const SRC = { x: W / 2, y: 1076 };
+const FORK = { x: W / 2, y: 912 };
+const ENTRY = { a: { x: POS.a.cx, y: 836 }, b: { x: POS.b.cx, y: 836 } };
+
+// ── content ──────────────────────────────────────────────────────────────────
+const BRAND = "Lumen";
+// A and B differ in exactly one element: the CTA. Everything else is identical,
+// which is what makes it a controlled test rather than a redesign.
+const CTA = { a: "Começar agora", b: "Ver demonstração" };
+const RATE = { a: 3.2, b: 4.7 };
+const VISITORS = 1240;
+const CONV = { a: 40, b: 58 }; // 40/1240 = 3.2% · 58/1240 = 4.7%
+const BAR_MAX = 300; // width at 5.0%
+
+// ── shot windows (absolute seconds) ──────────────────────────────────────────
+const S = {
+  hook: [0.0, 3.0],
+  split: [3.0, 7.0],
+  traffic: [7.0, 12.0],
+  measure: [12.0, 17.0],
+  reveal: [17.0, 22.0],
+  optimise: [22.0, 27.0],
+  close: [27.0, 32.0],
+};
+
+// ── page markup ──────────────────────────────────────────────────────────────
+const pageHtml = (k) => `      <div class="pg" id="pg-${k}">
+        <div class="pg-nav">
+          <div class="pg-brand"><span class="pg-mark"></span>${BRAND}</div>
+          <div class="pg-nav-r"><span></span><span></span><span></span></div>
+        </div>
+        <div class="pg-body">
+          <div class="pg-eyebrow">Analytics</div>
+          <div class="pg-head">Relatórios que se explicam sozinhos.</div>
+          <div class="pg-sub">Conecte seus dados e receba a análise pronta, toda segunda-feira.</div>
+          <div class="pg-ctawrap">
+            <div class="pg-cta" id="cta-${k}">${CTA[k]}</div>
+            <div class="pg-ring" id="ring-${k}"></div>
+${k === "a" ? `            <div id="cta-ghost">${CTA.b}</div>` : ""}
+          </div>
+          <div class="pg-viz">
+            <div class="pg-viz-row"><i style="height:34%"></i><i style="height:58%"></i><i style="height:44%"></i><i style="height:76%"></i><i style="height:62%"></i><i style="height:92%"></i></div>
+          </div>
+          <div class="pg-trust">
+            <span class="pg-stars"><i></i><i></i><i></i><i></i><i></i></span><span class="pg-trust-t">4,9 · usado por 2.400 times</span>
+          </div>
+        </div>
+      </div>`;
+
+const counterHtml = (k) => `      <div class="cnt" id="cnt-${k}">
+        <div class="cnt-tag" id="cnt-tag-${k}">VERSÃO ${k.toUpperCase()}</div>
+        <div class="cnt-row"><span class="cnt-k">Visitantes</span><span class="cnt-v" id="n-vis-${k}">0</span></div>
+        <div class="cnt-row"><span class="cnt-k">Conversões</span><span class="cnt-v" id="n-cnv-${k}">0</span></div>
+      </div>`;
+
+const rateHtml = (k) => `      <div class="rate" id="rate-${k}">
+        <div class="rate-tag">VERSÃO ${k.toUpperCase()}</div>
+        <div class="rate-v" id="n-rate-${k}">0,0%</div>
+        <div class="rate-track"><i id="bar-${k}"></i></div>
+      </div>`;
+
+const pulses = () => {
+  let out = "";
+  for (let i = 0; i < 20; i++) out += `      <span class="pls" id="pls-${i}"></span>\n`;
+  return out;
+};
+const convDots = () => {
+  let out = "";
+  for (let i = 0; i < 8; i++) out += `      <span class="cvd" id="cvd-${i}"></span>\n`;
+  return out;
+};
+
+// ── CSS ──────────────────────────────────────────────────────────────────────
+const css = `${FONTS}
+* { margin:0; padding:0; box-sizing:border-box; }
+html, body { width:${W}px; height:${H}px; overflow:hidden; background:${C.deep}; }
+body { font-family:'Manrope',sans-serif; -webkit-font-smoothing:antialiased; }
+#root { position:relative; width:${W}px; height:${H}px; overflow:hidden; }
+
+/* ── top-level layers: #id only ───────────────────────────────────────────── */
+#env {
+  position:absolute; inset:0;
+  background:
+    radial-gradient(1500px 900px at 62% 40%, rgba(124,58,237,0.09), transparent 64%),
+    radial-gradient(1100px 800px at 30% 88%, rgba(6,182,212,0.06), transparent 62%),
+    linear-gradient(172deg, ${C.dark} 0%, ${C.deep} 62%, #131315 100%);
+}
+#vignette {
+  position:absolute; inset:0; pointer-events:none;
+  background:radial-gradient(1250px 900px at 50% 46%, transparent 42%, rgba(0,0,0,0.42) 100%);
+}
+#grain {
+  position:absolute; inset:0; pointer-events:none; opacity:0.05;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+/* the room. everything spatial lives in here for the whole film */
+#stage { position:absolute; inset:0; perspective:1700px; }
+
+/* ── the page ─────────────────────────────────────────────────────────────── */
+.pg {
+  position:absolute; left:${(W - PAGE_W) / 2}px; top:${(H - PAGE_H) / 2}px;
+  width:${PAGE_W}px; height:${PAGE_H}px;
+  background:${C.paper}; color:${C.ink}; border-radius:20px;
+  box-shadow:0 60px 120px rgba(0,0,0,0.55), 0 8px 26px rgba(0,0,0,0.35);
+  overflow:hidden; display:flex; flex-direction:column;
+}
+.pg-nav { height:64px; padding:0 30px; display:flex; align-items:center; justify-content:space-between; border-bottom:1px solid ${C.hair}; flex:none; }
+.pg-brand { display:flex; align-items:center; gap:9px; font-size:21px; font-weight:800; letter-spacing:-0.02em; }
+.pg-mark { width:19px; height:19px; border-radius:6px; background:${C.ink}; }
+.pg-nav-r { display:flex; gap:14px; }
+.pg-nav-r span { width:38px; height:8px; border-radius:4px; background:${C.hair}; }
+.pg-body { padding:34px 34px 0; display:flex; flex-direction:column; flex:1; }
+.pg-eyebrow { font-size:13px; font-weight:800; letter-spacing:0.16em; color:${C.inkSoft}; }
+.pg-head { margin-top:16px; font-family:'Sora',sans-serif; font-size:44px; font-weight:700; line-height:1.08; letter-spacing:-0.032em; }
+.pg-sub { margin-top:16px; font-size:19px; font-weight:500; line-height:1.5; color:${C.inkSoft}; }
+.pg-ctawrap { margin-top:26px; position:relative; align-self:flex-start; }
+.pg-cta {
+  height:60px; padding:0 32px; border-radius:12px;
+  display:flex; align-items:center; justify-content:center;
+  font-size:20px; font-weight:700; color:${C.light}; background:${C.ink}; white-space:nowrap;
+}
+.pg-ring { position:absolute; inset:-9px; border-radius:20px; border:2px solid transparent; }
+.pg-viz { margin-top:30px; height:190px; border:1px solid ${C.hair}; border-radius:14px; background:#FAFBFC; padding:20px; }
+.pg-viz-row { height:100%; display:flex; align-items:flex-end; gap:14px; }
+.pg-viz-row i { flex:1; border-radius:5px 5px 2px 2px; background:${C.hair}; }
+.pg-trust { margin-top:auto; padding:20px 0 24px; display:flex; align-items:center; gap:10px; }
+.pg-stars { display:flex; gap:5px; }
+.pg-stars i { width:11px; height:11px; border-radius:3px; background:${C.sand}; }
+.pg-trust-t { font-size:14px; font-weight:600; color:${C.inkSoft}; }
+
+/* the ghost option in shot 1 — the possibility the page is hiding */
+#cta-ghost {
+  position:absolute; top:74px; left:0; height:60px; padding:0 32px; border-radius:12px;
+  border:2px dashed rgba(6,182,212,0.75); color:${C.cyan};
+  display:flex; align-items:center; justify-content:center;
+  font-size:20px; font-weight:700; white-space:nowrap;
+  background:rgba(6,182,212,0.07);
+}
+#splitline { position:absolute; left:${W / 2 - 1.5}px; top:0; height:${H}px; width:3px; border-radius:3px; background:linear-gradient(180deg, ${C.purple}, ${C.cyan}); }
+
+/* ── variant identity ─────────────────────────────────────────────────────── */
+.vlabel {
+  position:absolute; width:74px; height:74px; border-radius:50%;
+  display:flex; align-items:center; justify-content:center;
+  font-family:'Sora',sans-serif; font-size:32px; font-weight:800; color:${C.light};
+}
+#vl-a { background:${C.purple}; box-shadow:0 12px 34px rgba(124,58,237,0.42); }
+#vl-b { background:${C.cyan}; color:${C.ink}; box-shadow:0 12px 34px rgba(6,182,212,0.38); }
+
+/* ── traffic ──────────────────────────────────────────────────────────────── */
+#flow { position:absolute; inset:0; }
+#flow path { fill:none; stroke-linecap:round; }
+.pls { position:absolute; width:13px; height:13px; border-radius:50%; background:${C.sand}; box-shadow:0 0 18px rgba(216,192,167,0.7); }
+.cvd { position:absolute; width:11px; height:11px; border-radius:50%; }
+.split-tag {
+  position:absolute; height:40px; padding:0 18px; border-radius:100px;
+  border:1px solid rgba(255,255,255,0.16); background:rgba(255,255,255,0.05);
+  display:flex; align-items:center; font-size:17px; font-weight:700; color:rgba(255,255,255,0.9);
+  letter-spacing:0.04em; white-space:nowrap;
+}
+
+/* ── counters ─────────────────────────────────────────────────────────────── */
+.cnt {
+  position:absolute; top:${CNT.y}px; width:${CNT.w}px; height:${CNT.h}px;
+  border:1px solid rgba(255,255,255,0.11); border-radius:18px;
+  background:rgba(255,255,255,0.045); padding:20px 22px;
+}
+#cnt-a { left:${CNT.ax}px; }
+#cnt-b { left:${CNT.bx}px; }
+.cnt-tag { font-size:12px; font-weight:800; letter-spacing:0.14em; color:rgba(255,255,255,0.55); margin-bottom:16px; }
+.cnt-row { display:flex; align-items:baseline; justify-content:space-between; padding:11px 0; border-top:1px solid rgba(255,255,255,0.09); }
+.cnt-k { font-size:14px; font-weight:600; color:rgba(255,255,255,0.5); }
+.cnt-v { font-family:'Sora',sans-serif; font-size:26px; font-weight:700; color:${C.light}; font-variant-numeric:tabular-nums; }
+
+/* ── the reveal ───────────────────────────────────────────────────────────── */
+#scrim { position:absolute; inset:0; background:rgba(18,18,20,0.72); }
+.rate { position:absolute; top:340px; width:420px; text-align:center; }
+#rate-a { left:${POS.a.cx - 210}px; }
+#rate-b { left:${POS.b.cx - 210}px; }
+.rate-tag { font-size:14px; font-weight:800; letter-spacing:0.16em; color:rgba(255,255,255,0.55); }
+.rate-v { margin-top:14px; font-family:'Sora',sans-serif; font-size:132px; font-weight:800; line-height:1; letter-spacing:-0.045em; color:${C.light}; font-variant-numeric:tabular-nums; }
+.rate-track { margin:34px auto 0; width:${BAR_MAX}px; height:16px; border-radius:8px; background:rgba(255,255,255,0.10); overflow:hidden; }
+.rate-track i { display:block; height:100%; width:${BAR_MAX}px; border-radius:8px; transform-origin:0 50%; }
+#bar-a { background:${C.purple}; }
+#bar-b { background:${C.cyan}; }
+
+/* ── iteration trail ──────────────────────────────────────────────────────── */
+.iter {
+  position:absolute; height:38px; padding:0 16px; border-radius:100px;
+  border:1px solid rgba(124,58,237,0.42); background:rgba(124,58,237,0.12);
+  display:flex; align-items:center; font-family:'Sora',sans-serif;
+  font-size:16px; font-weight:700; color:rgba(255,255,255,0.82);
+}
+
+/* ── typography layers ────────────────────────────────────────────────────── */
+.cap-top {
+  position:absolute; left:0; width:${W}px; top:88px; text-align:center;
+  font-family:'Sora',sans-serif; font-weight:700; font-size:54px;
+  letter-spacing:-0.032em; color:${C.light};
+}
+.cap-sub {
+  position:absolute; left:0; width:${W}px; top:162px; text-align:center;
+  font-size:23px; font-weight:600; letter-spacing:0.01em; color:rgba(255,255,255,0.56);
+}
+.cap-left {
+  position:absolute; left:150px; width:640px;
+  font-family:'Sora',sans-serif; color:${C.light};
+}
+#cap-hook { top:452px; font-size:62px; font-weight:700; line-height:1.1; letter-spacing:-0.035em; }
+#cap-opt { top:392px; font-size:66px; font-weight:700; line-height:1.12; letter-spacing:-0.035em; }
+#cap-opt2 { top:606px; font-size:24px; font-weight:400; line-height:1.5; letter-spacing:-0.005em; color:rgba(255,255,255,0.6); font-family:'Manrope',sans-serif; }
+#cap-end { top:398px; font-size:88px; font-weight:800; line-height:1.06; letter-spacing:-0.042em; }
+#cap-end2 { top:628px; font-size:26px; font-weight:400; line-height:1.5; letter-spacing:-0.005em; color:rgba(255,255,255,0.62); font-family:'Manrope',sans-serif; }
+#sig {
+  position:absolute; left:150px; top:748px;
+  display:flex; align-items:center; gap:12px;
+  font-size:15px; font-weight:700; letter-spacing:0.18em; color:rgba(255,255,255,0.45);
+}
+#sig b { display:block; width:26px; height:3px; border-radius:2px; background:linear-gradient(90deg, ${C.purple}, ${C.cyan}); }
+#converge { position:absolute; height:2px; border-radius:2px; background:linear-gradient(90deg, rgba(124,58,237,0), ${C.purple} 40%, ${C.cyan}); transform-origin:0 50%; }
+`;
+
+// ── body ─────────────────────────────────────────────────────────────────────
+const clip = (id, a, b, t, extra = "") =>
+  `      <div id="${id}" class="clip" data-start="${a}" data-duration="${(b - a).toFixed(2)}" data-track-index="${t}"${extra}>`;
+
+let track = 0;
+const T = () => track++;
+
+const body = `      <div id="env" class="clip" data-start="0" data-duration="${DUR}" data-track-index="${T()}"></div>
+
+${clip("stage", 0, DUR, T(), ' data-layout-allow-overlap="true"')}
+        <svg id="flow" viewBox="0 0 ${W} ${H}">
+          <path id="fl-trunk" d="M ${SRC.x} ${SRC.y} L ${FORK.x} ${FORK.y}" stroke="rgba(216,192,167,0.55)" stroke-width="3"/>
+          <path id="fl-a" d="M ${FORK.x} ${FORK.y} C ${FORK.x} ${FORK.y - 50}, ${ENTRY.a.x} ${ENTRY.a.y + 54}, ${ENTRY.a.x} ${ENTRY.a.y}" stroke="rgba(124,58,237,0.72)" stroke-width="3"/>
+          <path id="fl-b" d="M ${FORK.x} ${FORK.y} C ${FORK.x} ${FORK.y - 50}, ${ENTRY.b.x} ${ENTRY.b.y + 54}, ${ENTRY.b.x} ${ENTRY.b.y}" stroke="rgba(6,182,212,0.72)" stroke-width="3"/>
+        </svg>
+${pageHtml("a")}
+${pageHtml("b")}
+        <div id="splitline"></div>
+        <div class="vlabel" id="vl-a">A</div>
+        <div class="vlabel" id="vl-b">B</div>
+${pulses()}${convDots()}        <div class="split-tag" id="tag-a">50% → A</div>
+        <div class="split-tag" id="tag-b">50% → B</div>
+${counterHtml("a")}
+${counterHtml("b")}
+        <div id="scrim"></div>
+${rateHtml("a")}
+${rateHtml("b")}
+        <div class="iter" id="it-1">B</div>
+        <div class="iter" id="it-2">B2</div>
+        <div class="iter" id="it-3">B3</div>
+        <div id="converge"></div>
+      </div>
+
+${clip("cap-hook", 0.5, 3.3, T())}Qual versão<br/>converte mais?</div>
+${clip("cap-ab", 3.3, 7.2, T())}<div class="cap-top">Isso é um teste A/B.</div></div>
+${clip("cap-ab2", 4.4, 7.2, T())}<div class="cap-sub">Duas versões. Uma variável.</div></div>
+${clip("cap-flow", 7.3, 12.2, T())}<div class="cap-top">Divida o tráfego.</div></div>
+${clip("cap-meas", 12.3, 17.2, T())}<div class="cap-top">Meça o comportamento real.</div></div>
+${clip("cap-data", 17.5, 22.2, T())}<div class="cap-top">Os dados mostram o que funciona.</div></div>
+${clip("cap-opt", 22.4, 27.2, T())}Teste.<br/>Aprenda.<br/>Otimize.</div>
+${clip("cap-opt2", 24.3, 27.2, T())}Mais conversões começam<br/>com melhores decisões.</div>
+${clip("cap-end", 27.4, DUR, T())}Não adivinhe.<br/>Teste.</div>
+${clip("cap-end2", 28.3, DUR, T())}Transforme hipóteses<br/>em conversões.</div>
+${clip("sig", 29.1, DUR, T())}<b></b>A/B TESTING</div>
+
+      <div id="vignette" class="clip" data-start="0" data-duration="${DUR}" data-track-index="${T()}"></div>
+      <div id="grain" class="clip" data-start="0" data-duration="${DUR}" data-track-index="${T()}"></div>`;
+
+// The caption clips need their class back — `clip()` emits only the id.
+const bodyFixed = body
+  .replace('<div id="cap-hook" class="clip"', '<div id="cap-hook" class="cap-left clip"')
+  .replace('<div id="cap-opt" class="clip"', '<div id="cap-opt" class="cap-left clip"')
+  .replace('<div id="cap-opt2" class="clip"', '<div id="cap-opt2" class="cap-left clip"')
+  .replace('<div id="cap-end" class="clip"', '<div id="cap-end" class="cap-left clip"')
+  .replace('<div id="cap-end2" class="clip"', '<div id="cap-end2" class="cap-left clip"');
+
+// ── timeline ─────────────────────────────────────────────────────────────────
+const A = tf(POS.a), B = tf(POS.b), SOLO = tf(POS.solo), WIN = tf(POS.win), FIN = tf(POS.final);
+
+const script = `
+      window.__timelines = window.__timelines || {};
+      var tl = gsap.timeline({ paused: true });
+      function pct(n) { return n.toFixed(1).replace(".", ",") + "%"; }
+      function int(n) {
+        var s = String(Math.round(n));
+        return s.length > 3 ? s.slice(0, s.length - 3) + "." + s.slice(s.length - 3) : s;
+      }
+
+      gsap.set(["#pg-a", "#pg-b"], { transformOrigin: "50% 50%" });
+      gsap.set("#pg-a", { x: ${SOLO.x}, y: ${SOLO.y}, scale: ${SOLO.scale}, rotationY: ${SOLO.rotationY}, autoAlpha: 0 });
+      gsap.set("#pg-b", { x: ${SOLO.x}, y: ${SOLO.y}, scale: ${SOLO.scale}, rotationY: ${SOLO.rotationY}, autoAlpha: 0 });
+      gsap.set(["#ring-a", "#ring-b"], { borderColor: "rgba(0,0,0,0)" });
+      gsap.set("#cta-ghost", { autoAlpha: 0 });
+      gsap.set("#splitline", { autoAlpha: 0, scaleY: 0, transformOrigin: "50% 50%" });
+      gsap.set(["#vl-a", "#vl-b"], { autoAlpha: 0, scale: 0.6, transformOrigin: "50% 50%" });
+      gsap.set(["#fl-trunk", "#fl-a", "#fl-b"], { autoAlpha: 0 });
+      gsap.set([".pls", ".cvd"], { autoAlpha: 0 });
+      gsap.set(["#tag-a", "#tag-b"], { autoAlpha: 0 });
+      gsap.set(["#cnt-a", "#cnt-b"], { autoAlpha: 0, y: 16 });
+      gsap.set(["#rate-a", "#rate-b"], { autoAlpha: 0, scale: 0.94, transformOrigin: "50% 50%" });
+      gsap.set("#scrim", { autoAlpha: 0 });
+      gsap.set(["#it-1", "#it-2", "#it-3"], { autoAlpha: 0 });
+      gsap.set("#converge", { autoAlpha: 0, scaleX: 0 });
+
+      /* ═══ SHOT 01 · 0-3 · the doubt ═══════════════════════════════════════
+         One page, alone. The camera pushes in and decelerates onto the CTA,
+         then a second option flickers behind it — the possibility the page is
+         hiding. Nothing is explained yet. */
+      tl.fromTo("#pg-a", { autoAlpha: 0, scale: ${SOLO.scale * 0.94}, z: -140 },
+        { autoAlpha: 1, scale: ${SOLO.scale}, z: 0, duration: 0.95, ease: "power3.out" }, 0.05);
+      tl.fromTo("#stage", { scale: 1.0 }, { scale: 1.07, duration: 2.4, ease: "power3.out" }, 0.15);
+      gsap.set("#stage", { transformOrigin: "58% 56%" });
+      tl.to("#ring-a", { borderColor: "rgba(124,58,237,0.85)", duration: 0.5, ease: "power2.out" }, 1.15);
+      // the ghost option sits exactly where a second CTA would live
+      tl.fromTo("#cta-ghost", { autoAlpha: 0, y: 14 },
+        { autoAlpha: 1, y: 0, duration: 0.42, ease: "power2.out" }, 1.65);
+      tl.to("#cta-ghost", { autoAlpha: 0, duration: 0.34, ease: "power2.in" }, 2.62);
+      tl.set("#cta-ghost", { autoAlpha: 0 }, 2.96);
+      tl.fromTo("#cap-hook", { autoAlpha: 0, y: 26, filter: "blur(7px)" },
+        { autoAlpha: 1, y: 0, filter: "blur(0px)", duration: 0.8, ease: "power3.out" }, 0.65);
+
+      /* ═══ SHOT 02 · 3-7 · the split ═══════════════════════════════════════
+         The CTA's own vertical line grows and cleaves the frame; the page
+         physically bifurcates rather than two pages appearing. Only the tested
+         element differs afterwards. */
+      tl.to("#splitline", { autoAlpha: 1, scaleY: 1, duration: 0.55, ease: "power3.inOut" }, 2.6);
+      tl.to("#splitline", { autoAlpha: 0, duration: 0.4, ease: "power2.in" }, 3.5);
+      tl.set("#splitline", { autoAlpha: 0 }, 3.9);
+
+      // dolly out to make room for two planes
+      tl.to("#stage", { scale: 1.0, duration: 1.3, ease: "power3.inOut" }, 3.05);
+      tl.set("#pg-b", { autoAlpha: 1 }, 3.06);
+      tl.to("#pg-a", { x: ${A.x}, y: ${A.y}, scale: ${A.scale}, rotationY: ${A.rotationY}, duration: 1.35, ease: "power3.inOut" }, 3.1);
+      tl.to("#pg-b", { x: ${B.x}, y: ${B.y}, scale: ${B.scale}, rotationY: ${B.rotationY}, duration: 1.35, ease: "power3.inOut" }, 3.1);
+      // the one variable changes, after the pages have settled apart
+      tl.to("#cta-b", { autoAlpha: 0, duration: 0.2, ease: "power2.in" }, 4.35);
+      tl.add(function () { document.getElementById("cta-b").textContent = ${JSON.stringify(CTA.b)}; }, 4.55);
+      tl.fromTo("#cta-b", { autoAlpha: 0, y: 10 }, { autoAlpha: 1, y: 0, duration: 0.34, ease: "power3.out" }, 4.56);
+      tl.to("#ring-a", { borderColor: "rgba(124,58,237,0.9)", duration: 0.3 }, 4.4);
+      tl.to("#ring-b", { borderColor: "rgba(6,182,212,0.9)", duration: 0.3 }, 4.6);
+
+      gsap.set("#vl-a", { x: ${POS.a.cx - 37 - 250}, y: ${POS.a.cy - 37 - 300} });
+      gsap.set("#vl-b", { x: ${POS.b.cx - 37 + 250}, y: ${POS.b.cy - 37 - 300} });
+      tl.to("#vl-a", { autoAlpha: 1, scale: 1, duration: 0.46, ease: "back.out(2)" }, 4.15);
+      tl.to("#vl-b", { autoAlpha: 1, scale: 1, duration: 0.46, ease: "back.out(2)" }, 4.32);
+
+      tl.fromTo("#cap-ab", { autoAlpha: 0, y: 20 }, { autoAlpha: 1, y: 0, duration: 0.6, ease: "power3.out" }, 3.45);
+      tl.fromTo("#cap-ab2", { autoAlpha: 0, y: 14 }, { autoAlpha: 1, y: 0, duration: 0.5, ease: "power3.out" }, 4.5);
+      tl.to(["#cap-ab", "#cap-ab2"], { autoAlpha: 0, duration: 0.3, ease: "power2.in" }, 6.9);
+      tl.set(["#cap-ab", "#cap-ab2"], { autoAlpha: 0 }, 7.2);
+      tl.to("#cap-hook", { autoAlpha: 0, y: -18, duration: 0.4, ease: "power2.in" }, 2.9);
+      tl.set("#cap-hook", { autoAlpha: 0 }, 3.3);
+
+      /* ═══ SHOT 03 · 7-12 · the traffic splits ════════════════════════════
+         A slight elevation reveals the fork. One stream arrives from the front
+         of the camera and divides evenly — deterministic pulses, not a particle
+         field. */
+      tl.to("#stage", { rotationX: 6, y: -76, duration: 1.1, ease: "power2.inOut" }, 6.75);
+      tl.to(["#fl-trunk", "#fl-a", "#fl-b"], { autoAlpha: 1, duration: 0.5, ease: "power2.out" }, 7.15);
+      gsap.set("#tag-a", { x: ${(FORK.x + ENTRY.a.x) / 2 - 100}, y: ${(FORK.y + ENTRY.a.y) / 2 - 4} });
+      gsap.set("#tag-b", { x: ${(FORK.x + ENTRY.b.x) / 2 + 22}, y: ${(FORK.y + ENTRY.b.y) / 2 - 4} });
+      tl.to(["#tag-a", "#tag-b"], { autoAlpha: 1, duration: 0.42, ease: "power2.out", stagger: 0.08 }, 8.0);
+      tl.to(["#tag-a", "#tag-b"], { autoAlpha: 0, duration: 0.4, ease: "power2.in" }, 11.7);
+      tl.set(["#tag-a", "#tag-b"], { autoAlpha: 0 }, 12.1);
+
+      // 20 pulses, strictly alternating so the 50/50 split is exact, with a
+      // lateral offset derived from the index — never random.
+      for (var i = 0; i < 20; i++) {
+        var toA = i % 2 === 0;
+        var ex = toA ? ${ENTRY.a.x} : ${ENTRY.b.x};
+        var jx = ((i * 29) % 27) - 13;
+        var at = 7.5 + i * 0.42;
+        var el = "#pls-" + i;
+        gsap.set(el, { x: ${SRC.x - 6.5}, y: ${SRC.y}, backgroundColor: toA ? "${C.purple}" : "${C.cyan}" });
+        tl.to(el, { autoAlpha: 1, duration: 0.14, ease: "power1.out" }, at);
+        tl.to(el, { y: ${FORK.y}, duration: 0.4, ease: "power1.in" }, at);
+        tl.to(el, { x: ex - 6.5 + jx, y: ${ENTRY.a.y - 12}, duration: 0.62, ease: "power2.out" }, at + 0.4);
+        tl.to(el, { autoAlpha: 0, duration: 0.2, ease: "power2.in" }, at + 0.86);
+        tl.set(el, { autoAlpha: 0 }, at + 1.08);
+      }
+
+      tl.fromTo("#cap-flow", { autoAlpha: 0, y: 20 }, { autoAlpha: 1, y: 0, duration: 0.55, ease: "power3.out" }, 7.4);
+      tl.to("#cap-flow", { autoAlpha: 0, duration: 0.3, ease: "power2.in" }, 11.9);
+      tl.set("#cap-flow", { autoAlpha: 0 }, 12.2);
+
+      /* ═══ SHOT 04 · 12-17 · behaviour becomes evidence ═══════════════════
+         Counters appear in the margins. A few visits fire the CTA — B fires
+         more often than A, so the answer is legible before any number says it. */
+      tl.to(["#cnt-a", "#cnt-b"], { autoAlpha: 1, y: 0, duration: 0.55, ease: "power3.out", stagger: 0.1 }, 12.2);
+
+      var pv = { a: 0, b: 0 }, pc = { a: 0, b: 0 };
+      ["a", "b"].forEach(function (k) {
+        tl.to(pv, { [k]: ${VISITORS}, duration: 4.2, ease: "power1.out",
+          onUpdate: function () { document.getElementById("n-vis-" + k).textContent = int(pv[k]); } }, 12.4);
+        tl.to(pc, { [k]: ${JSON.stringify(CONV)}[k], duration: 4.2, ease: "power1.out",
+          onUpdate: function () { document.getElementById("n-cnv-" + k).textContent = int(pc[k]); } }, 12.4);
+      });
+
+      // conversion events: 3 on A, 5 on B — the difference is shown, not stated
+      var CONVEV = [
+        ["a", 12.9], ["b", 13.2], ["b", 13.9], ["a", 14.5],
+        ["b", 15.0], ["b", 15.6], ["a", 16.0], ["b", 16.4]
+      ];
+      CONVEV.forEach(function (ev, i) {
+        var k = ev[0], at = ev[1];
+        var col = k === "a" ? "${C.purple}" : "${C.cyan}";
+        var px = k === "a" ? ${POS.a.cx} : ${POS.b.cx};
+        var tx = k === "a" ? ${CNT.ax + CNT.w / 2} : ${CNT.bx + CNT.w / 2};
+        tl.to("#cta-" + k, { scale: 1.055, duration: 0.16, ease: "power2.out" }, at);
+        tl.to("#cta-" + k, { scale: 1, duration: 0.26, ease: "power2.inOut" }, at + 0.16);
+        var d = "#cvd-" + i;
+        gsap.set(d, { backgroundColor: col, x: px - 5.5, y: 640 });
+        tl.fromTo(d, { autoAlpha: 0, x: px - 5.5, y: 640 },
+          { autoAlpha: 1, duration: 0.14, ease: "power1.out" }, at + 0.1);
+        tl.to(d, { x: tx - 5.5, y: ${CNT.y + 40}, duration: 0.72, ease: "power2.inOut" }, at + 0.1);
+        tl.to(d, { autoAlpha: 0, duration: 0.2, ease: "power2.in" }, at + 0.66);
+        tl.set(d, { autoAlpha: 0 }, at + 0.9);
+      });
+
+      tl.to(["#fl-trunk", "#fl-a", "#fl-b"], { autoAlpha: 0, duration: 0.8, ease: "power2.inOut" }, 16.7);
+      tl.set(["#fl-trunk", "#fl-a", "#fl-b"], { autoAlpha: 0 }, 17.5);
+
+      tl.fromTo("#cap-meas", { autoAlpha: 0, y: 20 }, { autoAlpha: 1, y: 0, duration: 0.55, ease: "power3.out" }, 12.4);
+      tl.to("#cap-meas", { autoAlpha: 0, duration: 0.3, ease: "power2.in" }, 16.9);
+      tl.set("#cap-meas", { autoAlpha: 0 }, 17.2);
+
+      /* ═══ SHOT 05 · 17-22 · the rates diverge ════════════════════════════
+         The pages fall back into depth and blur; the counters hand the frame to
+         the rates. B's bar crosses A's on screen, then everything rests for
+         about 0.7s before anything else moves. */
+      tl.to(["#pg-a", "#pg-b"], { z: -460, filter: "blur(11px)", autoAlpha: 0.22, duration: 1.0, ease: "power2.inOut" }, 17.0);
+      tl.to("#scrim", { autoAlpha: 1, duration: 0.85, ease: "power2.inOut" }, 17.05);
+      tl.to(["#cnt-a", "#cnt-b"], { autoAlpha: 0, scale: 1.06, duration: 0.5, ease: "power2.in" }, 17.05);
+      tl.set(["#cnt-a", "#cnt-b"], { autoAlpha: 0 }, 17.55);
+      tl.to(["#rate-a", "#rate-b"], { autoAlpha: 1, scale: 1, duration: 0.55, ease: "power3.out", stagger: 0.08 }, 17.45);
+
+      var pr = { a: 0, b: 0 };
+      tl.to(pr, { a: ${RATE.a}, duration: 1.9, ease: "power2.out",
+        onUpdate: function () { document.getElementById("n-rate-a").textContent = pct(pr.a); } }, 18.0);
+      tl.to(pr, { b: ${RATE.b}, duration: 2.1, ease: "power1.inOut",
+        onUpdate: function () { document.getElementById("n-rate-b").textContent = pct(pr.b); } }, 18.0);
+      tl.fromTo("#bar-a", { scaleX: 0 }, { scaleX: ${RATE.a / 5}, duration: 1.9, ease: "power2.out" }, 18.0);
+      tl.fromTo("#bar-b", { scaleX: 0 }, { scaleX: ${RATE.b / 5}, duration: 2.1, ease: "power1.inOut" }, 18.0);
+      // B's number takes the accent once it has actually passed A
+      tl.to("#n-rate-b", { color: "${C.cyan}", duration: 0.45, ease: "power2.out" }, 19.7);
+
+      tl.fromTo("#cap-data", { autoAlpha: 0, y: 20 }, { autoAlpha: 1, y: 0, duration: 0.55, ease: "power3.out" }, 17.6);
+      tl.to("#cap-data", { autoAlpha: 0, duration: 0.32, ease: "power2.in" }, 21.85);
+      tl.set("#cap-data", { autoAlpha: 0 }, 22.2);
+      // ~0.7s of rest after the reveal lands, before the next move
+
+      /* ═══ SHOT 06 · 22-27 · the winner consolidates ══════════════════════
+         A recedes and dissolves; B comes forward, sharpens and takes the purple
+         of the primary action. A faint trail hints that optimisation continues. */
+      tl.to("#scrim", { autoAlpha: 0, duration: 0.7, ease: "power2.inOut" }, 21.9);
+      tl.set("#scrim", { autoAlpha: 0 }, 22.6);
+      tl.to(["#rate-a", "#rate-b"], { autoAlpha: 0, y: -20, duration: 0.5, ease: "power2.in" }, 21.9);
+      tl.set(["#rate-a", "#rate-b"], { autoAlpha: 0 }, 22.4);
+      tl.to("#vl-a", { autoAlpha: 0, scale: 0.8, duration: 0.5, ease: "power2.in" }, 21.9);
+      tl.set("#vl-a", { autoAlpha: 0 }, 22.4);
+      tl.to("#pg-a", { autoAlpha: 0, z: -520, x: ${A.x - 140}, duration: 1.1, ease: "power2.inOut" }, 22.0);
+      tl.set("#pg-a", { autoAlpha: 0 }, 23.1);
+      tl.to("#stage", { rotationX: 0, y: 0, duration: 1.2, ease: "power3.inOut" }, 22.0);
+      tl.to("#pg-b", {
+        x: ${WIN.x}, y: ${WIN.y}, scale: ${WIN.scale}, rotationY: ${WIN.rotationY},
+        z: 0, filter: "blur(0px)", autoAlpha: 1, duration: 1.4, ease: "power3.inOut"
+      }, 22.05);
+      tl.to("#vl-b", { x: ${POS.win.cx - 37 + 300}, y: ${POS.win.cy - 37 - 340}, duration: 1.4, ease: "power3.inOut" }, 22.05);
+      // the winning version inherits the primary action colour
+      tl.to("#cta-b", { backgroundColor: "${C.purple}", duration: 0.7, ease: "power2.inOut" }, 22.9);
+      tl.to("#ring-b", { borderColor: "rgba(124,58,237,0.9)", duration: 0.7, ease: "power2.inOut" }, 22.9);
+      tl.to("#vl-b", { backgroundColor: "${C.purple}", duration: 0.7, ease: "power2.inOut" }, 22.9);
+
+      [1, 2, 3].forEach(function (n) {
+        gsap.set("#it-" + n, { x: ${POS.win.cx - 300} + (n - 1) * 74, y: ${POS.win.cy + 366} });
+        tl.fromTo("#it-" + n, { autoAlpha: 0, y: ${POS.win.cy + 378} },
+          { autoAlpha: n === 3 ? 0.4 : n === 2 ? 0.62 : 0.92, y: ${POS.win.cy + 366}, duration: 0.42, ease: "power3.out" }, 23.4 + (n - 1) * 0.22);
+      });
+
+      tl.fromTo("#cap-opt", { autoAlpha: 0, x: -26, filter: "blur(8px)" },
+        { autoAlpha: 1, x: 0, filter: "blur(0px)", duration: 0.85, ease: "power3.out" }, 22.5);
+      tl.fromTo("#cap-opt2", { autoAlpha: 0, y: 18 }, { autoAlpha: 1, y: 0, duration: 0.6, ease: "power3.out" }, 24.4);
+      tl.to(["#cap-opt", "#cap-opt2"], { autoAlpha: 0, duration: 0.38, ease: "power2.in" }, 26.8);
+      tl.set(["#cap-opt", "#cap-opt2"], { autoAlpha: 0 }, 27.2);
+      tl.to(["#it-1", "#it-2", "#it-3"], { autoAlpha: 0, duration: 0.4, ease: "power2.in" }, 26.7);
+      tl.set(["#it-1", "#it-2", "#it-3"], { autoAlpha: 0 }, 27.1);
+
+      /* ═══ SHOT 07 · 27-32 · the lesson holds ═════════════════════════════
+         Almost no movement. The page settles back, a single line converges on
+         its CTA, and the frame stays legible for the last two seconds. */
+      tl.to("#pg-b", { x: ${FIN.x}, y: ${FIN.y}, scale: ${FIN.scale}, rotationY: ${FIN.rotationY}, duration: 1.5, ease: "power3.inOut" }, 26.6);
+      tl.to("#vl-b", { autoAlpha: 0, duration: 0.5, ease: "power2.in" }, 26.6);
+      tl.set("#vl-b", { autoAlpha: 0 }, 27.1);
+      tl.to("#stage", { scale: 1.02, duration: 4.6, ease: "power2.out" }, 27.4);
+
+      tl.fromTo("#cap-end", { autoAlpha: 0, y: 30, filter: "blur(9px)" },
+        { autoAlpha: 1, y: 0, filter: "blur(0px)", duration: 0.9, ease: "power3.out" }, 27.5);
+      tl.fromTo("#cap-end2", { autoAlpha: 0, y: 20 }, { autoAlpha: 1, y: 0, duration: 0.65, ease: "power3.out" }, 28.4);
+      tl.fromTo("#sig", { autoAlpha: 0, y: 12 }, { autoAlpha: 1, y: 0, duration: 0.55, ease: "power3.out" }, 29.2);
+
+      gsap.set("#converge", { x: 800, y: ${POS.final.cy + 22}, width: 300 });
+      tl.to("#converge", { autoAlpha: 1, scaleX: 1, duration: 0.85, ease: "power3.out" }, 28.9);
+
+      window.__timelines["main"] = tl;`;
+
+const html = `<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=${W}, height=${H}" />
+    <script src="assets/vendor/gsap.min.js"><\/script>
+    <style>
+${css}    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="${DUR}" data-width="${W}" data-height="${H}">
+${bodyFixed}
+    </div>
+    <script>
+${script}
+    <\/script>
+  </body>
+</html>
+`;
+
+writeFileSync("index.html", html);
+console.log(`✓ index.html — ${W}x${H}, ${DUR}s, ${track} tracks`);
