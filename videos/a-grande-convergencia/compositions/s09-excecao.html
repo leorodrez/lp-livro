@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+  </head>
+  <body>
+    <template>
+      <style>
+        #root { position: absolute; inset: 0; overflow: hidden; }
+        .scene {
+          position: absolute; inset: 0; overflow: hidden;
+          background: #1b1a1f;
+        }
+        
+  
+  .sys {
+    font-family: 'JetBrains Mono', monospace;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    font-size: 17px;
+    color: #06b6d4;
+  }
+  .sys-lo { color: #6f6f78; }
+  .metric {
+    font-family: 'JetBrains Mono', monospace;
+    font-variant-numeric: tabular-nums;
+    color: #06b6d4;
+    letter-spacing: 0.02em;
+  }
+  .badge {
+    display: inline-flex; align-items: center; gap: 9px;
+    font-family: 'JetBrains Mono', monospace; font-size: 15px; letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #06b6d4;
+    border: 1px solid rgba(6,182,212,0.45);
+    background: rgba(6,182,212,0.08);
+    padding: 7px 13px; border-radius: 4px;
+    white-space: nowrap;
+  }
+  .badge::before {
+    content: ""; width: 6px; height: 6px; border-radius: 50%;
+    background: #06b6d4; flex: 0 0 auto;
+  }
+  /* A voz do sistema nunca pousa direto sobre a página: ela vive numa lasca
+     escura por cima de tudo. É o que a separa do conteúdo — e o que a mantém
+     legível sobre qualquer superfície. */
+  .chip {
+    display: inline-block;
+    background: rgba(20,19,24,0.92);
+    padding: 9px 15px;
+    border-radius: 3px;
+    white-space: nowrap;
+  }
+  
+  .scene { background: #121216; }
+  .world {
+    position: absolute; inset: 0;
+    transform-origin: 50% 50%;
+    will-change: transform;
+  }
+  .wall {
+    position: absolute; left: 50%; top: 50%;
+    width: 7200px; height: 4400px;
+    margin-left: -3600px; margin-top: -2200px;
+    background-image: url("data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22144%22%20height%3D%22116%22%20viewBox%3D%220%200%20144%20116%22%3E%0A%3Crect%20x%3D%220%22%20y%3D%220%22%20width%3D%22144%22%20height%3D%22116%22%20fill%3D%22none%22%2F%3E%0A%3Crect%20x%3D%226%22%20y%3D%226%22%20width%3D%22132%22%20height%3D%22104%22%20fill%3D%22%23ffffff%22%2F%3E%0A%3Crect%20x%3D%2215%22%20y%3D%2215%22%20width%3D%2226%22%20height%3D%225%22%20rx%3D%222%22%20fill%3D%22%232b2b2b%22%2F%3E%0A%3Crect%20x%3D%22102%22%20y%3D%2214%22%20width%3D%2227%22%20height%3D%228%22%20rx%3D%223%22%20fill%3D%22%237c3aed%22%2F%3E%0A%3Crect%20x%3D%2215%22%20y%3D%2229%22%20width%3D%22114%22%20height%3D%221%22%20fill%3D%22%23e4e4e7%22%2F%3E%0A%3Crect%20x%3D%2215%22%20y%3D%2240%22%20width%3D%2261%22%20height%3D%229%22%20rx%3D%223%22%20fill%3D%22%232b2b2b%22%2F%3E%0A%3Crect%20x%3D%2215%22%20y%3D%2254%22%20width%3D%2240%22%20height%3D%229%22%20rx%3D%223%22%20fill%3D%22%232b2b2b%22%2F%3E%0A%3Crect%20x%3D%2215%22%20y%3D%2269%22%20width%3D%2250%22%20height%3D%224%22%20rx%3D%222%22%20fill%3D%22%23e4e4e7%22%2F%3E%0A%3Crect%20x%3D%2215%22%20y%3D%2277%22%20width%3D%2237%22%20height%3D%224%22%20rx%3D%222%22%20fill%3D%22%23e4e4e7%22%2F%3E%0A%3Crect%20x%3D%2215%22%20y%3D%2288%22%20width%3D%2242%22%20height%3D%2213%22%20rx%3D%224%22%20fill%3D%22%237c3aed%22%2F%3E%0A%3Crect%20x%3D%2292%22%20y%3D%2240%22%20width%3D%2237%22%20height%3D%2246%22%20rx%3D%224%22%20fill%3D%22%23ecedf0%22%2F%3E%0A%3C%2Fsvg%3E");
+    background-repeat: repeat;
+    background-size: 144px 116px;
+    background-color: #121216;
+  }
+  /* A exceção ocupa exatamente uma célula da malha. Nada mais. */
+  .human {
+    position: absolute;
+    left: 1830px;
+    top: 1014px;
+    width: 132px; height: 104px;
+    background: #d8c0a7;
+    overflow: hidden;
+  }
+  .human i { position: absolute; display: block; }
+  .h-rule { left: 11px; top: 30px; width: 96px; height: 1px; background: rgba(43,43,43,0.4); }
+  .h-h1 { left: 11px; top: 40px; width: 74px; height: 7px; background: rgba(43,43,43,0.86); border-radius: 1px; }
+  .h-h2 { left: 11px; top: 52px; width: 45px; height: 7px; background: rgba(43,43,43,0.86); border-radius: 1px; }
+  .h-b { left: 63px; top: 76px; width: 44px; height: 12px; background: rgba(43,43,43,0.9); border-radius: 1px; }
+  .h-m { left: 11px; top: 12px; width: 22px; height: 4px; background: rgba(43,43,43,0.55); }
+  /* Temperatura: o universo esfriado ganha um traço de calor. */
+  .warm {
+    position: absolute; inset: 0; pointer-events: none;
+    background: radial-gradient(ellipse at 65% 65%,
+      rgba(216,192,167,0.30) 0%, rgba(216,192,167,0.06) 45%, rgba(216,192,167,0) 72%);
+    opacity: 0; mix-blend-mode: soft-light;
+  }
+  .cool {
+    position: absolute; inset: 0; pointer-events: none;
+    background: radial-gradient(ellipse at 50% 50%,
+      rgba(27,26,31,0) 40%, rgba(18,18,22,0.78) 100%);
+  }
+  /* Continuidade com a cena 08: a mesma queda de luz, para que o corte na
+     parede seja invisível. Ela abre conforme a câmera se aproxima. */
+  .scrim {
+    position: absolute; inset: 0; pointer-events: none;
+    background: radial-gradient(ellipse 46% 40% at 50% 48%,
+      rgba(14,14,18,0.86) 0%, rgba(14,14,18,0.70) 40%,
+      rgba(14,14,18,0.26) 72%, rgba(14,14,18,0) 100%);
+  }
+  .grain {
+    position: absolute; inset: 0; pointer-events: none;
+    background-image: url("data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22200%22%20height%3D%22200%22%3E%3Cfilter%20id%3D%22n%22%3E%3CfeTurbulence%20type%3D%22fractalNoise%22%20baseFrequency%3D%220.9%22%20numOctaves%3D%223%22%20seed%3D%2211%22%20stitchTiles%3D%22stitch%22%2F%3E%3CfeColorMatrix%20type%3D%22saturate%22%20values%3D%220%22%2F%3E%3C%2Ffilter%3E%3Crect%20width%3D%22200%22%20height%3D%22200%22%20filter%3D%22url(%23n)%22%2F%3E%3C%2Fsvg%3E");
+    background-size: 200px 200px;
+    opacity: 0; mix-blend-mode: overlay;
+  }
+  
+      </style>
+
+      <div
+        id="root"
+        data-composition-id="s09"
+        data-width="1920"
+        data-height="1080"
+        data-duration="5"
+      >
+        <div class="scene">
+
+          <div class="world" id="world">
+            <div class="wall"></div>
+            <div class="human"></div>
+          </div>
+          <div class="cool"></div>
+          <div class="scrim" id="scrim"></div>
+          <div class="warm" id="warm"></div>
+          <div class="grain" id="grain"></div>
+        </div>
+      </div>
+
+      <script>
+        (function () {
+          window.__timelines = window.__timelines || {};
+          const tl = gsap.timeline({ paused: true });
+
+          const world = document.getElementById("world");
+          const AIM = { x: 936, y: 526 };
+          const cam = { scale: 0.34, w: 0 };
+          function applyCamera() {
+            const s = cam.scale;
+            world.style.transform =
+              "translate(" + (-AIM.x * cam.w * s) + "px," + (-AIM.y * cam.w * s) + "px) scale(" + s + ")";
+          }
+          applyCamera();
+
+          // Só a câmera se move. A página não faz nada — é esse o ponto.
+          // Para em 0.88 do alvo: enquadramento editorial, nunca centralizado.
+          tl.fromTo(cam, { scale: 0.34, w: 0 },
+            { scale: 2.15, w: 0.88, duration: 4.4, ease: "power2.inOut", onUpdate: applyCamera }, 0.25);
+
+          tl.fromTo("#scrim", { opacity: 1 },
+            { opacity: 0.06, duration: 3.0, ease: "power2.inOut" }, 0.6);
+
+          // A temperatura sobe antes de qualquer explicação.
+          tl.fromTo("#warm", { opacity: 0 }, { opacity: 1, duration: 3.2, ease: "power1.inOut" }, 1.1);
+          tl.fromTo("#grain", { opacity: 0 }, { opacity: 0.16, duration: 2.4, ease: "power1.inOut" }, 2.2);
+  
+          window.__timelines["s09"] = tl;
+        })();
+      </script>
+    </template>
+  </body>
+</html>

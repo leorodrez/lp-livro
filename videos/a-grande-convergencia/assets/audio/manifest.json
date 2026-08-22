@@ -1,0 +1,260 @@
+{
+  "bed": {
+    "src": "assets/audio/bed.mp3",
+    "volume": 0.9
+  },
+  "events": [
+    {
+      "at": 1.24,
+      "src": "assets/audio/sfx/click.mp3",
+      "volume": 0.85,
+      "dur": 0.37
+    },
+    {
+      "at": 1.25,
+      "src": "assets/audio/sfx/impact-bass-2.mp3",
+      "volume": 0.3,
+      "dur": 1.1
+    },
+    {
+      "at": 1.33,
+      "src": "assets/audio/sfx/ping.mp3",
+      "volume": 0.22,
+      "dur": 0.9
+    },
+    {
+      "at": 3.86,
+      "src": "assets/audio/sfx/click-soft.mp3",
+      "volume": 0.5,
+      "dur": 0.37
+    },
+    {
+      "at": 4.52,
+      "src": "assets/audio/sfx/click-soft.mp3",
+      "volume": 0.5,
+      "dur": 0.37
+    },
+    {
+      "at": 5.06,
+      "src": "assets/audio/sfx/click-soft.mp3",
+      "volume": 0.5,
+      "dur": 0.37
+    },
+    {
+      "at": 5.62,
+      "src": "assets/audio/sfx/click-soft.mp3",
+      "volume": 0.5,
+      "dur": 0.37
+    },
+    {
+      "at": 8.18,
+      "src": "assets/audio/sfx/click.mp3",
+      "volume": 0.6,
+      "dur": 0.37
+    },
+    {
+      "at": 8.96,
+      "src": "assets/audio/sfx/click.mp3",
+      "volume": 0.6,
+      "dur": 0.37
+    },
+    {
+      "at": 9.74,
+      "src": "assets/audio/sfx/click.mp3",
+      "volume": 0.6,
+      "dur": 0.37
+    },
+    {
+      "at": 10.06,
+      "src": "assets/audio/sfx/ping.mp3",
+      "volume": 0.3,
+      "dur": 1
+    },
+    {
+      "at": 12.5,
+      "src": "assets/audio/sfx/click-soft.mp3",
+      "volume": 0.52,
+      "dur": 0.37
+    },
+    {
+      "at": 12.95,
+      "src": "assets/audio/sfx/click-soft.mp3",
+      "volume": 0.5,
+      "dur": 0.37
+    },
+    {
+      "at": 13.3,
+      "src": "assets/audio/sfx/click-soft.mp3",
+      "volume": 0.48000000000000004,
+      "dur": 0.37
+    },
+    {
+      "at": 13.62,
+      "src": "assets/audio/sfx/click-soft.mp3",
+      "volume": 0.46,
+      "dur": 0.37
+    },
+    {
+      "at": 13.9,
+      "src": "assets/audio/sfx/click-soft.mp3",
+      "volume": 0.44,
+      "dur": 0.37
+    },
+    {
+      "at": 14.14,
+      "src": "assets/audio/sfx/click-soft.mp3",
+      "volume": 0.42000000000000004,
+      "dur": 0.37
+    },
+    {
+      "at": 14.36,
+      "src": "assets/audio/sfx/click-soft.mp3",
+      "volume": 0.4,
+      "dur": 0.37
+    },
+    {
+      "at": 14.55,
+      "src": "assets/audio/sfx/click-soft.mp3",
+      "volume": 0.38,
+      "dur": 0.37
+    },
+    {
+      "at": 14.72,
+      "src": "assets/audio/sfx/click-soft.mp3",
+      "volume": 0.36,
+      "dur": 0.37
+    },
+    {
+      "at": 14.88,
+      "src": "assets/audio/sfx/click-soft.mp3",
+      "volume": 0.34,
+      "dur": 0.37
+    },
+    {
+      "at": 18,
+      "src": "assets/audio/sfx/impact-bass-1.mp3",
+      "volume": 0.26,
+      "dur": 1.8
+    },
+    {
+      "at": 24.7,
+      "src": "assets/audio/sfx/ping.mp3",
+      "volume": 0.16,
+      "dur": 0.8
+    },
+    {
+      "at": 24.98,
+      "src": "assets/audio/sfx/ping.mp3",
+      "volume": 0.16,
+      "dur": 0.8
+    },
+    {
+      "at": 25.26,
+      "src": "assets/audio/sfx/ping.mp3",
+      "volume": 0.16,
+      "dur": 0.8
+    },
+    {
+      "at": 25.54,
+      "src": "assets/audio/sfx/ping.mp3",
+      "volume": 0.16,
+      "dur": 0.8
+    },
+    {
+      "at": 25.82,
+      "src": "assets/audio/sfx/ping.mp3",
+      "volume": 0.16,
+      "dur": 0.8
+    },
+    {
+      "at": 30.62,
+      "src": "assets/audio/sfx/click.mp3",
+      "volume": 0.42,
+      "dur": 0.37
+    },
+    {
+      "at": 31.15,
+      "src": "assets/audio/sfx/click.mp3",
+      "volume": 0.44,
+      "dur": 0.37
+    },
+    {
+      "at": 31.61,
+      "src": "assets/audio/sfx/click.mp3",
+      "volume": 0.45999999999999996,
+      "dur": 0.37
+    },
+    {
+      "at": 32,
+      "src": "assets/audio/sfx/click.mp3",
+      "volume": 0.48,
+      "dur": 0.37
+    },
+    {
+      "at": 32.33,
+      "src": "assets/audio/sfx/click.mp3",
+      "volume": 0.5,
+      "dur": 0.37
+    },
+    {
+      "at": 32.62,
+      "src": "assets/audio/sfx/click.mp3",
+      "volume": 0.52,
+      "dur": 0.37
+    },
+    {
+      "at": 32.86,
+      "src": "assets/audio/sfx/click.mp3",
+      "volume": 0.54,
+      "dur": 0.37
+    },
+    {
+      "at": 33.07,
+      "src": "assets/audio/sfx/click.mp3",
+      "volume": 0.56,
+      "dur": 0.37
+    },
+    {
+      "at": 33.25,
+      "src": "assets/audio/sfx/click.mp3",
+      "volume": 0.58,
+      "dur": 0.37
+    },
+    {
+      "at": 33.4,
+      "src": "assets/audio/sfx/click.mp3",
+      "volume": 0.6,
+      "dur": 0.37
+    },
+    {
+      "at": 35.85,
+      "src": "assets/audio/sfx/impact-bass-1.mp3",
+      "volume": 0.6,
+      "dur": 2.1
+    },
+    {
+      "at": 38.74,
+      "src": "assets/audio/sfx/ping.mp3",
+      "volume": 0.2,
+      "dur": 1.1
+    },
+    {
+      "at": 44.62,
+      "src": "assets/audio/sfx/key-press.mp3",
+      "volume": 0.42,
+      "dur": 0.43
+    },
+    {
+      "at": 46.18,
+      "src": "assets/audio/sfx/key-press.mp3",
+      "volume": 0.22,
+      "dur": 0.43
+    },
+    {
+      "at": 48.6,
+      "src": "assets/audio/sfx/glitch-1.mp3",
+      "volume": 0.3,
+      "dur": 1.2
+    }
+  ]
+}

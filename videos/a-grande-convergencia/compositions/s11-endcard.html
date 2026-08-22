@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+  </head>
+  <body>
+    <template>
+      <style>
+        #root { position: absolute; inset: 0; overflow: hidden; }
+        .scene {
+          position: absolute; inset: 0; overflow: hidden;
+          background: #1b1a1f;
+        }
+        
+  .scene { background: #2b2b2b; }
+  .fill {
+    position: absolute; inset: 0;
+    background: #2b2b2b;
+  }
+  .wrap {
+    position: absolute; left: 168px; top: 50%;
+    transform: translateY(-50%);
+    width: 1500px;
+  }
+  .mask { overflow: hidden; }
+  .l1 {
+    font-family: Inter, sans-serif; font-weight: 900;
+    font-size: 104px; line-height: 1.06; letter-spacing: -0.035em;
+    color: #ffffff;
+    max-width: 17ch;
+  }
+  .mask2 { overflow: hidden; margin-top: 42px; }
+  .l2 {
+    font-family: 'EB Garamond', serif; font-weight: 400;
+    font-size: 56px; letter-spacing: -0.005em;
+    color: #d8c0a7;
+  }
+  
+      </style>
+
+      <div
+        id="root"
+        data-composition-id="s11"
+        data-width="1920"
+        data-height="1080"
+        data-duration="4"
+      >
+        <div class="scene">
+
+          <div class="fill"></div>
+          <div class="wrap">
+            <div class="mask"><div class="l1" id="l1">Quando tudo otimiza, diferença vira luxo.</div></div>
+            <div class="mask2"><div class="l2" id="l2">Ou vantagem.</div></div>
+          </div>
+        </div>
+      </div>
+
+      <script>
+        (function () {
+          window.__timelines = window.__timelines || {};
+          const tl = gsap.timeline({ paused: true });
+
+          // Reveal simples por máscara. Nenhuma ornamentação. Câmera parada.
+          tl.fromTo("#l1", { yPercent: 108 },
+            { yPercent: 0, duration: 0.82, ease: "power3.out" }, 0.22);
+          tl.fromTo("#l2", { yPercent: 120 },
+            { yPercent: 0, duration: 0.66, ease: "power3.out" }, 1.62);
+          // Estável até o último frame.
+  
+          window.__timelines["s11"] = tl;
+        })();
+      </script>
+    </template>
+  </body>
+</html>

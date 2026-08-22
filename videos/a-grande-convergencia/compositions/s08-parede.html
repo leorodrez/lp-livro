@@ -1,0 +1,188 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+  </head>
+  <body>
+    <template>
+      <style>
+        #root { position: absolute; inset: 0; overflow: hidden; }
+        .scene {
+          position: absolute; inset: 0; overflow: hidden;
+          background: #1b1a1f;
+        }
+        
+  
+  .sys {
+    font-family: 'JetBrains Mono', monospace;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    font-size: 17px;
+    color: #06b6d4;
+  }
+  .sys-lo { color: #6f6f78; }
+  .metric {
+    font-family: 'JetBrains Mono', monospace;
+    font-variant-numeric: tabular-nums;
+    color: #06b6d4;
+    letter-spacing: 0.02em;
+  }
+  .badge {
+    display: inline-flex; align-items: center; gap: 9px;
+    font-family: 'JetBrains Mono', monospace; font-size: 15px; letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #06b6d4;
+    border: 1px solid rgba(6,182,212,0.45);
+    background: rgba(6,182,212,0.08);
+    padding: 7px 13px; border-radius: 4px;
+    white-space: nowrap;
+  }
+  .badge::before {
+    content: ""; width: 6px; height: 6px; border-radius: 50%;
+    background: #06b6d4; flex: 0 0 auto;
+  }
+  /* A voz do sistema nunca pousa direto sobre a página: ela vive numa lasca
+     escura por cima de tudo. É o que a separa do conteúdo — e o que a mantém
+     legível sobre qualquer superfície. */
+  .chip {
+    display: inline-block;
+    background: rgba(20,19,24,0.92);
+    padding: 9px 15px;
+    border-radius: 3px;
+    white-space: nowrap;
+  }
+  
+  .scene { background: #121216; }
+  .world {
+    position: absolute; inset: 0;
+    transform-origin: 50% 50%;
+    will-change: transform;
+  }
+  .wall {
+    position: absolute; left: 50%; top: 50%;
+    width: 7200px; height: 4400px;
+    margin-left: -3600px; margin-top: -2200px;
+    background-image: url("data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22144%22%20height%3D%22116%22%20viewBox%3D%220%200%20144%20116%22%3E%0A%3Crect%20x%3D%220%22%20y%3D%220%22%20width%3D%22144%22%20height%3D%22116%22%20fill%3D%22none%22%2F%3E%0A%3Crect%20x%3D%226%22%20y%3D%226%22%20width%3D%22132%22%20height%3D%22104%22%20fill%3D%22%23ffffff%22%2F%3E%0A%3Crect%20x%3D%2215%22%20y%3D%2215%22%20width%3D%2226%22%20height%3D%225%22%20rx%3D%222%22%20fill%3D%22%232b2b2b%22%2F%3E%0A%3Crect%20x%3D%22102%22%20y%3D%2214%22%20width%3D%2227%22%20height%3D%228%22%20rx%3D%223%22%20fill%3D%22%237c3aed%22%2F%3E%0A%3Crect%20x%3D%2215%22%20y%3D%2229%22%20width%3D%22114%22%20height%3D%221%22%20fill%3D%22%23e4e4e7%22%2F%3E%0A%3Crect%20x%3D%2215%22%20y%3D%2240%22%20width%3D%2261%22%20height%3D%229%22%20rx%3D%223%22%20fill%3D%22%232b2b2b%22%2F%3E%0A%3Crect%20x%3D%2215%22%20y%3D%2254%22%20width%3D%2240%22%20height%3D%229%22%20rx%3D%223%22%20fill%3D%22%232b2b2b%22%2F%3E%0A%3Crect%20x%3D%2215%22%20y%3D%2269%22%20width%3D%2250%22%20height%3D%224%22%20rx%3D%222%22%20fill%3D%22%23e4e4e7%22%2F%3E%0A%3Crect%20x%3D%2215%22%20y%3D%2277%22%20width%3D%2237%22%20height%3D%224%22%20rx%3D%222%22%20fill%3D%22%23e4e4e7%22%2F%3E%0A%3Crect%20x%3D%2215%22%20y%3D%2288%22%20width%3D%2242%22%20height%3D%2213%22%20rx%3D%224%22%20fill%3D%22%237c3aed%22%2F%3E%0A%3Crect%20x%3D%2292%22%20y%3D%2240%22%20width%3D%2237%22%20height%3D%2246%22%20rx%3D%224%22%20fill%3D%22%23ecedf0%22%2F%3E%0A%3C%2Fsvg%3E");
+    background-repeat: repeat;
+    background-size: 144px 116px;
+    background-color: #121216;
+  }
+  .vig {
+    position: absolute; inset: 0; pointer-events: none;
+    background: radial-gradient(ellipse at 50% 50%,
+      rgba(27,26,31,0) 42%, rgba(18,18,22,0.72) 100%);
+  }
+  /* Iluminação, não card: a luz cai sobre o centro à medida que a parede
+     cresce. É o que deixa a voz do sistema legível sobre mil páginas brancas. */
+  .scrim {
+    position: absolute; inset: 0; pointer-events: none;
+    background: radial-gradient(ellipse 46% 40% at 50% 48%,
+      rgba(14,14,18,0.86) 0%, rgba(14,14,18,0.70) 40%,
+      rgba(14,14,18,0.26) 72%, rgba(14,14,18,0) 100%);
+    opacity: 0;
+  }
+  .count {
+    position: absolute; left: 50%; top: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center; width: 1400px;
+  }
+  .count-n {
+    font-family: 'JetBrains Mono', monospace; font-variant-numeric: tabular-nums;
+    font-size: 66px; color: #ffffff; letter-spacing: -0.01em;
+    text-shadow: 0 8px 40px rgba(0,0,0,0.9);
+  }
+  .count-l {
+    font-family: 'JetBrains Mono', monospace; font-size: 19px; letter-spacing: 0.2em;
+    text-transform: uppercase; color: #06b6d4; margin-top: 16px;
+  }
+  .stack2 { position: relative; height: 92px; }
+  .stack2 > div { position: absolute; left: 0; right: 0; top: 0; }
+  .perfect {
+    position: absolute; left: 50%; bottom: 118px;
+    transform: translateX(-50%);
+    font-family: Inter, sans-serif; font-weight: 900; font-size: 62px;
+    letter-spacing: -0.035em; color: #ffffff;
+    white-space: nowrap; opacity: 0;
+    text-shadow: 0 8px 44px rgba(0,0,0,0.95);
+  }
+  
+      </style>
+
+      <div
+        id="root"
+        data-composition-id="s08"
+        data-width="1920"
+        data-height="1080"
+        data-duration="5"
+      >
+        <div class="scene">
+
+          <div class="world" id="world"><div class="wall"></div></div>
+          <div class="vig"></div>
+          <div class="scrim" id="scrim"></div>
+          <div class="count">
+            <div class="stack2">
+              <div id="cn-0" data-layout-allow-overlap><div class="count-n" id="counter">0</div><div class="count-l">variantes testadas</div></div>
+              <div id="cn-1" style="opacity:0" data-layout-allow-overlap><div class="count-n">1</div><div class="count-l">vencedora</div></div>
+            </div>
+          </div>
+          <div class="perfect" id="perfect">A landing page perfeita.</div>
+        </div>
+      </div>
+
+      <script>
+        (function () {
+          window.__timelines = window.__timelines || {};
+          const tl = gsap.timeline({ paused: true });
+
+          function stack(sel, n, at) {
+            for (let i = 0; i < n; i++) gsap.set(sel + i, { autoAlpha: i === 0 ? 1 : 0 });
+            for (let i = 1; i < n; i++) {
+              tl.set(sel + (i - 1), { autoAlpha: 0 }, at[i]);
+              tl.set(sel + i, { autoAlpha: 1 }, at[i]);
+            }
+          }
+
+          const world = document.getElementById("world");
+          const cam = { scale: 1.62 };
+          function applyCamera() {
+            world.style.transform = "translate(0px,0px) scale(" + cam.scale + ")";
+          }
+          applyCamera();
+
+          // Pull-back muito lento. No fim, tudo finalmente para.
+          tl.fromTo(cam, { scale: 1.62 },
+            { scale: 0.34, duration: 3.6, ease: "power2.out", onUpdate: applyCamera }, 0);
+
+          // A luz fecha sobre o centro conforme a parede se revela.
+          tl.fromTo("#scrim", { opacity: 0 },
+            { opacity: 1, duration: 0.85, ease: "power2.out" }, 0.15);
+
+          // Contador — formatação pt-BR determinística, sem toLocaleString.
+          const el = document.getElementById("counter");
+          const proxy = { v: 0 };
+          function fmt(n) {
+            return String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+          }
+          el.textContent = "0";
+          tl.fromTo(proxy, { v: 0 }, {
+            v: 1847392, duration: 1.5, ease: "power2.out",
+            onUpdate: function () { el.textContent = fmt(proxy.v); }
+          }, 0.55);
+
+          // 1.847.392 variantes. Uma vencedora.
+
+          stack("#cn-", 2, [0,2.72]);
+          tl.fromTo("#cn-1", { scale: 0.94 }, { scale: 1, duration: 0.5, ease: "power3.out" }, 2.72);
+
+          tl.fromTo("#perfect", { opacity: 0, y: 14 },
+            { opacity: 1, y: 0, duration: 0.62, ease: "power3.out" }, 3.5);
+          // Hold. Nada mais se move.
+  
+          window.__timelines["s08"] = tl;
+        })();
+      </script>
+    </template>
+  </body>
+</html>

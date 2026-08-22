@@ -1,0 +1,335 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+  </head>
+  <body>
+    <template>
+      <style>
+        #root { position: absolute; inset: 0; overflow: hidden; }
+        .scene {
+          position: absolute; inset: 0; overflow: hidden;
+          background: #1b1a1f;
+        }
+        
+  
+  .lp {
+    position: relative;
+    background: #ffffff;
+    color: #2b2b2b;
+    font-family: Inter, sans-serif;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+    /* Variáveis de convergência — animar estas É a convergência. */
+    --lp-accent: #7c3aed;
+    --lp-radius: 10px;
+    --lp-gap: 1;
+    --lp-align: left;
+    --lp-pad: 1;
+  }
+  .lp-nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: calc(22px * var(--lp-pad)) calc(34px * var(--lp-pad));
+    border-bottom: 1px solid #e4e4e7;
+    flex: 0 0 auto;
+  }
+  .lp-brand {
+    font-weight: 900;
+    letter-spacing: -0.02em;
+    font-size: 20px;
+    white-space: nowrap;
+  }
+  .lp-navlinks { display: flex; gap: 20px; }
+  .lp-navlink {
+    height: 7px; width: 42px; border-radius: 4px;
+    background: #e4e4e7;
+  }
+  .lp-navcta {
+    height: 26px; width: 84px;
+    border-radius: var(--lp-radius);
+    background: var(--lp-accent);
+  }
+  .lp-body {
+    flex: 1 1 auto;
+    display: flex;
+    gap: calc(40px * var(--lp-gap));
+    padding: calc(44px * var(--lp-pad)) calc(34px * var(--lp-pad));
+    align-items: center;
+    min-height: 0;
+  }
+  .lp-copy {
+    flex: 1 1 auto;
+    display: flex;
+    flex-direction: column;
+    gap: calc(18px * var(--lp-gap));
+    text-align: var(--lp-align);
+    align-items: var(--lp-items, flex-start);
+    min-width: 0;
+  }
+  .lp-h {
+    font-weight: 900;
+    font-size: 44px;
+    line-height: 1.02;
+    letter-spacing: -0.035em;
+    max-width: 15ch;
+  }
+  .lp-sub {
+    font-weight: 400;
+    font-size: 17px;
+    line-height: 1.45;
+    color: #6f6f76;
+    max-width: 30ch;
+  }
+  .lp-cta {
+    display: inline-block;
+    background: var(--lp-accent);
+    color: #ffffff;
+    font-weight: 700;
+    font-size: 16px;
+    letter-spacing: 0.06em;
+    padding: 15px 30px;
+    border-radius: var(--lp-radius);
+    white-space: nowrap;
+    align-self: var(--lp-items, flex-start);
+  }
+  .lp-proof {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 13px;
+    color: #6f6f76;
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .lp-dots { display: flex; }
+  .lp-dot {
+    width: 16px; height: 16px; border-radius: 50%;
+    background: #e4e4e7;
+    margin-left: -5px;
+    border: 2px solid #ffffff;
+  }
+  .lp-media {
+    flex: 0 0 auto;
+    background: linear-gradient(148deg, #f2f2f4 0%, #e6e6ea 100%);
+    border-radius: var(--lp-radius);
+    position: relative;
+    overflow: hidden;
+  }
+  /* Placeholder editorial abstrato — nunca stock photography. */
+  .lp-media::after {
+    content: "";
+    position: absolute;
+    left: 18%; top: 26%; width: 64%; height: 48%;
+    border-radius: 6px;
+    background: repeating-linear-gradient(
+      118deg, #e4e4e7 0 9px, #f7f7f9 9px 20px
+    );
+    opacity: 0.85;
+  }
+  .lp-media.round { border-radius: 50%; }
+  .lp-media.round::after { border-radius: 50%; left: 20%; top: 20%; width: 60%; height: 60%; }
+  
+  
+  .sys {
+    font-family: 'JetBrains Mono', monospace;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    font-size: 17px;
+    color: #06b6d4;
+  }
+  .sys-lo { color: #6f6f78; }
+  .metric {
+    font-family: 'JetBrains Mono', monospace;
+    font-variant-numeric: tabular-nums;
+    color: #06b6d4;
+    letter-spacing: 0.02em;
+  }
+  .badge {
+    display: inline-flex; align-items: center; gap: 9px;
+    font-family: 'JetBrains Mono', monospace; font-size: 15px; letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #06b6d4;
+    border: 1px solid rgba(6,182,212,0.45);
+    background: rgba(6,182,212,0.08);
+    padding: 7px 13px; border-radius: 4px;
+    white-space: nowrap;
+  }
+  .badge::before {
+    content: ""; width: 6px; height: 6px; border-radius: 50%;
+    background: #06b6d4; flex: 0 0 auto;
+  }
+  /* A voz do sistema nunca pousa direto sobre a página: ela vive numa lasca
+     escura por cima de tudo. É o que a separa do conteúdo — e o que a mantém
+     legível sobre qualquer superfície. */
+  .chip {
+    display: inline-block;
+    background: rgba(20,19,24,0.92);
+    padding: 9px 15px;
+    border-radius: 3px;
+    white-space: nowrap;
+  }
+  
+  .scene { background: #121216; }
+  .world {
+    position: absolute; inset: 0;
+    transform-origin: 50% 50%;
+    will-change: transform;
+  }
+  .page {
+    position: absolute; inset: 0;
+    background: #ffffff;
+  }
+  .hero-h {
+    position: absolute; left: 118px; top: 296px;
+    font-family: Inter, sans-serif; font-weight: 900;
+    font-size: 82px; line-height: 0.98; letter-spacing: -0.04em;
+    color: #2b2b2b; max-width: 12ch;
+  }
+  .hero-sub {
+    position: absolute; left: 120px; top: 540px;
+    font-family: Inter, sans-serif; font-weight: 400; font-size: 26px;
+    color: #6f6f76; letter-spacing: -0.01em;
+  }
+  /* Duas variantes do botão empilhadas na MESMA borda esquerda, com larguras
+     fixas e diferentes: a troca de copy muda a borda direita — o "microajuste
+     de largura" é real, não um tween. */
+  .cta-stack { position: absolute; left: 120px; top: 620px; height: 56px; }
+  .cta-btn {
+    position: absolute; left: 0; top: 0;
+    display: block; height: 56px; line-height: 56px;
+    text-align: center;
+    background: #7c3aed; color: #ffffff;
+    font-family: Inter, sans-serif; font-weight: 700; font-size: 21px;
+    letter-spacing: 0.07em; border-radius: 10px;
+    white-space: nowrap;
+  }
+  #cta-0 { width: 300px; }
+  #cta-1 { width: 268px; }
+  .cta-ghost {
+    position: absolute; left: 0; top: 0;
+    display: block; width: 268px; height: 56px; line-height: 54px;
+    text-align: center;
+    border: 1px dashed rgba(124,58,237,0.75);
+    color: #7c3aed;
+    font-family: Inter, sans-serif; font-weight: 700; font-size: 21px;
+    letter-spacing: 0.07em; border-radius: 10px;
+    white-space: nowrap; opacity: 0;
+  }
+  .glow {
+    position: absolute; left: 145px; top: 523px;
+    width: 250px; height: 250px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(124,58,237,0.22) 0%, rgba(124,58,237,0) 66%);
+    will-change: transform;
+  }
+  .metric {
+    position: absolute; left: 448px; top: 632px;
+    font-size: 24px; font-weight: 700; opacity: 0;
+  }
+  .winner {
+    position: absolute; left: 121px; top: 698px;
+    font-size: 14px; opacity: 0;
+  }
+  .cursor { position: absolute; left: 0; top: 0; will-change: transform; }
+  .lane {
+    position: absolute; left: 120px; top: 596px;
+    width: 62px; height: 3px; background: #06b6d4;
+  }
+  
+      </style>
+
+      <div
+        id="root"
+        data-composition-id="s01"
+        data-width="1920"
+        data-height="1080"
+        data-duration="3"
+      >
+        <div class="scene">
+
+          <div class="world" id="world">
+            <div class="page">
+              <div class="hero-h">Comece hoje. Sem cartão.</div>
+              <div class="hero-sub">Teste grátis por 14 dias.</div>
+              <div class="lane"></div>
+              <div class="glow" id="glow"></div>
+              <div class="cta-stack">
+                <div class="cta-ghost" id="ghost" data-layout-allow-overlap>QUERO COMEÇAR</div>
+                <div class="cta-btn" id="cta-0" data-layout-allow-overlap>COMEÇAR AGORA</div>
+                <div class="cta-btn" id="cta-1" data-layout-allow-overlap>QUERO COMEÇAR</div>
+              </div>
+              <div class="metric" id="metric">+0,7%</div>
+              <div class="sys winner" id="winner">variante vencedora</div>
+              <svg class="cursor" id="cursor" width="30" height="38" viewBox="0 0 30 38" fill="none">
+                <path d="M3 2 L3 30 L10.5 23.2 L15.6 34.6 L20.3 32.4 L15.3 21.4 L25 21 Z"
+                      fill="#ffffff" stroke="#2b2b2b" stroke-width="2.2" stroke-linejoin="round"/>
+              </svg>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <script>
+        (function () {
+          window.__timelines = window.__timelines || {};
+          const tl = gsap.timeline({ paused: true });
+
+          function stack(sel, n, at) {
+            for (let i = 0; i < n; i++) gsap.set(sel + i, { autoAlpha: i === 0 ? 1 : 0 });
+            for (let i = 1; i < n; i++) {
+              tl.set(sel + (i - 1), { autoAlpha: 0 }, at[i]);
+              tl.set(sel + i, { autoAlpha: 1 }, at[i]);
+            }
+          }
+
+          const world = document.getElementById("world");
+          const AIM_X = 310, AIM_Y = 628;
+          // Câmera de wrapper único: T = -offset × S (viewport-change).
+          const cam = { scale: 4.35 };
+          function applyCamera() {
+            const s = cam.scale;
+            world.style.transform =
+              "translate(" + (-(AIM_X - 960) * s) + "px," + (-(AIM_Y - 540) * s) + "px) scale(" + s + ")";
+          }
+          applyCamera();
+
+          // Leg 1 — push macro lentíssimo. O espectador lê o botão.
+          tl.fromTo(cam, { scale: 4.35 },
+            { scale: 4.78, duration: 2.1, ease: "power1.inOut", onUpdate: applyCamera }, 0);
+
+          // O cursor se aproxima e PARA. Nunca clica — a página decide antes.
+          tl.fromTo("#cursor", { x: 566, y: 806, opacity: 0 },
+            { opacity: 1, duration: 0.18, ease: "none" }, 0.30);
+          tl.fromTo("#cursor", { x: 566, y: 806 },
+            { x: 402, y: 692, duration: 0.82, ease: "power2.out" }, 0.34);
+
+          // A/B → análise → vencedor → substituição.
+          tl.fromTo("#ghost", { opacity: 0 }, { opacity: 0.9, duration: 0.06, ease: "none" }, 1.06);
+          tl.to("#ghost", { opacity: 0, duration: 0.05, ease: "none" }, 1.20);
+
+          stack("#cta-", 2, [0,1.24]);
+          // Microajuste: o elemento reassenta depois de trocar de tamanho.
+          tl.fromTo("#cta-1", { scale: 1.035 },
+            { scale: 1, duration: 0.26, ease: "power3.out", transformOrigin: "0% 50%" }, 1.24);
+
+          tl.fromTo("#metric", { y: 16, opacity: 0 },
+            { y: 0, opacity: 1, duration: 0.34, ease: "power3.out" }, 1.30);
+          tl.fromTo("#winner", { opacity: 0 }, { opacity: 1, duration: 0.30, ease: "power2.out" }, 1.46);
+
+          // Respiração do glow (finita, determinística).
+          tl.fromTo("#glow", { scale: 0.94 },
+            { scale: 1.06, duration: 1.5, ease: "sine.inOut", yoyo: true, repeat: 1 }, 0);
+
+          // Leg 2 — a câmera atravessa o botão Purple. O Purple entrega a cena 02.
+          tl.to(cam, { scale: 26, duration: 0.92, ease: "power2.in", onUpdate: applyCamera }, 2.10);
+          tl.to(["#metric", "#winner", "#cursor"], { opacity: 0, duration: 0.30, ease: "power1.in" }, 2.10);
+  
+          window.__timelines["s01"] = tl;
+        })();
+      </script>
+    </template>
+  </body>
+</html>

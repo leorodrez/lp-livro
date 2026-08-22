@@ -1,0 +1,179 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+  </head>
+  <body>
+    <template>
+      <style>
+        #root { position: absolute; inset: 0; overflow: hidden; }
+        .scene {
+          position: absolute; inset: 0; overflow: hidden;
+          background: #1b1a1f;
+        }
+        
+  
+  .sys {
+    font-family: 'JetBrains Mono', monospace;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    font-size: 17px;
+    color: #06b6d4;
+  }
+  .sys-lo { color: #6f6f78; }
+  .metric {
+    font-family: 'JetBrains Mono', monospace;
+    font-variant-numeric: tabular-nums;
+    color: #06b6d4;
+    letter-spacing: 0.02em;
+  }
+  .badge {
+    display: inline-flex; align-items: center; gap: 9px;
+    font-family: 'JetBrains Mono', monospace; font-size: 15px; letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #06b6d4;
+    border: 1px solid rgba(6,182,212,0.45);
+    background: rgba(6,182,212,0.08);
+    padding: 7px 13px; border-radius: 4px;
+    white-space: nowrap;
+  }
+  .badge::before {
+    content: ""; width: 6px; height: 6px; border-radius: 50%;
+    background: #06b6d4; flex: 0 0 auto;
+  }
+  /* A voz do sistema nunca pousa direto sobre a página: ela vive numa lasca
+     escura por cima de tudo. É o que a separa do conteúdo — e o que a mantém
+     legível sobre qualquer superfície. */
+  .chip {
+    display: inline-block;
+    background: rgba(20,19,24,0.92);
+    padding: 9px 15px;
+    border-radius: 3px;
+    white-space: nowrap;
+  }
+  
+  .scene { background: #17161a; }
+  .world { position: absolute; inset: 0; transform-origin: 50% 50%; will-change: transform; }
+  /* Largura incomum, deslocada. Não fecha na grade — de propósito. */
+  .paper {
+    position: absolute;
+    left: 200px; top: 96px;
+    width: 1250px; height: 888px;
+    background: #d8c0a7;
+    box-shadow: 0 60px 140px rgba(0,0,0,0.62);
+  }
+  .p-mark {
+    position: absolute; left: 96px; top: 74px;
+    font-family: 'JetBrains Mono', monospace; font-size: 15px; letter-spacing: 0.28em;
+    text-transform: uppercase; color: rgba(43,43,43,0.52);
+  }
+  /* Um filete editorial que atravessa fora do alinhamento. */
+  .p-rule {
+    position: absolute; left: -64px; top: 268px;
+    width: 812px; height: 1px; background: rgba(43,43,43,0.55);
+  }
+  .p-h {
+    position: absolute; left: 96px; top: 318px;
+    font-family: 'EB Garamond', serif; font-weight: 400;
+    font-size: 128px; line-height: 0.96; letter-spacing: -0.018em;
+    color: #2b2b2b;
+  }
+  .p-sub {
+    position: absolute; left: 99px; top: 606px;
+    font-family: 'EB Garamond', serif; font-weight: 400; font-style: italic;
+    font-size: 30px; color: rgba(43,43,43,0.72); max-width: 26ch;
+    line-height: 1.4;
+  }
+  /* O botão não está onde o algoritmo o colocaria. */
+  .p-cta {
+    position: absolute; left: 742px; top: 722px;
+    font-family: 'JetBrains Mono', monospace; font-size: 19px; letter-spacing: 0.16em;
+    text-transform: uppercase; color: #d8c0a7;
+    background: #2b2b2b;
+    padding: 19px 34px;
+  }
+  .p-foot {
+    position: absolute; left: 96px; bottom: 78px;
+    font-family: 'EB Garamond', serif; font-size: 23px; color: rgba(43,43,43,0.6);
+  }
+  .outline { position: absolute; left: 184px; top: 80px; overflow: visible; }
+  .warn {
+    position: absolute; right: 100px;
+    font-family: 'JetBrains Mono', monospace; font-size: 16px; letter-spacing: 0.16em;
+    text-transform: uppercase; color: #06b6d4;
+    opacity: 0; white-space: nowrap;
+  }
+  .grain2 {
+    position: absolute; inset: 0; pointer-events: none;
+    background-image: url("data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22200%22%20height%3D%22200%22%3E%3Cfilter%20id%3D%22n%22%3E%3CfeTurbulence%20type%3D%22fractalNoise%22%20baseFrequency%3D%220.86%22%20numOctaves%3D%223%22%20seed%3D%2223%22%20stitchTiles%3D%22stitch%22%2F%3E%3CfeColorMatrix%20type%3D%22saturate%22%20values%3D%220%22%2F%3E%3C%2Ffilter%3E%3Crect%20width%3D%22200%22%20height%3D%22200%22%20filter%3D%22url(%23n)%22%2F%3E%3C%2Fsvg%3E");
+    background-size: 200px 200px;
+    opacity: 0.19; mix-blend-mode: overlay;
+  }
+  
+      </style>
+
+      <div
+        id="root"
+        data-composition-id="s10"
+        data-width="1920"
+        data-height="1080"
+        data-duration="4"
+      >
+        <div class="scene">
+
+          <div class="world" id="world">
+            <div class="paper">
+              <div class="p-mark">Estúdio · São Paulo</div>
+              <div class="p-rule"></div>
+              <div class="p-h">Feito por<br />alguém.</div>
+              <div class="p-sub">Levou três semanas. Ninguém testou mil versões.</div>
+              <div class="p-cta">Vem conversar</div>
+              <div class="p-foot">— desde 2019</div>
+            </div>
+            <svg class="outline" width="1282" height="920" viewBox="0 0 1282 920" fill="none">
+              <rect id="ol" x="1" y="1" width="1280" height="918"
+                    stroke="#7c3aed" stroke-width="3" fill="none"
+                    stroke-dasharray="4404" stroke-dashoffset="4404" />
+            </svg>
+          </div>
+          <div class="warn" id="warn-0" style="top:150px" data-layout-allow-overlap>anomalia detectada</div>
+          <div class="warn" id="warn-1" style="top:150px" data-layout-allow-overlap>confiança insuficiente</div>
+          <div class="grain2"></div>
+        </div>
+      </div>
+
+      <script>
+        (function () {
+          window.__timelines = window.__timelines || {};
+          const tl = gsap.timeline({ paused: true });
+
+          const world = document.getElementById("world");
+          const cam = { scale: 1 };
+          function applyCamera() {
+            world.style.transform = "translate(0px,0px) scale(" + cam.scale + ")";
+          }
+          applyCamera();
+
+          // Quase estática. Um micro push, nada mais.
+          tl.fromTo(cam, { scale: 1.028 },
+            { scale: 1, duration: 4, ease: "power2.out", onUpdate: applyCamera }, 0);
+
+          tl.fromTo("#warn-0", { opacity: 0 }, { opacity: 1, duration: 0.24, ease: "power2.out" }, 0.85);
+          tl.to("#warn-0", { opacity: 0, duration: 0.18, ease: "none" }, 1.92);
+          tl.fromTo("#warn-1", { opacity: 0 }, { opacity: 1, duration: 0.24, ease: "power2.out" }, 2.06);
+          tl.to("#warn-1", { opacity: 0, duration: 0.5, ease: "power1.in" }, 3.05);
+
+          // O sistema tenta corrigi-la. O contorno hesita. Desaparece.
+          tl.fromTo("#ol", { strokeDashoffset: 4404 },
+            { strokeDashoffset: 1850, duration: 0.66, ease: "power2.out" }, 1.06);
+          tl.to("#ol", { strokeDashoffset: 1585, duration: 0.5, ease: "power1.inOut" }, 1.78);
+          tl.to("#ol", { opacity: 0.45, duration: 0.22, ease: "none" }, 2.30);
+          tl.to("#ol", { opacity: 0, duration: 0.42, ease: "power2.in" }, 2.58);
+  
+          window.__timelines["s10"] = tl;
+        })();
+      </script>
+    </template>
+  </body>
+</html>

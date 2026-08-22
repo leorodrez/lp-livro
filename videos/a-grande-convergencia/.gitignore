@@ -1,0 +1,6 @@
+node_modules/
+renders/work-*/
+renders/.*hf-transaction*/
+snapshots/
+.hyperframes/
+assets/audio/bed.wav

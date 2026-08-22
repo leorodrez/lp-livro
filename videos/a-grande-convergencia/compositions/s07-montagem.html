@@ -1,0 +1,264 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+  </head>
+  <body>
+    <template>
+      <style>
+        #root { position: absolute; inset: 0; overflow: hidden; }
+        .scene {
+          position: absolute; inset: 0; overflow: hidden;
+          background: #1b1a1f;
+        }
+        
+  
+  .lp {
+    position: relative;
+    background: #ffffff;
+    color: #2b2b2b;
+    font-family: Inter, sans-serif;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+    /* Variáveis de convergência — animar estas É a convergência. */
+    --lp-accent: #7c3aed;
+    --lp-radius: 10px;
+    --lp-gap: 1;
+    --lp-align: left;
+    --lp-pad: 1;
+  }
+  .lp-nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: calc(22px * var(--lp-pad)) calc(34px * var(--lp-pad));
+    border-bottom: 1px solid #e4e4e7;
+    flex: 0 0 auto;
+  }
+  .lp-brand {
+    font-weight: 900;
+    letter-spacing: -0.02em;
+    font-size: 20px;
+    white-space: nowrap;
+  }
+  .lp-navlinks { display: flex; gap: 20px; }
+  .lp-navlink {
+    height: 7px; width: 42px; border-radius: 4px;
+    background: #e4e4e7;
+  }
+  .lp-navcta {
+    height: 26px; width: 84px;
+    border-radius: var(--lp-radius);
+    background: var(--lp-accent);
+  }
+  .lp-body {
+    flex: 1 1 auto;
+    display: flex;
+    gap: calc(40px * var(--lp-gap));
+    padding: calc(44px * var(--lp-pad)) calc(34px * var(--lp-pad));
+    align-items: center;
+    min-height: 0;
+  }
+  .lp-copy {
+    flex: 1 1 auto;
+    display: flex;
+    flex-direction: column;
+    gap: calc(18px * var(--lp-gap));
+    text-align: var(--lp-align);
+    align-items: var(--lp-items, flex-start);
+    min-width: 0;
+  }
+  .lp-h {
+    font-weight: 900;
+    font-size: 44px;
+    line-height: 1.02;
+    letter-spacing: -0.035em;
+    max-width: 15ch;
+  }
+  .lp-sub {
+    font-weight: 400;
+    font-size: 17px;
+    line-height: 1.45;
+    color: #6f6f76;
+    max-width: 30ch;
+  }
+  .lp-cta {
+    display: inline-block;
+    background: var(--lp-accent);
+    color: #ffffff;
+    font-weight: 700;
+    font-size: 16px;
+    letter-spacing: 0.06em;
+    padding: 15px 30px;
+    border-radius: var(--lp-radius);
+    white-space: nowrap;
+    align-self: var(--lp-items, flex-start);
+  }
+  .lp-proof {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 13px;
+    color: #6f6f76;
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .lp-dots { display: flex; }
+  .lp-dot {
+    width: 16px; height: 16px; border-radius: 50%;
+    background: #e4e4e7;
+    margin-left: -5px;
+    border: 2px solid #ffffff;
+  }
+  .lp-media {
+    flex: 0 0 auto;
+    background: linear-gradient(148deg, #f2f2f4 0%, #e6e6ea 100%);
+    border-radius: var(--lp-radius);
+    position: relative;
+    overflow: hidden;
+  }
+  /* Placeholder editorial abstrato — nunca stock photography. */
+  .lp-media::after {
+    content: "";
+    position: absolute;
+    left: 18%; top: 26%; width: 64%; height: 48%;
+    border-radius: 6px;
+    background: repeating-linear-gradient(
+      118deg, #e4e4e7 0 9px, #f7f7f9 9px 20px
+    );
+    opacity: 0.85;
+  }
+  .lp-media.round { border-radius: 50%; }
+  .lp-media.round::after { border-radius: 50%; left: 20%; top: 20%; width: 60%; height: 60%; }
+  
+  
+  .sys {
+    font-family: 'JetBrains Mono', monospace;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    font-size: 17px;
+    color: #06b6d4;
+  }
+  .sys-lo { color: #6f6f78; }
+  .metric {
+    font-family: 'JetBrains Mono', monospace;
+    font-variant-numeric: tabular-nums;
+    color: #06b6d4;
+    letter-spacing: 0.02em;
+  }
+  .badge {
+    display: inline-flex; align-items: center; gap: 9px;
+    font-family: 'JetBrains Mono', monospace; font-size: 15px; letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #06b6d4;
+    border: 1px solid rgba(6,182,212,0.45);
+    background: rgba(6,182,212,0.08);
+    padding: 7px 13px; border-radius: 4px;
+    white-space: nowrap;
+  }
+  .badge::before {
+    content: ""; width: 6px; height: 6px; border-radius: 50%;
+    background: #06b6d4; flex: 0 0 auto;
+  }
+  /* A voz do sistema nunca pousa direto sobre a página: ela vive numa lasca
+     escura por cima de tudo. É o que a separa do conteúdo — e o que a mantém
+     legível sobre qualquer superfície. */
+  .chip {
+    display: inline-block;
+    background: rgba(20,19,24,0.92);
+    padding: 9px 15px;
+    border-radius: 3px;
+    white-space: nowrap;
+  }
+  
+  .scene { background: #121216; }
+  .frame {
+    position: absolute; left: 50%; top: 50%;
+    width: 1500px; height: 856px;
+    margin-left: -750px; margin-top: -428px;
+    border-radius: 12px;
+    box-shadow: 0 50px 120px rgba(0,0,0,0.62);
+    --lp-gap: 1;
+  }
+  .frame .lp-h { font-size: 70px; max-width: 12ch; }
+  .frame .lp-sub { font-size: 21px; max-width: 32ch; }
+  .frame .lp-cta { font-size: 19px; padding: 18px 38px; }
+  .frame .lp-brand { font-size: 27px; }
+  .frame .lp-proof { font-size: 15px; }
+  .brand-stack { position: relative; width: 460px; height: 34px; }
+  .brand-stack > div { position: absolute; left: 0; top: 0; white-space: nowrap; }
+  .seg-stack {
+    position: absolute; left: 50%; bottom: 84px; transform: translateX(-50%);
+    width: 700px; height: 26px;
+  }
+  .seg-stack > div {
+    position: absolute; left: 50%; top: 0; transform: translateX(-50%);
+    white-space: nowrap; font-size: 17px; color: #9a9aa4;
+  }
+  
+      </style>
+
+      <div
+        id="root"
+        data-composition-id="s07"
+        data-width="1920"
+        data-height="1080"
+        data-duration="6"
+      >
+        <div class="scene">
+
+          <div class="lp frame">
+            <div class="lp-nav">
+              <div class="lp-brand brand-stack" id="brands"></div>
+              <div class="lp-navlinks">
+                <div class="lp-navlink"></div><div class="lp-navlink"></div>
+                <div class="lp-navlink"></div><div class="lp-navcta"></div>
+              </div>
+            </div>
+            <div class="lp-body">
+              <div class="lp-copy">
+                <div class="lp-h">Transforme seu futuro.</div>
+                <div class="lp-sub">Resultados comprovados por dados. Sem compromisso.</div>
+                <div class="lp-cta">COMEÇAR AGORA</div>
+                <div class="lp-proof"><div class="lp-dots"><div class="lp-dot"></div><div class="lp-dot"></div><div class="lp-dot"></div></div><span>+12.000 empresas</span></div>
+              </div>
+              <div class="lp-media" style="width:430px;height:430px"></div>
+            </div>
+          </div>
+          <div class="sys seg-stack" id="segs"></div>
+        </div>
+      </div>
+
+      <script>
+        (function () {
+          window.__timelines = window.__timelines || {};
+          const tl = gsap.timeline({ paused: true });
+
+          function stack(sel, n, at) {
+            for (let i = 0; i < n; i++) gsap.set(sel + i, { autoAlpha: i === 0 ? 1 : 0 });
+            for (let i = 1; i < n; i++) {
+              tl.set(sel + (i - 1), { autoAlpha: 0 }, at[i]);
+              tl.set(sel + i, { autoAlpha: 1 }, at[i]);
+            }
+          }
+
+          // Nenhuma câmera. Nenhum movimento de layout. Só substituição.
+          // 42 trocas em 6s, com o intervalo encolhendo a cada decisão.
+          const CARDS = [["CORVEN","software"],["AURORA","padaria"],["VÉRTICE","banco"],["MERIDIAN","clínica"],["HABITA","imobiliária"],["PONTO","curso"],["DATAMO","consultoria"],["LUME","escritório"],["SALVO","seguros"],["TRELA","pet"],["NEXO","logística"],["OURIVÉS","joalheria"],["GRÃO","cafeteria"],["ALVES & CIA","advocacia"],["PLENA","odontologia"],["RUMO","viagens"],["CORVEN","software"],["AURORA","padaria"],["VÉRTICE","banco"],["MERIDIAN","clínica"],["HABITA","imobiliária"],["PONTO","curso"],["DATAMO","consultoria"],["LUME","escritório"],["SALVO","seguros"],["TRELA","pet"],["NEXO","logística"],["OURIVÉS","joalheria"],["GRÃO","cafeteria"],["ALVES & CIA","advocacia"],["PLENA","odontologia"],["RUMO","viagens"],["CORVEN","software"],["AURORA","padaria"],["VÉRTICE","banco"],["MERIDIAN","clínica"],["HABITA","imobiliária"],["PONTO","curso"],["DATAMO","consultoria"],["LUME","escritório"],["SALVO","seguros"],["TRELA","pet"]];
+          document.getElementById("brands").innerHTML = CARDS
+            .map(function (c, i) { return '<div id="br-' + i + '" data-layout-allow-overlap>' + c[0] + '</div>'; }).join("");
+          document.getElementById("segs").innerHTML = CARDS
+            .map(function (c, i) { return '<div id="sg-' + i + '" data-layout-allow-overlap>' + c[1] + '</div>'; }).join("");
+
+          stack("#br-", 42, [0,0.62,1.15,1.603,1.991,2.322,2.605,2.848,3.055,3.232,3.383,3.513,3.623,3.718,3.799,3.871,3.943,4.015,4.087,4.159,4.231,4.303,4.375,4.447,4.519,4.591,4.663,4.735,4.807,4.879,4.951,5.023,5.095,5.167,5.239,5.311,5.383,5.455,5.527,5.599,5.671,5.743]);
+
+          stack("#sg-", 42, [0,0.62,1.15,1.603,1.991,2.322,2.605,2.848,3.055,3.232,3.383,3.513,3.623,3.718,3.799,3.871,3.943,4.015,4.087,4.159,4.231,4.303,4.375,4.447,4.519,4.591,4.663,4.735,4.807,4.879,4.951,5.023,5.095,5.167,5.239,5.311,5.383,5.455,5.527,5.599,5.671,5.743]);
+  
+          window.__timelines["s07"] = tl;
+        })();
+      </script>
+    </template>
+  </body>
+</html>
