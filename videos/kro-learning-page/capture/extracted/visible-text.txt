@@ -1,0 +1,134 @@
+HYPERFRAMES VIDEO PRODUCTION BRIEF — KRO AI · The Learning Page
+(brief integral do usuário, condensado nos pontos que governam a tela)
+
+OBJETIVO
+Filme de produto premium apresentando o KRO AI como camada de inteligência e
+experimentação aplicada a um site que já existe. Transformar uma ideia abstrata
+— otimização contínua de mensagens através do comportamento real dos visitantes —
+numa narrativa visual clara: site estático → hipótese → variações → visitantes
+reais → dados → aprendizado → evolução contínua.
+
+CORE MESSAGE
+Seu site não precisa repetir a mesma mensagem para sempre. O KRO AI transforma o
+que está escrito nele em experimentos e deixa seus próprios visitantes mostrarem
+quais mensagens funcionam melhor. A inteligência artificial gera possibilidades.
+O comportamento dos visitantes produz a resposta. O aprendizado acumulado torna a
+comunicação progressivamente mais informada.
+
+CONCEITO — The Learning Page
+1 → muitas → dados → 1 melhor informada. A página se ramifica, recebe visitantes,
+acumula sinais, as versões competem sem agressividade visual, uma emerge, e todas
+convergem de volta para uma única experiência agora informada.
+
+======================================================================
+TEXTO DE TELA, NA ORDEM (todo o copy que aparece no filme)
+======================================================================
+
+Shot 01 (0:00–0:06)
+  "Seu site recebe visitantes todos os dias."
+  "Mas ele aprende alguma coisa com eles?"   [ênfase visual em "aprende"]
+
+Shot 02 (0:06–0:12)
+  (sem frase nova — a imagem comunica repetição)
+  headline da página: "Simplifique a gestão da sua empresa."
+
+Shot 03 (0:12–0:18)
+  "Com o KRO, qualquer mensagem do seu site pode virar uma hipótese."
+
+Shot 04 (0:18–0:27)
+  hipóteses geradas:
+    "Tenha mais controle da sua empresa sem aumentar a complexidade."
+    "Menos operação. Mais tempo para fazer sua empresa crescer."
+    "Sua gestão pode ser muito mais simples do que parece."
+  editorial: "A IA cria novas possibilidades."
+
+Shot 05 (0:27–0:34)
+  "O mesmo site. Diferentes formas de comunicar."
+  "Visitantes reais começam a responder."
+
+Shot 06 (0:34–0:43)
+  (sem texto grande — os dados respiram)
+
+Shot 07 (0:43–0:51)
+  "O KRO não tenta adivinhar qual texto é melhor."
+  "Ele deixa seus próprios clientes responderem."   [ênfase em "seus próprios clientes"]
+
+Shot 08 (0:51–0:58)
+  "Cada experimento deixa seu site mais inteligente."
+  "Headline. Oferta. Benefícios. CTA. Posicionamento."
+  "Se está escrito no seu site, existe algo para aprender."
+
+Shot 09 (0:58–1:06)
+  "Seu site deixa de ser uma página estática."   ["página estática" vira múltiplas hipóteses]
+  "E passa a aprender com quem realmente importa: seus visitantes."
+
+Shot 10 (1:06–1:13)
+  "Você já investe para trazer pessoas até o seu site."
+  "O KRO ajuda você a aprender o que dizer quando elas chegam."
+
+Shot 11 (1:13–1:18)
+  "Você escolhe o que seu site diz."
+  "Seus clientes podem mostrar o que ele deveria dizer."
+
+Shot 12 (1:18–1:22) — End card
+  "KRO AI"
+  "Transforme as mensagens do seu site em experimentos.
+   Descubra o que faz mais gente agir."
+  CTA: "Coloque seu site para aprender."
+
+======================================================================
+LANDING PAGE FICTÍCIA (objeto do experimento)
+======================================================================
+Empresa premium de gestão empresarial. Estrutura obrigatória: navegação mínima,
+headline, subheadline, CTA, benefícios, prova social, pequenos elementos visuais
+complementares. Sem lorem ipsum. Precisa permanecer reconhecível durante todo o
+filme — é sempre o mesmo site.
+
+======================================================================
+DIREÇÃO — resumo operacional
+======================================================================
+Paleta: fundo grafite profundo / off-black, interface predominantemente clara,
+branco quente para tipografia, cinzas neutros, UMA cor de destaque KRO para
+seleção, hipóteses, dados importantes e versão vencedora. Sem arco-íris de
+variantes — elas se diferenciam por posição, nomenclatura e conteúdo.
+
+Tipografia: sans-serif contemporânea. Headlines grandes com muito espaço
+negativo, máximo uma ideia dominante por composição. Peso, escala e posição
+carregam a ênfase — não animar cada palavra.
+
+Profundidade: ambiente → página → componentes destacados → dados em foreground.
+Variantes posicionadas em profundidade como páginas paralelas do mesmo sistema.
+
+Luz: suave e direcional, a página é a principal fonte luminosa. Vencedora ganha
+contraste, definição, escala e iluminação — nunca glow explodido.
+
+Câmera: começa distante e se aproxima. Alterna macro e wide. Slow push-ins, dolly
+lateral, parallax, pequenos orbits, push-through, rack-focus, scale transitions.
+Perspectiva 3D discreta entre 3° e 12°. Nunca screen recording.
+
+Motion: selecionar → ramificar → observar → convergir. A headline se separa da
+página, avança em Z e revela alternativas como ramificações do mesmo componente.
+Páginas variantes nascem visualmente da página original. Indicadores de
+comportamento entram como consequência das visitas.
+Física: elementos grandes 700–1400ms, UI secundária 300–600ms, microinterações
+150–300ms. Sem bounce, overshoot mínimo.
+Hierarquia de animação: câmera > página > elemento experimentado > variantes >
+dados > texto editorial > microdetalhes. Nunca animar tudo ao mesmo tempo.
+Transições por continuidade espacial: a própria página é o elemento de transição.
+
+Ritmo: abertura contemplativa com hook imediato; descoberta moderada; criação das
+hipóteses acelera; experimento cresce; resultado desacelera deliberadamente;
+learning loop em montagem rápida; conclusão limpa e estável.
+
+Som: eletrônica contemporânea minimalista. Pulso discreto → camada rítmica na
+entrada do KRO → progressão na multiplicação → densidade crescente nos dados →
+suspensão harmônica na vencedora → energia no ciclo → resolução limpa no end card.
+Sound design escasso e preciso: ticks nas visitas, clique na seleção, micro-impacto
+na ativação, whoosh na multiplicação, pulsos nas conversões, sub-impact contido na
+convergência, assinatura curta no logo.
+
+Implementação: HTML como composição, CSS/SVG para interface, GSAP para timelines.
+Landing page como componente reutilizável, instâncias controladas para variantes.
+Tudo determinístico, seekable e frame-accurate. Nada de setTimeout/setInterval/
+relógio real/randomização não-seeded. Métricas com valores pré-definidos e
+interpolados. Visitantes com trajetórias pré-programadas.
