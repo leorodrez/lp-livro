@@ -1,0 +1,38 @@
+FONTE: briefing do usuário (captura de https://www.apple.com/br/ negada pela
+política de egresso da organização — 403 no CONNECT para www.apple.com:443).
+Screenshots reais fornecidos manualmente pelo usuário em capture/screenshots/.
+
+SEÇÕES/PRODUTOS DA HOMEPAGE APPLE BRASIL citados no briefing:
+- Evento especial da Apple (hero)
+- Mac mini
+- Mac Studio
+- iPhone
+- MacBook Air
+- MacBook Neo
+- Apple Watch
+- AirPods Pro 3
+
+LINGUAGEM DA PÁGINA (do briefing, seção 6):
+minimalismo editorial, branco, preto, produto como protagonista, enorme espaço
+negativo, tipografia precisa, alto contraste, iluminação limpa.
+
+COPY DO VÍDEO (KRO AI), na ordem do storyboard:
+"Vamos tentar melhorar o site da Apple."
+"O que você mudaria aqui?"
+"Talvez nada."
+"Mas essa também é uma hipótese."
+DESIGN / COPY / HIERARQUIA / CTA
+"Grandes profissionais criam grandes hipóteses."
+"O comportamento real decide."
+A — controle · B — variante · C — variante
+"Testar." / "Aprender." / "E testar novamente."
+"Às vezes, a diferença é só 1%."
+"1% parece pequeno." → "Até você multiplicar pela escala."
+"Pequenos ganhos. Escala gigantesca."
+"KRO AI não substitui grandes profissionais."
+substitui → potencializa
+"Transforme páginas excelentes em sistemas que aprendem."
+"Sua melhor página ainda é uma hipótese."
+"Teste com KRO AI."
+
+MARCA KRO: logo "kro ai_" · domínio usekro.ai · assinatura "Conversão inteligente"
