@@ -35,4 +35,21 @@ substitui → potencializa
 "Sua melhor página ainda é uma hipótese."
 "Teste com KRO AI."
 
+COPY DAS VARIANTES TESTADAS NO FILME (seção Mac mini)
+
+A — controle .... copy REAL da Apple, extraída do print, intocada:
+                 "Agora com M6 e M5 Pro." / "Confira em breve a disponibilidade"
+                 [Saiba mais] [Ver preços]
+B — variante ... fornecida pelo usuário; é a que vence no filme:
+                 "Potência M6 e M5 Pro." / "Em breve nas lojas. Fique atento."
+                 [Conheça já] [Ver valores]
+C — variante ... fornecida pelo usuário; é a que perde:
+                 "A nova geração chegou." / "Novidade chegando em breve!"
+                 [Descubra] [Conferir já]
+B1 — geração 2 . fornecida pelo usuário:
+                 "M6 ou M5 Pro. Você escolhe." / "Disponível em breve. Aguarde."
+                 [Veja mais] [Confira já]
+B2 / B3 ........ refinamentos mínimos de B (linha terciária removida; ênfase
+                 dos CTAs trocada). Aparecem em escala pequena e não são lidos.
+
 MARCA KRO: logo "kro ai_" · domínio usekro.ai · assinatura "Conversão inteligente"

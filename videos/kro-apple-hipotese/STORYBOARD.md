@@ -281,9 +281,22 @@ travados. Nada cruza a frase.
 Adapt de `comparison-split`: mantenho a assinatura do book-open — os pares entram
 das alas opostas com tilts 3D espelhados — mas em três tempos (A já existe; B e C
 nascem dela) e com tilts muito mais contidos, porque a peça inteira é contida.
-**Regra dura deste shot:** as diferenças entre as variantes são pequenas e
-plausíveis. B troca a ênfase entre os dois CTAs; C funde subtítulo e linha
-terciária numa só. Nenhuma variante é feia, nenhuma é obviamente melhor.
+**Regra dura deste shot:** cada variante tem copy própria, e todas são
+decisões que um bom copywriter consideraria de verdade. Nenhuma é feia,
+nenhuma é obviamente melhor.
+
+| | subtítulo | linha terciária | CTAs |
+| --- | --- | --- | --- |
+| **A — controle** | Agora com M6 e M5 Pro. | Confira em breve a disponibilidade | Saiba mais · Ver preços |
+| **B — variante** | Potência M6 e M5 Pro. | Em breve nas lojas. Fique atento. | Conheça já · Ver valores |
+| **C — variante** | A nova geração chegou. | Novidade chegando em breve! | Descubra · Conferir já |
+
+**A carrega a copy real da Apple, intocada.** O briefing determina que "uma
+mantém a versão original como controle", e o espectador passou os shots 1–5
+lendo exatamente essa copy — trocá-la quebraria a continuidade e a tese junto.
+B é a reescrita mais contida das três, e é ela que vence. C é a mais
+promocional (é a única com exclamação), e é ela que perde: uma coincidência
+narrativa honesta, não uma lição embutida.
 
 Scene 1 (0.0–1.2s): as camadas voltam para z 0 em `power2.inOut` e o `rotateY`
 volta a 0°. Os rótulos COPY/CTA/DESIGN/HIERARQUIA saem. A página se refaz inteira.
@@ -505,7 +518,7 @@ Scene 6 (3.4–6.5s): **HOLD 3.1s.** Tudo parado.
 - roles: (sem fotografia — o briefing proíbe pessoas genéricas e banco de imagens; os profissionais são representados pelas próprias decisões)
 - focal: tipografia + as linhas de fluxo
 - handoff_in: campo de sessões em scale 0.12, inalterado
-- handoff_out: frase em três linhas no top 614 — "KRO AI não" / "substitui" / "grandes profissionais." — opacidade 1, parada. O verbo tem **linha própria**, e é isso que permite trocá-lo no F13 sem refluxo
+- handoff_out: frase em três linhas no top 614 — "KRO AI" / "não substitui" / "grandes profissionais." — opacidade 1, parada. **A negação vive na mesma linha do verbo**, e é isso que permite que ela saia junto com ele no F13: trocar só "substitui" deixaria "KRO AI não potencializa", invertendo a mensagem da marca
 
 Adapt de `spatial-pan-stations`: mantenho as estações pré-posicionadas atravessadas
 por uma câmera única, mas encolho a traversal a um deslize de 40px — o shot é de
@@ -544,13 +557,13 @@ tese, e a que mais precisa ser lida inteira.
 - handoff_out: página excelente em x708 y428 escala 0.42, opacidade 1; histórico (A·B·C·B1·B2) em y538 escala 0.15 a 0.14 de opacidade; frase final em tela
 
 Adapt de `kinetic-type-beats`: a assinatura é a **troca de token no lugar** — a
-frase não sai e volta, só uma palavra dela muda. Isso obriga o espectador a reler
+frase não sai e volta, só a linha central dela muda. Isso obriga o espectador a reler
 a mesma sentença e perceber que a tese inverteu. É o melhor uso possível dessa
 assinatura no filme.
 
 Scene 1 (0.0–0.3s): a frase herdada continua exatamente onde estava. Zero
 movimento — o espectador precisa reconhecê-la como a mesma.
-Scene 2 (0.3–1.3s): **"substitui" → "potencializa"**, troca no lugar
+Scene 2 (0.3–1.3s): **"não substitui" → "potencializa"**, troca no lugar
 (`discrete-text-sequence`): a palavra antiga sobe 8px e sai, a nova entra por
 baixo no mesmo baseline, e a linha **re-flui** em `power2.inOut` para acomodar as
 três letras a mais. A palavra nova chega em ciano e assenta em branco em 0.4s —

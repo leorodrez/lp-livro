@@ -12,18 +12,24 @@ const Y_ROW1    = -(NAV + HERO + SEC + STUDIO + ROW / 2 - 540); // -2630
 
 /* ── variantes: diferenças pequenas e plausíveis, nunca caricatas ───────── */
 const VARIANTS = {
+  /* A é o CONTROLE: a copy real da Apple, intocada. O briefing determina que
+     "uma mantém a versão original como controle", e o espectador passou os
+     shots 1–5 lendo exatamente esta copy — trocá-la quebraria a continuidade. */
   A:  { sub:'Agora com M6 e M5 Pro.', ter:'Confira em breve a disponibilidade',
         ctas:[['fill','Saiba mais'],['ghost','Ver preços']] },
-  B:  { sub:'Agora com M6 e M5 Pro.', ter:'Confira em breve a disponibilidade',
-        ctas:[['ghost','Saiba mais'],['fill','Ver preços']] },
-  C:  { sub:'Agora com M6 e M5 Pro. Disponibilidade em breve.', ter:'',
-        ctas:[['fill','Saiba mais'],['ghost','Ver preços']] },
-  B1: { sub:'Agora com M6 e M5 Pro.', ter:'Confira em breve a disponibilidade',
-        ctas:[['ghost','Saiba mais'],['fill','Ver preços e configurações']] },
-  B2: { sub:'Agora com M6 e M5 Pro.', ter:'', subWeight:500,
-        ctas:[['ghost','Saiba mais'],['fill','Ver preços']] },
-  B3: { sub:'Agora com M6 e M5 Pro.', ter:'Confira em breve a disponibilidade',
-        ctas:[['fill','Ver preços'],['ghost','Saiba mais']] },
+  /* B vence: a reescrita mais contida das três. */
+  B:  { sub:'Potência M6 e M5 Pro.', ter:'Em breve nas lojas. Fique atento.',
+        ctas:[['fill','Conheça já'],['ghost','Ver valores']] },
+  /* C perde: a copy mais promocional, com exclamação — a menos Apple das três. */
+  C:  { sub:'A nova geração chegou.', ter:'Novidade chegando em breve!',
+        ctas:[['fill','Descubra'],['ghost','Conferir já']] },
+  /* geração seguinte, derivada de B */
+  B1: { sub:'M6 ou M5 Pro. Você escolhe.', ter:'Disponível em breve. Aguarde.',
+        ctas:[['fill','Veja mais'],['ghost','Confira já']] },
+  B2: { sub:'Potência M6 e M5 Pro.', ter:'',
+        ctas:[['fill','Conheça já'],['ghost','Ver valores']] },
+  B3: { sub:'Potência M6 e M5 Pro.', ter:'Em breve nas lojas. Fique atento.',
+        ctas:[['ghost','Conheça já'],['fill','Ver valores']] },
 };
 
 const NAV_ITEMS = ['Loja','Mac','iPad','iPhone','Watch','AirPods','TV e Casa',

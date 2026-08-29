@@ -497,7 +497,7 @@ W('13-potencializa.html', frame('13-potencializa', 7.5, `
         ${HIST.map((_, i) => pcard(['A','B','C','B1','B2'][i], 'card hs h' + i)).join('')}
         ${pcard('B', 'card main')}
       </div>
-      <div class="msg msg-lg t-not" style="top:614px" data-layout-allow-overlap><span>KRO AI não</span><span class="swapline" data-layout-allow-overlap><span class="w-old" data-layout-allow-overlap><b data-layout-allow-overlap>substitui</b></span><span class="w-new" data-layout-allow-overlap><b data-layout-allow-overlap>potencializa</b></span></span><span data-layout-allow-overlap>grandes profissionais.</span></div>
+      <div class="msg msg-lg t-not" style="top:614px" data-layout-allow-overlap><span>KRO AI</span><span class="swapline" data-layout-allow-overlap><span class="w-old" data-layout-allow-overlap><b data-layout-allow-overlap>não substitui</b></span><span class="w-new" data-layout-allow-overlap><b data-layout-allow-overlap>potencializa</b></span></span><span data-layout-allow-overlap>grandes profissionais.</span></div>
       <div class="msg msg-lg t-fin" style="top:150px"><span>Transforme páginas excelentes</span><span>em sistemas que aprendem.</span></div>
     </div>`, `
     const HP = ${JSON.stringify(HIST)};
