@@ -8,7 +8,7 @@ destination: youtube
 aspect: 1920x1080
 language: pt-BR
 audience: "Fundadores, executivos de marketing, CROs, heads de growth, designers, copywriters, estrategistas digitais e empresas com tráfego relevante"
-length: 94s
+length: 103s
 angle: "experimento intelectual — pegar uma referência de excelência (apple.com/br) e demonstrar que mesmo ela é uma hipótese testável"
 narration: no
 music: none
@@ -45,10 +45,16 @@ de efeitos.
 
 ## Assets
 
-- capture/screenshots/ — capturas reais de apple.com/br; fonte visual de verdade
-  para a reconstrução da página (hero do evento, Mac mini, Mac Studio, iPhone,
-  MacBook Air, MacBook Neo, Apple Watch, AirPods Pro 3).
-- ../../kro_ai_logo-01 (7).png — logo KRO AI para o end card.
+- capture/screenshots/apple-site-prints1..7.png — os 7 prints reais de
+  apple.com/br, tirados e fornecidos manualmente pelo usuário depois que a
+  captura automática foi negada (commit `af7d753`). Fonte visual de verdade:
+  hero do evento, Mac mini, Mac Studio, iPhone, MacBook Air, iPad air,
+  MacBook Neo, Apple Watch Series 11, AirPods Pro 3, rodapé.
+- capture/assets/*.png — recortes de produto extraídos desses prints com ffmpeg.
+- assets/kro-lockup.png — logo KRO AI aparado, para o end card.
+- assets/fonts/ — Inter 400/500/600/700 e JetBrains Mono 400/500, self-hosted
+  (a máquina só tinha DejaVu/Liberation, nenhuma das duas serve para a
+  precisão tipográfica que a peça exige).
 
 ## Customizations
 
@@ -76,9 +82,20 @@ de efeitos.
 
 ## Notes
 
-- **Duração**: o briefing pediu 70–85s, mas o próprio storyboard shot-by-shot vai
-  de 0:00 a 1:34. O briefing também determina que *legibilidade tem prioridade
-  sobre a duração estimada*. Alvo: ~94s, honrando integralmente os HOLDs.
+- **Duração final: 103,1s.** O briefing pediu 70–85s, mas as 16 mensagens que
+  ele especifica, somadas aos HOLDs mínimos que ele próprio define, exigem
+  ~58s só de texto (≈45s de HOLD + ≈13s de entradas/saídas) — antes de
+  qualquer coreografia. A janela de 70–85s nunca foi compatível com as
+  próprias regras de legibilidade do briefing, e ele resolve esse conflito
+  explicitamente a favor da legibilidade. O storyboard shot-by-shot já somava
+  94s; honrar os HOLDs à risca levou a 103s.
+- **Captura**: a captura automática de apple.com/br foi negada pela política de
+  egresso da organização (403 no CONNECT para `www.apple.com:443`) — não é
+  falha transitória. Registro em `capture/CAPTURE-BLOCKED-NOTE.md`. Resolvido
+  com os prints fornecidos manualmente pelo usuário.
+- **Uso de marca**: a peça reconstrói a homepage da Apple com copy e fotografia
+  de produto reais, a partir de material que o usuário forneceu deliberadamente
+  para esse fim. É uma decisão dele, sinalizada antes da construção.
 - **Projeto mudo** (`music: none`, sem `SCRIPT.md`): não há credencial HeyGen
   nesta máquina e as engines locais (Kokoro/MusicGen) estão sem dependências.
   Confirmado com o usuário. A direção de som da seção 10 do briefing fica
