@@ -1,0 +1,205 @@
+{
+  "bgm": null,
+  "bgm_pending": false,
+  "voices": [],
+  "sfx": [
+    {
+      "frame": 1,
+      "file": "assets/sfx/impact-bass-1.mp3",
+      "offset_s": 0.0,
+      "duration_s": 2.116,
+      "volume": 0.34
+    },
+    {
+      "frame": 1,
+      "file": "assets/sfx/whoosh-short.mp3",
+      "offset_s": 5.7,
+      "duration_s": 0.575,
+      "volume": 0.26
+    },
+    {
+      "frame": 2,
+      "file": "assets/sfx/click.mp3",
+      "offset_s": 2.0,
+      "duration_s": 0.366,
+      "volume": 0.24
+    },
+    {
+      "frame": 2,
+      "file": "assets/sfx/click-soft.mp3",
+      "offset_s": 4.2,
+      "duration_s": 0.366,
+      "volume": 0.2
+    },
+    {
+      "frame": 2,
+      "file": "assets/sfx/click-soft.mp3",
+      "offset_s": 4.5,
+      "duration_s": 0.366,
+      "volume": 0.2
+    },
+    {
+      "frame": 2,
+      "file": "assets/sfx/click-soft.mp3",
+      "offset_s": 4.8,
+      "duration_s": 0.366,
+      "volume": 0.2
+    },
+    {
+      "frame": 2,
+      "file": "assets/sfx/ping.mp3",
+      "offset_s": 6.3,
+      "duration_s": 1.32,
+      "volume": 0.22
+    },
+    {
+      "frame": 2,
+      "file": "assets/sfx/ping.mp3",
+      "offset_s": 6.9,
+      "duration_s": 1.32,
+      "volume": 0.22
+    },
+    {
+      "frame": 2,
+      "file": "assets/sfx/ping.mp3",
+      "offset_s": 7.5,
+      "duration_s": 1.32,
+      "volume": 0.22
+    },
+    {
+      "frame": 3,
+      "file": "assets/sfx/whoosh-cinematic.mp3",
+      "offset_s": 0.4,
+      "duration_s": 5.544,
+      "volume": 0.26
+    },
+    {
+      "frame": 4,
+      "file": "assets/sfx/riser.mp3",
+      "offset_s": 1.8,
+      "duration_s": 10.032,
+      "volume": 0.14
+    },
+    {
+      "frame": 5,
+      "file": "assets/sfx/impact-bass-2.mp3",
+      "offset_s": 0.0,
+      "duration_s": 2.592,
+      "volume": 0.38
+    },
+    {
+      "frame": 6,
+      "file": "assets/sfx/click-soft.mp3",
+      "offset_s": 0.5,
+      "duration_s": 0.366,
+      "volume": 0.18
+    },
+    {
+      "frame": 6,
+      "file": "assets/sfx/click-soft.mp3",
+      "offset_s": 0.72,
+      "duration_s": 0.366,
+      "volume": 0.18
+    },
+    {
+      "frame": 6,
+      "file": "assets/sfx/click-soft.mp3",
+      "offset_s": 0.94,
+      "duration_s": 0.366,
+      "volume": 0.18
+    },
+    {
+      "frame": 6,
+      "file": "assets/sfx/click-soft.mp3",
+      "offset_s": 1.16,
+      "duration_s": 0.366,
+      "volume": 0.18
+    },
+    {
+      "frame": 7,
+      "file": "assets/sfx/pop.mp3",
+      "offset_s": 0.5,
+      "duration_s": 0.72,
+      "volume": 0.16
+    },
+    {
+      "frame": 7,
+      "file": "assets/sfx/pop.mp3",
+      "offset_s": 1.2,
+      "duration_s": 0.72,
+      "volume": 0.16
+    },
+    {
+      "frame": 7,
+      "file": "assets/sfx/pop.mp3",
+      "offset_s": 1.9,
+      "duration_s": 0.72,
+      "volume": 0.16
+    },
+    {
+      "frame": 7,
+      "file": "assets/sfx/pop.mp3",
+      "offset_s": 2.6,
+      "duration_s": 0.72,
+      "volume": 0.16
+    },
+    {
+      "frame": 7,
+      "file": "assets/sfx/pop.mp3",
+      "offset_s": 3.3,
+      "duration_s": 0.72,
+      "volume": 0.16
+    },
+    {
+      "frame": 8,
+      "file": "assets/sfx/ping.mp3",
+      "offset_s": 2.2,
+      "duration_s": 1.32,
+      "volume": 0.24
+    },
+    {
+      "frame": 9,
+      "file": "assets/sfx/whoosh-short.mp3",
+      "offset_s": 0.2,
+      "duration_s": 0.575,
+      "volume": 0.22
+    },
+    {
+      "frame": 10,
+      "file": "assets/sfx/impact-bass-1.mp3",
+      "offset_s": 0.35,
+      "duration_s": 2.116,
+      "volume": 0.32
+    },
+    {
+      "frame": 10,
+      "file": "assets/sfx/impact-bass-1.mp3",
+      "offset_s": 2.35,
+      "duration_s": 2.116,
+      "volume": 0.32
+    },
+    {
+      "frame": 12,
+      "file": "assets/sfx/impact-bass-2.mp3",
+      "offset_s": 0.0,
+      "duration_s": 2.592,
+      "volume": 0.3
+    },
+    {
+      "frame": 14,
+      "file": "assets/sfx/ping.mp3",
+      "offset_s": 2.6,
+      "duration_s": 1.32,
+      "volume": 0.26
+    },
+    {
+      "frame": 15,
+      "file": "assets/sfx/impact-bass-1.mp3",
+      "offset_s": 0.0,
+      "duration_s": 2.116,
+      "volume": 0.26
+    }
+  ],
+  "total_duration_s": 83,
+  "bgm_note": "BGM indisponível neste ambiente: HeyGen exige login e o MusicGen local não pôde baixar os pesos (huggingface.co negado pela política de rede)."
+}

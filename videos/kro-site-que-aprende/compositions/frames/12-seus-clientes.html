@@ -1,0 +1,413 @@
+<template>
+  <style>
+    @font-face{font-family:"Sora";font-weight:600;font-style:normal;font-display:block;src:url("assets/fonts/Sora-600.woff2") format("woff2");}
+    @font-face{font-family:"Sora";font-weight:700;font-style:normal;font-display:block;src:url("assets/fonts/Sora-700.woff2") format("woff2");}
+
+    #root{
+      position:relative;
+      width:1080px;
+      height:1920px;
+      overflow:hidden;
+      font-family:"Sora",sans-serif;
+    }
+
+    /* ---------- level 1 — atmospheric ground (full-bleed clip, never on #root) ---------- */
+    .f12-ground{
+      position:absolute;
+      inset:0;
+      background:
+        radial-gradient(118% 86% at 20% 10%, #343434 0%, #2B2B2B 44%, #1E1E1E 100%);
+    }
+    .f12-grain{
+      position:absolute;
+      inset:0;
+      opacity:0.032;
+      mix-blend-mode:overlay;
+      pointer-events:none;
+    }
+    .f12-grain svg{display:block;width:100%;height:100%;}
+
+    /* ---------- level 2 — the system, inside perspective ---------- */
+    .f12-stage{
+      position:absolute;
+      inset:0;
+      perspective:2400px;
+      perspective-origin:50% 38%;
+      transform-style:preserve-3d;
+    }
+
+    /* landing-mock — handoff_in: x 0, y -40px, scale 0.70, opacity 1 */
+    .f12-mock-wrap{
+      --dof:0px;
+      position:absolute;
+      left:160px;
+      top:190px;
+      width:760px;
+      height:960px;
+      filter:blur(var(--dof));
+      will-change:filter,transform;
+      transform-style:preserve-3d;
+      z-index:2;
+    }
+    .f12-mock{
+      position:absolute;
+      inset:0;
+      background:#F4F2EE;
+      border-radius:20px;
+      box-shadow:0 30px 80px rgba(0,0,0,0.45);
+      overflow:hidden;
+    }
+    .f12-mock-sheen{
+      position:absolute;
+      left:0;right:0;top:0;
+      height:120px;
+      background:linear-gradient(180deg, rgba(255,255,255,0.085) 0%, rgba(255,255,255,0) 100%);
+    }
+    .f12-mock-chrome{
+      position:absolute;
+      left:0;right:0;top:0;
+      height:64px;
+      border-bottom:1px solid rgba(43,43,43,0.10);
+      display:flex;
+      align-items:center;
+      gap:12px;
+      padding-left:28px;
+    }
+    .f12-chrome-dot{
+      width:12px;height:12px;border-radius:50%;
+      background:rgba(43,43,43,0.16);
+    }
+    .f12-mock-body{
+      position:absolute;
+      left:56px;right:56px;top:150px;
+    }
+    .f12-mock-head{display:flex;flex-direction:column;gap:18px;}
+    .f12-bar-h{
+      display:block;
+      height:30px;
+      border-radius:6px;
+      background:rgba(43,43,43,0.80);
+    }
+    .f12-bar-h.w88{width:88%;}
+    .f12-bar-h.w54{width:54%;}
+    .f12-cta-bar{
+      display:block;
+      width:112px;height:12px;
+      border-radius:6px;
+      background:rgba(244,242,238,0.72);
+    }
+    .f12-label-bar{
+      display:block;
+      width:92px;height:10px;
+      border-radius:6px;
+      background:rgba(255,255,255,0.30);
+    }
+    .f12-bar{
+      display:block;
+      height:14px;
+      border-radius:6px;
+      background:rgba(43,43,43,0.12);
+    }
+    .f12-bar.w88{width:88%;}
+    .f12-bar.w72{width:72%;}
+    .f12-bar.w54{width:54%;}
+    .f12-mock-lines{margin-top:34px;display:flex;flex-direction:column;gap:16px;}
+    .f12-mock-cta{
+      margin-top:46px;
+      width:244px;height:62px;
+      border-radius:100px;
+      background:#2B2B2B;
+      display:flex;align-items:center;justify-content:center;
+      font-family:"Sora",sans-serif;font-weight:600;font-size:18px;
+      color:#F4F2EE;
+      letter-spacing:0.01em;
+    }
+    .f12-mock-rule{
+      position:absolute;
+      left:56px;right:56px;bottom:150px;
+      height:1px;
+      background:rgba(43,43,43,0.10);
+    }
+    .f12-mock-foot{
+      position:absolute;
+      left:56px;right:56px;bottom:84px;
+      display:flex;gap:18px;
+    }
+    .f12-foot-bar{height:12px;border-radius:6px;background:rgba(43,43,43,0.08);}
+
+    /* signal-dots — eighteen cyan visitor signals in low orbit */
+    .f12-orbit-wrap{
+      --dof:0px;
+      position:absolute;
+      left:140px;
+      top:390px;
+      width:800px;
+      height:800px;
+      filter:blur(var(--dof));
+      will-change:filter;
+      transform-style:preserve-3d;
+      z-index:1;
+    }
+    .f12-orbit-tilt{
+      position:absolute;
+      inset:0;
+      transform:rotateX(74deg);
+      transform-style:preserve-3d;
+    }
+    .f12-orbit-spin{
+      position:absolute;
+      inset:0;
+      transform-style:preserve-3d;
+    }
+    .f12-dot{
+      position:absolute;
+      border-radius:50%;
+      background:#06B6D4;
+      transform:translate(-50%,-50%) rotateX(-74deg);
+      box-shadow:0 0 14px rgba(6,182,212,0.40);
+    }
+    .f12-dot::after{
+      content:"";
+      position:absolute;
+      right:50%;
+      top:50%;
+      width:46px;
+      height:2px;
+      margin-top:-1px;
+      border-radius:2px;
+      background:linear-gradient(270deg, rgba(6,182,212,0.46) 0%, rgba(6,182,212,0) 100%);
+    }
+
+    /* the experimentation system that vanishes all at once in Cena A */
+    .f12-system{
+      position:absolute;
+      inset:0;
+      z-index:3;
+      transform-style:preserve-3d;
+    }
+    .f12-variant{
+      position:absolute;
+      width:236px;
+      background:#F4F2EE;
+      border:1px solid rgba(43,43,43,0.10);
+      border-radius:16px;
+      padding:22px 20px;
+      box-shadow:0 30px 80px rgba(0,0,0,0.45);
+    }
+    .f12-variant .f12-bar{margin-bottom:12px;}
+    .f12-variant .f12-bar:last-child{margin-bottom:0;}
+    .f12-v1{left:44px;top:430px;transform:rotateY(16deg);}
+    .f12-v2{left:800px;top:356px;transform:rotateY(-16deg);}
+    .f12-v3{left:742px;top:762px;transform:rotateY(-12deg);}
+    .f12-readout{
+      position:absolute;
+      left:88px;
+      top:1058px;
+      padding:20px 26px;
+      background:rgba(255,255,255,0.04);
+      border:1px solid rgba(255,255,255,0.10);
+      border-radius:12px;
+    }
+    .f12-metric-value{
+      font-family:"Sora",sans-serif;font-weight:700;font-size:54px;line-height:1;
+      color:#06B6D4;
+      letter-spacing:-0.02em;
+    }
+    .f12-metric-label{
+      margin-top:14px;
+      display:flex;
+    }
+    .f12-wires{position:absolute;inset:0;}
+
+    /* ---------- level 3 — hero typography, flat in the camera plane ---------- */
+    .f12-hero{
+      position:absolute;
+      left:0;
+      right:0;
+      top:838px;
+      text-align:center;
+      font-family:"Sora",sans-serif;
+      font-weight:700;
+      font-size:100px;
+      line-height:1.04;
+      letter-spacing:-0.03em;
+      color:#FFFFFF;
+      transform-origin:50% 50%;
+      will-change:transform,opacity;
+      z-index:10;
+    }
+    .f12-hero .brand{color:#7C3AED;}
+  </style>
+
+  <div
+    id="root"
+    data-composition-id="12-seus-clientes"
+    data-start="0"
+    data-duration="2.5"
+    data-width="1080"
+    data-height="1920"
+  >
+    <!-- level 1 — atmosphere -->
+    <div class="f12-ground clip" data-start="0" data-duration="2.5" data-track-index="0">
+      <div class="f12-grain">
+        <svg xmlns="http://www.w3.org/2000/svg" width="1080" height="1920" viewBox="0 0 1080 1920" preserveAspectRatio="none">
+          <filter id="f12-noise" x="0" y="0" width="100%" height="100%">
+            <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="3" stitchTiles="stitch" seed="7" />
+          </filter>
+          <rect width="1080" height="1920" filter="url(#f12-noise)" />
+        </svg>
+      </div>
+    </div>
+
+    <!-- level 2 — the system -->
+    <div class="f12-stage clip" data-start="0" data-duration="2.5" data-track-index="1">
+      <!-- the landing page: the only object that stays -->
+      <div class="f12-mock-wrap" id="f12-mock-wrap">
+        <div class="f12-mock">
+          <div class="f12-mock-chrome">
+            <span class="f12-chrome-dot"></span>
+            <span class="f12-chrome-dot"></span>
+            <span class="f12-chrome-dot"></span>
+          </div>
+          <div class="f12-mock-sheen"></div>
+          <div class="f12-mock-body">
+            <div class="f12-mock-head">
+              <span class="f12-bar-h w88"></span>
+              <span class="f12-bar-h w54"></span>
+            </div>
+            <div class="f12-mock-lines">
+              <span class="f12-bar w88"></span>
+              <span class="f12-bar w72"></span>
+            </div>
+            <div class="f12-mock-cta"><span class="f12-cta-bar"></span></div>
+          </div>
+          <div class="f12-mock-rule"></div>
+          <div class="f12-mock-foot">
+            <span class="f12-foot-bar" style="width:188px"></span>
+            <span class="f12-foot-bar" style="width:124px"></span>
+            <span class="f12-foot-bar" style="width:92px"></span>
+          </div>
+        </div>
+      </div>
+
+      <!-- the eighteen visitor signals that stay with the page -->
+      <div class="f12-orbit-wrap" id="f12-orbit-wrap">
+        <div class="f12-orbit-tilt">
+          <div class="f12-orbit-spin" id="f12-orbit-spin">
+            <i class="f12-dot" style="left:400.0px;top:0.0px;width:12px;height:12px"></i>
+            <i class="f12-dot" style="left:527.9px;top:48.6px;width:14px;height:14px"></i>
+            <i class="f12-dot" style="left:623.7px;top:133.4px;width:10px;height:10px"></i>
+            <i class="f12-dot" style="left:746.4px;top:200.0px;width:16px;height:16px"></i>
+            <i class="f12-dot" style="left:768.3px;top:335.1px;width:12px;height:12px"></i>
+            <i class="f12-dot" style="left:742.7px;top:460.4px;width:14px;height:14px"></i>
+            <i class="f12-dot" style="left:746.4px;top:600.0px;width:12px;height:12px"></i>
+            <i class="f12-dot" style="left:640.4px;top:686.5px;width:14px;height:14px"></i>
+            <i class="f12-dot" style="left:519.0px;top:727.0px;width:10px;height:10px"></i>
+            <i class="f12-dot" style="left:400.0px;top:800.0px;width:16px;height:16px"></i>
+            <i class="f12-dot" style="left:272.1px;top:751.4px;width:12px;height:12px"></i>
+            <i class="f12-dot" style="left:176.3px;top:666.6px;width:14px;height:14px"></i>
+            <i class="f12-dot" style="left:53.6px;top:600.0px;width:12px;height:12px"></i>
+            <i class="f12-dot" style="left:31.7px;top:464.9px;width:14px;height:14px"></i>
+            <i class="f12-dot" style="left:57.3px;top:339.6px;width:10px;height:10px"></i>
+            <i class="f12-dot" style="left:53.6px;top:200.0px;width:16px;height:16px"></i>
+            <i class="f12-dot" style="left:159.6px;top:113.5px;width:12px;height:12px"></i>
+            <i class="f12-dot" style="left:281.0px;top:73.0px;width:14px;height:14px"></i>
+          </div>
+        </div>
+      </div>
+
+      <!-- the experimentation apparatus — leaves all at once in Cena A -->
+      <div class="f12-system" id="f12-system">
+        <svg class="f12-wires" xmlns="http://www.w3.org/2000/svg" width="1080" height="1920" viewBox="0 0 1080 1920" fill="none">
+          <path d="M280 492 L436 616" stroke="rgba(6,182,212,0.26)" stroke-width="2" />
+          <path d="M836 418 L652 580" stroke="rgba(6,182,212,0.26)" stroke-width="2" />
+          <path d="M806 824 L664 744" stroke="rgba(6,182,212,0.26)" stroke-width="2" />
+          <path d="M214 1052 L348 964" stroke="rgba(6,182,212,0.18)" stroke-width="2" />
+        </svg>
+        <div class="f12-variant f12-v1">
+          <span class="f12-bar w88"></span>
+          <span class="f12-bar w54"></span>
+        </div>
+        <div class="f12-variant f12-v2">
+          <span class="f12-bar w72"></span>
+          <span class="f12-bar w54"></span>
+        </div>
+        <div class="f12-variant f12-v3">
+          <span class="f12-bar w88"></span>
+          <span class="f12-bar w72"></span>
+        </div>
+        <div class="f12-readout">
+          <div class="f12-metric-value">18</div>
+          <div class="f12-metric-label"><span class="f12-label-bar"></span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- level 3 — hero typography -->
+    <div class="f12-hero clip" id="f12-hero" data-start="0" data-duration="2.5" data-track-index="2">
+      seus <span class="brand">clientes</span>.
+    </div>
+  </div>
+
+  <script src="assets/vendor/gsap.min.js"></script>
+  <script>
+    (function () {
+      window.__timelines = window.__timelines || {};
+      var tl = gsap.timeline({ paused: true });
+
+      /* ---------- handoff_in — the exact boundary state frame 11 hands over ---------- */
+      gsap.set("#f12-mock-wrap", { x: 0, y: -40, scale: 0.7, opacity: 1, "--dof": "0px" });
+      gsap.set("#f12-orbit-wrap", { opacity: 1, "--dof": "0px" });
+      gsap.set("#f12-orbit-spin", { rotation: -7 });
+
+      /* ---------- Cena A (0.0-0.5s) — a reducao -----------------------------------
+         The whole experimentation apparatus leaves AT ONCE (one tween on one group,
+         never staggered), and the page + the visitor signals rack out of focus to
+         5px because the word is now the subject (depth-of-field-blur). Every tween
+         here lands by 0.55s, well before the hold window opens at 0.8s.          */
+      tl.fromTo(
+        "#f12-system",
+        { opacity: 1 },
+        { opacity: 0, duration: 0.1, ease: "power1.in" },
+        0.06
+      );
+
+      tl.to(
+        "#f12-mock-wrap",
+        { "--dof": "5px", opacity: 0.62, duration: 0.5, ease: "power2.inOut" },
+        0.05
+      );
+      tl.to(
+        "#f12-orbit-wrap",
+        { "--dof": "5px", opacity: 0.7, duration: 0.5, ease: "power2.inOut" },
+        0.05
+      );
+      /* the low orbit coasts to a complete stop as the focus leaves it */
+      tl.fromTo(
+        "#f12-orbit-spin",
+        { rotation: -7 },
+        { rotation: 0, duration: 0.5, ease: "power2.out" },
+        0.05
+      );
+
+      /* ---------- Cena B (0.0-0.8s) — a palavra -----------------------------------
+         spring-pop-entrance, scale 0 -> 1 with a 3% overshoot: back.out(0.9) peaks
+         at 4*s^3 / (27*(s+1)^2) = 0.030. "clientes" is purple in its very first
+         rendered frame - no colour tween, the colour IS the content. The 14px rise
+         is folded into the handoff_out y of +160px so no CSS transform is needed.  */
+      tl.fromTo(
+        "#f12-hero",
+        { scale: 0, opacity: 0, y: 174 },
+        { scale: 1, opacity: 1, y: 160, duration: 0.55, ease: "back.out(0.9)" },
+        0
+      );
+
+      /* ---------- Cena C (0.8-2.0s) — quase zero movimento ------------------------
+         Nothing is scheduled past 0.55s. 1.2s of an absolutely still frame, and the
+         hero lands exactly on handoff_out: x 0, y +160px, scale 1.0, opacity 1.    */
+
+      window.__timelines["12-seus-clientes"] = tl;
+      tl.seek(0);
+    })();
+  </script>
+</template>

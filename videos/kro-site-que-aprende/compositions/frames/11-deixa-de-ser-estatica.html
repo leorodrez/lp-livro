@@ -1,0 +1,486 @@
+<template>
+  <style>
+    /* ---- fonts (self-hosted, project-root relative — see frame.md) ---- */
+    @font-face{font-family:"Sora";font-weight:600;font-style:normal;font-display:block;src:url("assets/fonts/Sora-600.woff2") format("woff2");}
+    @font-face{font-family:"Sora";font-weight:700;font-style:normal;font-display:block;src:url("assets/fonts/Sora-700.woff2") format("woff2");}
+
+    /* ---- frame root (styled by #root, never by a class — sub-composition law) ---- */
+    #root{
+      position:relative;
+      width:1080px;height:1920px;
+      overflow:hidden;              /* required by viewport-change: any non-1.0 camera scale reveals edges */
+      font-family:"Sora",sans-serif;
+      -webkit-font-smoothing:antialiased;
+    }
+
+    /* ================= LEVEL 1 — atmospheric ground (full-bleed clip layer) ================= */
+    .f11-ground{
+      position:absolute;inset:0;
+      background:
+        radial-gradient(118% 92% at 16% 6%, #3A3A3A 0%, #2F2F2F 34%, #2B2B2B 58%, #1E1E1E 100%);
+    }
+    .f11-grain{position:absolute;inset:0;width:100%;height:100%;opacity:0.032;pointer-events:none;}
+
+    /* ================= LEVEL 2 — the system, inside perspective ================= */
+    .f11-stage{position:absolute;inset:0;perspective:2400px;perspective-origin:50% 50%;}
+    /* the virtual camera — ONE wrapper, composite translate()+scale() written by applyCamera().
+       It governs level 2 only: hero typography is a separate flat clip and never moves. */
+    .f11-cam{position:absolute;inset:0;transform-origin:50% 50%;transform-style:preserve-3d;will-change:transform;}
+    .f11-plane{position:absolute;inset:0;transform-style:preserve-3d;}
+
+    /* ---- landing-mock: the cinematographic object (never a browser screenshot) ---- */
+    .f11-mock{
+      position:absolute;left:130px;top:200px;width:820px;height:740px;
+      background:#F4F2EE;border-radius:20px;
+      box-shadow:0 30px 80px rgba(0,0,0,0.45);
+      transform-origin:50% 50%;
+    }
+    .f11-reflect{
+      position:absolute;left:0;top:0;width:100%;height:132px;border-radius:20px 20px 0 0;
+      background:linear-gradient(180deg, rgba(255,255,255,0.09) 0%, rgba(255,255,255,0) 100%);
+    }
+    .f11-chrome{position:absolute;left:0;top:0;width:100%;height:62px;border-bottom:1px solid rgba(43,43,43,0.10);}
+    .f11-chrome i{position:absolute;top:26px;width:11px;height:11px;border-radius:50%;background:rgba(43,43,43,0.16);}
+    .f11-chrome i:nth-child(1){left:28px;}
+    .f11-chrome i:nth-child(2){left:50px;}
+    .f11-chrome i:nth-child(3){left:72px;}
+
+    .f11-hl{position:absolute;left:56px;top:110px;width:620px;height:88px;}
+    .f11-hl b{position:absolute;left:0;display:block;border-radius:6px;background:rgba(43,43,43,0.72);}
+    .f11-hl .f11-b1{top:0;width:560px;height:22px;}
+    .f11-hl .f11-b2{top:46px;width:340px;height:22px;}
+
+    .f11-body{position:absolute;left:56px;top:232px;width:620px;height:38px;}
+    .f11-body b{position:absolute;left:0;display:block;height:10px;border-radius:6px;background:rgba(43,43,43,0.26);}
+    .f11-body .f11-l1{top:0;width:520px;}
+    .f11-body .f11-l2{top:28px;width:432px;}
+
+    /* the block that expands (anchored expansion) and is later promoted */
+    .f11-blk{
+      position:absolute;left:56px;top:330px;width:708px;height:0;overflow:hidden;
+      border-radius:12px;background:rgba(6,182,212,0.08);
+      border:1px solid rgba(6,182,212,0.22);box-sizing:border-box;
+    }
+    .f11-blk-bar{position:absolute;left:22px;top:24px;width:300px;height:14px;border-radius:6px;background:rgba(43,43,43,0.70);}
+    .f11-blk-sub{position:absolute;left:22px;top:118px;width:236px;height:9px;border-radius:6px;background:rgba(43,43,43,0.22);}
+    /* potential-bar — observed potential, demonstrative product UI, never a promise */
+    .f11-pot{position:absolute;left:22px;top:76px;width:560px;height:10px;border-radius:6px;background:rgba(6,182,212,0.12);overflow:hidden;}
+    .f11-pot span{display:block;width:0;height:100%;border-radius:6px;background:#06B6D4;}
+
+    .f11-btn{
+      position:absolute;left:56px;top:540px;width:230px;height:62px;
+      border-radius:100px;background:#2B2B2B;
+    }
+    .f11-btn i{position:absolute;left:38px;top:27px;width:112px;height:8px;border-radius:6px;background:rgba(244,242,238,0.82);}
+
+    /* variant-card #2 (handoff_in) — identical geometry, differs only in its headline.
+       It dissolves back into the original mock in 600ms: pure cross-fade, zero transform motion. */
+    .f11-variant{position:absolute;left:56px;top:110px;width:620px;height:88px;}
+    .f11-variant b{position:absolute;left:0;display:block;border-radius:6px;background:rgba(43,43,43,0.72);}
+    .f11-variant .f11-v1{top:4px;width:404px;height:20px;}
+    .f11-variant .f11-v2{top:44px;width:496px;height:20px;}
+
+    /* selection chrome — declares which component the arriving signal is bound to */
+    .f11-sel{position:absolute;border:1.5px solid rgba(6,182,212,0.95);border-radius:10px;opacity:0;box-sizing:border-box;}
+    .f11-sel-hl{left:44px;top:96px;width:644px;height:116px;}
+    .f11-sel-btn{left:44px;top:528px;width:254px;height:86px;}
+    .f11-sel-blk{left:44px;top:318px;width:732px;height:180px;}
+
+    /* the 55% -> 100% light morph of the surface */
+    .f11-scrim{position:absolute;inset:0;border-radius:20px;background:#2B2B2B;}
+
+    /* ---- signal-dots: the visitor. Cyan point with a short trail. Never an avatar. ---- */
+    .f11-orb{position:absolute;left:0;top:0;}
+    .f11-orb-core{display:block;border-radius:50%;background:#06B6D4;box-shadow:0 0 12px rgba(6,182,212,0.45);}
+    .f11-sig{position:absolute;left:0;top:0;opacity:0;}
+    .f11-sig .f11-head{position:absolute;left:-7px;top:-7px;width:14px;height:14px;border-radius:50%;background:#06B6D4;box-shadow:0 0 14px rgba(6,182,212,0.5);}
+    .f11-sig .f11-trail{position:absolute;left:-2px;top:-1px;width:74px;height:2px;border-radius:2px;transform-origin:0% 50%;background:linear-gradient(90deg, rgba(6,182,212,0.55) 0%, rgba(6,182,212,0) 100%);}
+    .f11-sig1 .f11-trail{transform:rotate(196deg);}
+    .f11-sig2 .f11-trail{transform:rotate(139deg);}
+    .f11-sig3 .f11-trail{transform:rotate(339deg);}
+    .f11-ring{position:absolute;left:-19px;top:-19px;width:38px;height:38px;border-radius:50%;border:1.5px solid rgba(6,182,212,0.8);opacity:0;}
+
+    /* ---- feedback-flows: arriving from outside in, on a deviation curve ---- */
+    .f11-flows{position:absolute;inset:0;width:100%;height:100%;overflow:visible;}
+    .f11-flows path{fill:none;stroke:#06B6D4;stroke-width:2.5;stroke-linecap:round;opacity:0.9;}
+
+    /* ================= LEVEL 3 — hero typography: flat, no perspective, never blurred ================= */
+    .f11-typo{position:absolute;inset:0;}
+    .f11-phrase{position:absolute;left:88px;top:1070px;width:832px;}
+    .f11-line{position:relative;height:106px;margin-bottom:-24px;overflow:hidden;}
+    .f11-ink{
+      display:block;padding:14px 0;
+      font-family:"Sora",sans-serif;font-weight:600;font-size:66px;line-height:1.16;
+      letter-spacing:-0.02em;color:#FFFFFF;white-space:nowrap;
+    }
+  </style>
+
+  <div
+    id="root"
+    data-composition-id="11-deixa-de-ser-estatica"
+    data-start="0"
+    data-duration="8"
+    data-width="1080"
+    data-height="1920"
+  >
+    <!-- LEVEL 1 — full-bleed ground on its own clip layer (never on #root) -->
+    <div class="clip f11-ground" data-start="0" data-duration="8" data-track-index="0">
+      <svg class="f11-grain" viewBox="0 0 1080 1920" preserveAspectRatio="none" aria-hidden="true">
+        <filter id="f11-grain-filter" x="0" y="0" width="100%" height="100%">
+          <feTurbulence type="fractalNoise" baseFrequency="0.82" numOctaves="3" seed="7" stitchTiles="stitch"/>
+          <feColorMatrix type="saturate" values="0"/>
+        </filter>
+        <rect width="1080" height="1920" filter="url(#f11-grain-filter)"/>
+      </svg>
+    </div>
+
+    <!-- LEVEL 2 — the system -->
+    <div class="clip f11-stage" data-start="0" data-duration="8" data-track-index="1">
+      <div class="f11-cam">
+        <div class="f11-plane">
+
+          <svg class="f11-flows" viewBox="0 0 1080 1920" preserveAspectRatio="none" aria-hidden="true">
+            <path class="f11-flow f11-flow1" d="M -150 1290 C 210 1200 70 880 232 640"/>
+            <path class="f11-flow f11-flow2" d="M 1250 1330 C 980 1270 1070 950 848 700"/>
+            <path class="f11-flow f11-flow3" d="M 1260 70 C 1010 230 1130 300 848 330"/>
+          </svg>
+          <div class="f11-fdot f11-fdot1"></div>
+          <div class="f11-fdot f11-fdot2"></div>
+          <div class="f11-fdot f11-fdot3"></div>
+
+          <div class="f11-mock">
+            <div class="f11-chrome"><i></i><i></i><i></i></div>
+
+            <div class="f11-hl">
+              <b class="f11-b1"></b>
+              <b class="f11-b2"></b>
+            </div>
+
+            <div class="f11-body">
+              <b class="f11-l1"></b>
+              <b class="f11-l2"></b>
+            </div>
+
+            <div class="f11-blk">
+              <div class="f11-blk-bar"></div>
+              <div class="f11-pot"><span></span></div>
+              <div class="f11-blk-sub"></div>
+            </div>
+
+            <div class="f11-btn"><i></i></div>
+
+            <div class="f11-variant">
+              <b class="f11-v1"></b>
+              <b class="f11-v2"></b>
+            </div>
+
+            <div class="f11-sel f11-sel-hl"></div>
+            <div class="f11-sel f11-sel-btn"></div>
+            <div class="f11-sel f11-sel-blk"></div>
+
+            <div class="f11-reflect"></div>
+            <div class="f11-scrim"></div>
+          </div>
+
+          <div class="f11-orbit"></div>
+
+          <div class="f11-sig f11-sig1"><i class="f11-trail"></i><i class="f11-head"></i><i class="f11-ring"></i></div>
+          <div class="f11-sig f11-sig2"><i class="f11-trail"></i><i class="f11-head"></i><i class="f11-ring"></i></div>
+          <div class="f11-sig f11-sig3"><i class="f11-trail"></i><i class="f11-head"></i><i class="f11-ring"></i></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- LEVEL 3 — hero typography (onscreen_text, verbatim) -->
+    <div class="clip f11-typo" data-start="0" data-duration="8" data-track-index="2">
+      <div class="f11-phrase f11-p1">
+        <div class="f11-line"><span class="f11-ink">Seu site deixa</span></div>
+        <div class="f11-line"><span class="f11-ink">de ser uma página</span></div>
+        <div class="f11-line"><span class="f11-ink">estática...</span></div>
+      </div>
+      <div class="f11-phrase f11-p2">
+        <div class="f11-line"><span class="f11-ink">e passa a aprender</span></div>
+        <div class="f11-line"><span class="f11-ink">com quem realmente</span></div>
+        <div class="f11-line"><span class="f11-ink">importa:</span></div>
+      </div>
+    </div>
+  </div>
+
+  <script src="assets/vendor/gsap.min.js"></script>
+  <script>
+    (function () {
+      var FID = "11-deixa-de-ser-estatica";
+      var root = document.querySelector('[data-composition-id="' + FID + '"]');
+      if (!root) return;
+      var q = function (s) { return root.querySelector(s); };
+      var qa = function (s) { return Array.prototype.slice.call(root.querySelectorAll(s)); };
+
+      /* ---------------------------------------------------------------
+         geometry / contracts
+      --------------------------------------------------------------- */
+      var VW = 1080, VH = 1920;
+      var CX = VW / 2, CY = VH / 2;                 /* camera + perspective origin */
+      var MOCK_CY = 570;                            /* laid-out centre of the landing-mock (200 + 740/2) */
+      var CAM_END = 0.92;                           /* Cena D dolly-out (viewport-change) */
+
+      /* handoff_out — landing-mock, composed on screen: x 0, y -40px, scale 0.70, opacity 1.
+         The camera carries 0.92 of that, so the element itself resolves the remainder. */
+      var HO_Y = -40, HO_SCALE = 0.70;
+      var MOCK_END_SCALE = HO_SCALE / CAM_END;                       /* 0.76087 */
+      var MOCK_END_Y = (MOCK_CY + HO_Y - CY) / CAM_END - (MOCK_CY - CY);
+
+      /* ---------------------------------------------------------------
+         the virtual camera — ONE wrapper, ONE writer (viewport-change)
+      --------------------------------------------------------------- */
+      var camEl = q(".f11-cam");
+      var cam = { scale: 1, x: 0, y: 0 };
+      function applyCamera() {
+        camEl.style.transform =
+          "translate(" + cam.x + "px," + cam.y + "px) scale(" + cam.scale + ")";
+      }
+      applyCamera(); /* seed frame 0 */
+
+      /* ---------------------------------------------------------------
+         signal-dots in low orbit — 18, deterministic, parked on an ellipse
+      --------------------------------------------------------------- */
+      var ORB_CX = 540, ORB_CY = 870, ORB_RX = 440, ORB_RY = 120;
+      var ANG_OFF = [0, 7, -5, 3, -8, 6, 2, -6, 4, 8, -3, 5, -7, 1, 6, -4, 3, -2];
+      var RADF = [1.00, 0.94, 1.06, 0.98, 1.02, 0.90, 1.08, 0.96, 1.00,
+                  1.04, 0.92, 1.00, 1.06, 0.95, 1.01, 1.07, 0.93, 0.99];
+      var SIZES = [12, 10, 14, 11, 13, 10, 16, 12, 11, 14, 10, 13, 12, 15, 11, 12, 10, 14];
+      var G1 = [0, 5, 10, 15];
+      var G2 = [1, 3, 6, 8, 11, 13, 16];
+      var G3 = [2, 4, 7, 9, 12, 14, 17];
+
+      var orbitEl = q(".f11-orbit");
+      var orbs = [];
+      var cores = [];
+      var baseAng = [];
+      var bakedOp = [];
+      for (var i = 0; i < 18; i++) {
+        var a = ((i * 20 + ANG_OFF[i]) * Math.PI) / 180;
+        baseAng.push(a);
+        bakedOp.push(0.40 + 0.55 * (0.5 + 0.5 * Math.sin(a)));
+        var holder = document.createElement("div");
+        holder.className = "f11-orb";
+        holder.style.left = ORB_CX + "px";
+        holder.style.top = ORB_CY + "px";
+        var core = document.createElement("span");
+        core.className = "f11-orb-core";
+        core.style.width = SIZES[i] + "px";
+        core.style.height = SIZES[i] + "px";
+        core.style.marginLeft = -SIZES[i] / 2 + "px";
+        core.style.marginTop = -SIZES[i] / 2 + "px";
+        core.style.opacity = "0";
+        holder.appendChild(core);
+        orbitEl.appendChild(holder);
+        orbs.push(holder);
+        cores.push(core);
+      }
+      var ORB = { t: 0 };
+      function placeOrbit() {
+        for (var k = 0; k < 18; k++) {
+          var ang = baseAng[k] + ORB.t;
+          gsap.set(orbs[k], {
+            x: ORB_RX * RADF[k] * Math.cos(ang),
+            y: ORB_RY * RADF[k] * Math.sin(ang)
+          });
+        }
+      }
+      placeOrbit(); /* seed frame 0 */
+
+      /* ---------------------------------------------------------------
+         handles
+      --------------------------------------------------------------- */
+      var mock = q(".f11-mock");
+      var plane = q(".f11-plane");
+      var scrim = q(".f11-scrim");
+      var variant = q(".f11-variant");
+      var hl = q(".f11-hl");
+      var hlB1 = q(".f11-hl .f11-b1");
+      var hlB2 = q(".f11-hl .f11-b2");
+      var body = q(".f11-body");
+      var blk = q(".f11-blk");
+      var blkBar = q(".f11-blk-bar");
+      var potFill = q(".f11-pot span");
+      var btn = q(".f11-btn");
+      var selHl = q(".f11-sel-hl");
+      var selBtn = q(".f11-sel-btn");
+      var selBlk = q(".f11-sel-blk");
+      var p1 = qa(".f11-p1 .f11-ink");
+      var p2 = qa(".f11-p2 .f11-ink");
+      var flows = qa(".f11-flow");
+      var fdots = qa(".f11-fdot");
+      var sigs = qa(".f11-sig");
+
+      /* feedback-flow end points (plane space) = the page's FINAL edges */
+      var FEND = [[232, 640], [848, 700], [848, 330]];
+      for (var f = 0; f < 3; f++) {
+        fdots[f].style.position = "absolute";
+        fdots[f].style.left = FEND[f][0] - 9 + "px";
+        fdots[f].style.top = FEND[f][1] - 9 + "px";
+        fdots[f].style.width = "18px";
+        fdots[f].style.height = "18px";
+        fdots[f].style.borderRadius = "50%";
+        fdots[f].style.border = "1.5px solid rgba(6,182,212,0.85)";
+        fdots[f].style.opacity = "0";
+      }
+      var flowLen = flows.map(function (p) { return p.getTotalLength(); });
+      flows.forEach(function (p, idx) {
+        p.style.strokeDasharray = flowLen[idx] + " " + flowLen[idx];
+        p.style.strokeDashoffset = flowLen[idx];
+      });
+
+      /* flight-signal anchors (plane space) and their approach vectors */
+      var SIG = [
+        { el: sigs[0], x: 170, y: 354, dx: -620, dy: -210, start: 0.95, land: 1.40 },
+        { el: sigs[1], x: 301, y: 771, dx: -470, dy: 430, start: 1.45, land: 1.90 },
+        { el: sigs[2], x: 196, y: 548, dx: 720, dy: -300, start: 1.85, land: 2.30 }
+      ];
+      SIG.forEach(function (s) {
+        s.el.style.left = s.x + "px";
+        s.el.style.top = s.y + "px";
+      });
+
+      /* ---------------------------------------------------------------
+         one paused timeline
+      --------------------------------------------------------------- */
+      var tl = gsap.timeline({ paused: true });
+
+      /* ===== Cena A (0.0–0.8) — a falsa imobilidade ======================
+         The opening page returns, frontal, same scale, same position. The only
+         thing that resolves is handoff_in: variant-card #2 (x 0, y 0, scale 1.0,
+         opacity 1) dissolving back into the original landing-mock over 600ms —
+         a pure cross-fade, no transform, no camera. Dead still from 0.60s. */
+      tl.fromTo(variant, { opacity: 1 }, { opacity: 0, duration: 0.60, ease: "power1.inOut" }, 0);
+      tl.fromTo(hl, { opacity: 0 }, { opacity: 1, duration: 0.60, ease: "power1.inOut" }, 0);
+
+      /* ===== Cena B (0.8–2.7) — ela responde ============================= */
+      /* theme morph by cross-fade: the surface lights from 55% to 100% */
+      tl.fromTo(scrim, { opacity: 0.45 }, { opacity: 0, duration: 1.20, ease: "power2.inOut" }, 0.80);
+      /* camera: frontal -> slight perspective change, STOPPED at 2.35s,
+         before the first phrase is complete (nothing moves while text is read) */
+      tl.fromTo(plane, { rotationY: 0 }, { rotationY: -9, duration: 1.55, ease: "power2.inOut" }, 0.80);
+
+      tl.addLabel("b1", 1.40).addLabel("b2", 1.90).addLabel("b3", 2.30);
+
+      /* each arriving signal flies in on a deviation curve (x and y on
+         different eases) and lands exactly on its beat label */
+      SIG.forEach(function (s) {
+        var d = s.land - s.start;
+        tl.fromTo(s.el, { x: s.dx, opacity: 0 },
+          { x: 0, opacity: 1, duration: d, ease: "power1.out" }, s.start);
+        tl.fromTo(s.el, { y: s.dy }, { y: 0, duration: d, ease: "power2.in" }, s.start);
+        tl.fromTo(s.el.querySelector(".f11-ring"), { scale: 0.3, opacity: 0.6 },
+          { scale: 1.7, opacity: 0, duration: 0.42, ease: "power2.out" }, s.land);
+        tl.fromTo(s.el, { opacity: 1 }, { opacity: 0, duration: 0.24, ease: "power1.in" }, s.land + 0.08);
+      });
+
+      /* control coupled to target — the reaction fires at the SAME label as the
+         signal's impact: gesture and response in one beat, both in frame */
+      /* b1 — the headline changes weight */
+      tl.fromTo(selHl, { opacity: 0, scale: 0.94 }, { opacity: 0.55, scale: 1, duration: 0.26, ease: "back.out(2)" }, "b1");
+      tl.fromTo(selHl, { opacity: 0.55 }, { opacity: 0, duration: 0.22, ease: "power1.in" }, 1.80);
+      tl.fromTo(hlB1, { height: 22, backgroundColor: "rgba(43,43,43,0.72)" },
+        { height: 32, backgroundColor: "rgba(43,43,43,0.90)", duration: 0.38, ease: "power2.inOut" }, "b1");
+      tl.fromTo(hlB2, { height: 22, width: 340, backgroundColor: "rgba(43,43,43,0.72)" },
+        { height: 32, width: 412, backgroundColor: "rgba(43,43,43,0.90)", duration: 0.38, ease: "power2.inOut" }, "b1");
+
+      /* b2 — the button changes position */
+      tl.fromTo(selBtn, { opacity: 0, scale: 0.94 }, { opacity: 0.55, scale: 1, duration: 0.26, ease: "back.out(2)" }, "b2");
+      tl.fromTo(selBtn, { opacity: 0.55 }, { opacity: 0, duration: 0.22, ease: "power1.in" }, 2.30);
+      tl.fromTo(btn, { x: 0, y: 0 }, { x: 250, y: -18, duration: 0.40, ease: "power2.inOut" }, "b2");
+
+      /* b3 — a block expands (anchored expansion) */
+      tl.fromTo(selBlk, { opacity: 0, scale: 0.94 }, { opacity: 0.55, scale: 1, duration: 0.26, ease: "back.out(2)" }, "b3");
+      tl.fromTo(selBlk, { opacity: 0.55 }, { opacity: 0, duration: 0.22, ease: "power1.in" }, 2.44);
+      tl.fromTo(blk, { height: 0 }, { height: 156, duration: 0.40, ease: "power3.out" }, "b3");
+
+      /* the first visitors settle into low orbit */
+      tl.fromTo(ORB, { t: 0 }, { t: 0.26, duration: 1.30, ease: "power1.inOut", onUpdate: placeOrbit }, 1.40);
+      G1.forEach(function (idx, n) {
+        tl.fromTo(cores[idx], { scale: 0.2, opacity: 0 },
+          { scale: 1, opacity: bakedOp[idx], duration: 0.34, ease: "back.out(1.7)" }, 1.45 + n * 0.25);
+      });
+
+      /* ===== Cena C (0.8–3.8) — primeira frase ===========================
+         "Seu site deixa de ser uma página estática..."
+         reveal from below, 420ms line stagger. Complete at 2.36s; the whole
+         composition is then still from 2.70s to 3.78s (hold 1.1s). */
+      p1.forEach(function (ink, n) {
+        tl.fromTo(ink, { yPercent: 100 }, { yPercent: 0, duration: 0.72, ease: "power3.out" }, 0.80 + n * 0.42);
+      });
+
+      /* ----- line change (within-frame seam): both sides travel UPWARD ----- */
+      p1.forEach(function (ink, n) {
+        tl.fromTo(ink, { yPercent: 0 }, { yPercent: -100, duration: 0.30, ease: "power2.in" }, 3.78 + n * 0.04);
+        tl.fromTo(ink, { opacity: 1 }, { opacity: 0, duration: 0.20, ease: "power1.in" }, 3.78 + n * 0.04);
+      });
+
+      /* ===== Cena D (4.1–6.9) — segunda frase ============================
+         "e passa a aprender com quem realmente importa:" */
+      p2.forEach(function (ink, n) {
+        tl.fromTo(ink, { yPercent: 100 }, { yPercent: 0, duration: 0.72, ease: "power3.out" }, 4.10 + n * 0.42);
+      });
+
+      /* the only camera movement of the second half: a very slow dolly-out.
+         It finishes at 6.90s — before the closing hold — and never touches
+         the typography layer, which is outside the camera. */
+      tl.fromTo(cam, { scale: 1 }, { scale: CAM_END, duration: 2.80, ease: "power1.inOut", onUpdate: applyCamera }, 4.10);
+      tl.fromTo(mock, { y: 0, scale: 1 },
+        { y: MOCK_END_Y, scale: MOCK_END_SCALE, duration: 2.80, ease: "power1.inOut" }, 4.10);
+
+      /* feedback-flows arrive from outside in, on a deviation curve; on each
+         arrival the message hierarchy inside the page visibly changes */
+      var FLOW = [
+        { draw: 4.45, land: 4.95 },
+        { draw: 5.25, land: 5.75 },
+        { draw: 6.05, land: 6.50 }
+      ];
+      flows.forEach(function (p, idx) {
+        var fl = flowLen[idx];
+        tl.fromTo(p, { strokeDashoffset: fl }, { strokeDashoffset: 0, duration: FLOW[idx].land - FLOW[idx].draw, ease: "power2.inOut" }, FLOW[idx].draw);
+        tl.fromTo(p, { opacity: 0.9 }, { opacity: 0.30, duration: 0.34, ease: "power1.inOut" }, FLOW[idx].land + 0.04);
+        tl.fromTo(fdots[idx], { scale: 0.35, opacity: 0.85 }, { scale: 1.5, opacity: 0, duration: 0.40, ease: "power2.out" }, FLOW[idx].land);
+      });
+
+      /* arrival 1 — what was small rises, what was large recedes */
+      tl.fromTo(blk, { y: 0 }, { y: -220, duration: 0.65, ease: "power2.inOut" }, 4.95);
+      tl.fromTo(hl, { y: 0, opacity: 1 }, { y: 196, opacity: 0.55, duration: 0.65, ease: "power2.inOut" }, 4.95);
+      tl.fromTo(hlB1, { height: 32 }, { height: 24, duration: 0.65, ease: "power2.inOut" }, 4.95);
+      tl.fromTo(hlB2, { height: 32 }, { height: 24, duration: 0.65, ease: "power2.inOut" }, 4.95);
+      tl.fromTo(body, { y: 0 }, { y: 196, duration: 0.65, ease: "power2.inOut" }, 4.95);
+
+      /* arrival 2 — the promoted block gains weight, the old call recedes */
+      tl.fromTo(blkBar, { width: 300, height: 14 }, { width: 480, height: 24, duration: 0.50, ease: "power2.inOut" }, 5.75);
+      tl.fromTo(btn, { scale: 1, opacity: 1 }, { scale: 0.90, opacity: 0.55, duration: 0.50, ease: "power2.inOut" }, 5.75);
+
+      /* arrival 3 — observed potential reads back inside the page */
+      tl.fromTo(blk, { borderColor: "rgba(6,182,212,0.22)" }, { borderColor: "rgba(6,182,212,0.50)", duration: 0.38, ease: "power1.inOut" }, 6.50);
+      tl.fromTo(potFill, { width: "0%" }, { width: "62%", duration: 0.38, ease: "power2.out" }, 6.50);
+
+      /* visitors keep arriving through the second half — eighteen in orbit by 6.87s */
+      tl.fromTo(ORB, { t: 0.26 }, { t: 0.95, duration: 2.80, ease: "power1.inOut", onUpdate: placeOrbit }, 4.10);
+      G2.forEach(function (idx, n) {
+        tl.fromTo(cores[idx], { scale: 0.2, opacity: 0 },
+          { scale: 1, opacity: bakedOp[idx], duration: 0.34, ease: "back.out(1.7)" }, 4.15 + n * 0.27);
+      });
+      var G3T = [5.90, 6.06, 6.20, 6.32, 6.42, 6.50, 6.56];
+      G3.forEach(function (idx, n) {
+        tl.fromTo(cores[idx], { scale: 0.2, opacity: 0 },
+          { scale: 1, opacity: bakedOp[idx], duration: 0.30, ease: "back.out(1.7)" }, G3T[n]);
+      });
+
+      /* ===== Cena E (6.9–8.0) — hold =====================================
+         The colon at the end of the phrase hangs. Page, camera and typography
+         are completely still; only the signals keep turning, very slowly. */
+      tl.fromTo(ORB, { t: 0.95 }, { t: 1.06, duration: 1.10, ease: "none", onUpdate: placeOrbit }, 6.90);
+
+      tl.set({}, {}, 8);
+
+      window.__timelines = window.__timelines || {};
+      window.__timelines[FID] = tl;
+      tl.seek(0);
+    })();
+  </script>
+</template>

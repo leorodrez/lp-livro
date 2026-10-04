@@ -1,0 +1,48 @@
+{
+  "version": 1,
+  "preferences": {
+    "destination": {
+      "value": "meta-ads-reels",
+      "confirmed_in": [
+        "kro-site-que-aprende"
+      ],
+      "updated_at": "2026-10-04T17:09:49.381Z"
+    },
+    "aspect": {
+      "value": "1080x1920",
+      "confirmed_in": [
+        "kro-site-que-aprende"
+      ],
+      "updated_at": "2026-10-04T17:09:49.435Z"
+    },
+    "language": {
+      "value": "pt-BR",
+      "confirmed_in": [
+        "kro-site-que-aprende"
+      ],
+      "updated_at": "2026-10-04T17:09:49.486Z"
+    },
+    "flow": {
+      "value": "automation",
+      "confirmed_in": [
+        "kro-site-que-aprende"
+      ],
+      "updated_at": "2026-10-04T17:09:49.538Z"
+    },
+    "storyboard": {
+      "value": "no",
+      "confirmed_in": [
+        "kro-site-que-aprende"
+      ],
+      "updated_at": "2026-10-04T17:09:49.592Z"
+    },
+    "style_preset.product-launch-video": {
+      "value": "blue-professional",
+      "confirmed_in": [
+        "kro-site-que-aprende"
+      ],
+      "updated_at": "2026-10-04T17:09:49.646Z"
+    }
+  },
+  "sightings": {}
+}

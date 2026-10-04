@@ -1,0 +1,329 @@
+<template>
+  <style>
+    /* ── fonts (self-hosted, project-root relative — copied from frame.md) ───── */
+    @font-face{font-family:"Manrope";font-weight:400;font-style:normal;font-display:block;src:url("assets/fonts/Manrope-400.woff2") format("woff2");}
+    @font-face{font-family:"Manrope";font-weight:500;font-style:normal;font-display:block;src:url("assets/fonts/Manrope-500.woff2") format("woff2");}
+    @font-face{font-family:"Manrope";font-weight:600;font-style:normal;font-display:block;src:url("assets/fonts/Manrope-600.woff2") format("woff2");}
+    @font-face{font-family:"Manrope";font-weight:700;font-style:normal;font-display:block;src:url("assets/fonts/Manrope-700.woff2") format("woff2");}
+    @font-face{font-family:"Manrope";font-weight:800;font-style:normal;font-display:block;src:url("assets/fonts/Manrope-800.woff2") format("woff2");}
+    @font-face{font-family:"Sora";font-weight:400;font-style:normal;font-display:block;src:url("assets/fonts/Sora-400.woff2") format("woff2");}
+    @font-face{font-family:"Sora";font-weight:600;font-style:normal;font-display:block;src:url("assets/fonts/Sora-600.woff2") format("woff2");}
+    @font-face{font-family:"Sora";font-weight:700;font-style:normal;font-display:block;src:url("assets/fonts/Sora-700.woff2") format("woff2");}
+    @font-face{font-family:"Sora";font-weight:800;font-style:normal;font-display:block;src:url("assets/fonts/Sora-800.woff2") format("woff2");}
+
+    /* ── frame root — styled by #root, never by a class; no background here ──── */
+    #root{position:relative;width:1080px;height:1920px;overflow:hidden;}
+
+    /* ── level 1 — atmospheric ground (full-bleed, on a clip layer) ──────────── */
+    .f06-variantes-bg{position:absolute;inset:0;}
+    .f06-variantes-ground{
+      position:absolute;inset:0;
+      background:
+        radial-gradient(126% 92% at 20% 11%, #3A3A3A 0%, #313131 28%, #2B2B2B 56%, #232323 82%, #1E1E1E 100%);
+    }
+    .f06-variantes-sheen{
+      position:absolute;inset:0;
+      background:linear-gradient(142deg, rgba(255,255,255,0.035) 0%, rgba(255,255,255,0) 46%);
+    }
+    .f06-variantes-vig{
+      position:absolute;inset:0;
+      background:radial-gradient(78% 58% at 50% 62%, rgba(0,0,0,0) 0%, rgba(0,0,0,0.30) 78%, rgba(0,0,0,0.42) 100%);
+    }
+    .f06-variantes-grain{position:absolute;inset:0;opacity:0.032;}
+
+    /* ── level 2 — the system, inside perspective ────────────────────────────── */
+    .f06-variantes-stage{position:absolute;inset:0;perspective:2400px;perspective-origin:34% 26%;}
+    .f06-variantes-world{position:absolute;inset:0;transform-style:preserve-3d;}
+
+    /* lab-planes inherited from the previous frame (handoff_in) */
+    .f06-variantes-planes{position:absolute;inset:0;transform-style:preserve-3d;}
+    .f06-variantes-plane{
+      position:absolute;border:1px solid rgba(6,182,212,0.15);border-radius:22px;
+      background:linear-gradient(180deg, rgba(255,255,255,0.028) 0%, rgba(255,255,255,0) 64%);
+    }
+
+    /* the landing-mock — morph anchor */
+    .f06-variantes-mock{
+      position:absolute;left:180px;top:530px;width:720px;height:860px;
+      border-radius:20px;background:#F4F2EE;
+      box-shadow:0 30px 80px rgba(0,0,0,0.45);
+      overflow:hidden;will-change:transform;
+    }
+    .f06-variantes-reflect{
+      position:absolute;left:0;top:0;right:0;height:120px;
+      background:linear-gradient(180deg, rgba(255,255,255,0.55) 0%, rgba(255,255,255,0) 100%);
+    }
+    .f06-variantes-mock-old,.f06-variantes-mock-new{position:absolute;inset:0;}
+
+    .f06-variantes-chrome{position:absolute;left:56px;top:46px;display:flex;align-items:center;gap:12px;}
+    .f06-variantes-dot{width:14px;height:14px;border-radius:50%;background:rgba(43,43,43,0.16);}
+    .f06-variantes-urlpill{margin-left:18px;width:300px;height:18px;border-radius:100px;background:rgba(43,43,43,0.07);}
+
+    .f06-variantes-hbar{height:34px;border-radius:6px;background:rgba(43,43,43,0.84);}
+    .f06-variantes-hbar.soft{background:rgba(43,43,43,0.62);}
+    .f06-variantes-bbar{height:14px;border-radius:6px;background:rgba(43,43,43,0.20);}
+    .f06-variantes-cta{width:196px;height:62px;border-radius:100px;background:#2B2B2B;}
+    .f06-variantes-mock-body{position:absolute;left:56px;top:150px;right:56px;}
+    .f06-variantes-mock-body .f06-variantes-hbar{margin-bottom:16px;}
+    .f06-variantes-mock-body .f06-variantes-bbar{margin-top:36px;}
+    .f06-variantes-mock-body .f06-variantes-cta{margin-top:58px;}
+
+    /* the anchored state the page reduces to (content-new of the morph) */
+    .f06-variantes-anchor-box{
+      position:absolute;left:44px;top:140px;width:632px;height:124px;
+      border:2px solid rgba(6,182,212,0.55);border-radius:12px;
+      box-shadow:inset 0 0 26px rgba(6,182,212,0.16);
+    }
+    .f06-variantes-ghost{position:absolute;height:14px;border-radius:6px;background:rgba(43,43,43,0.13);}
+
+    /* branch connectors */
+    .f06-variantes-links{position:absolute;left:0;top:0;}
+    .f06-variantes-link{fill:none;stroke:rgba(6,182,212,0.36);stroke-width:2;stroke-linecap:round;}
+
+    /* the four variant-cards */
+    .f06-variantes-card{
+      position:absolute;left:420px;top:812px;width:240px;height:296px;
+      border-radius:16px;background:#F4F2EE;border:1px solid rgba(43,43,43,0.10);
+      box-shadow:0 18px 46px rgba(0,0,0,0.34);
+      overflow:hidden;will-change:transform;
+    }
+    .f06-variantes-card .f06-variantes-reflect{height:44px;background:linear-gradient(180deg, rgba(255,255,255,0.46) 0%, rgba(255,255,255,0) 100%);}
+    .f06-variantes-cchrome{position:absolute;left:20px;top:18px;display:flex;align-items:center;gap:6px;}
+    .f06-variantes-cdot{width:7px;height:7px;border-radius:50%;background:rgba(43,43,43,0.16);}
+    .f06-variantes-cbody{position:absolute;left:20px;top:52px;right:20px;}
+    .f06-variantes-vh{height:20px;border-radius:5px;background:rgba(43,43,43,0.84);margin-bottom:10px;}
+    .f06-variantes-vh.soft{background:rgba(43,43,43,0.60);}
+    .f06-variantes-vh.tall{height:30px;}
+    .f06-variantes-vh.slim{height:14px;}
+    .f06-variantes-vb{height:8px;border-radius:4px;background:rgba(43,43,43,0.20);margin-top:16px;}
+    .f06-variantes-vc{height:30px;border-radius:100px;background:#2B2B2B;margin-top:26px;}
+
+    /* ── level 3 — hero typography: flat in the camera plane, never moved ────── */
+    .f06-variantes-type{position:absolute;inset:0;}
+    .f06-variantes-statement{
+      position:absolute;left:88px;top:520px;width:832px;
+      font-family:"Sora",sans-serif;font-weight:600;font-size:56px;line-height:1.2;
+      letter-spacing:-0.018em;color:#FFFFFF;transform-origin:0% 50%;
+    }
+    .f06-variantes-statement span{display:block;}
+  </style>
+
+  <div
+    id="root"
+    data-composition-id="06-variantes"
+    data-duration="4"
+    data-width="1080"
+    data-height="1920"
+  >
+    <!-- level 1 — full-bleed ground on its own clip layer (never on #root) -->
+    <div class="f06-variantes-bg clip" data-start="0" data-duration="4" data-track-index="0">
+      <div class="f06-variantes-ground"></div>
+      <div class="f06-variantes-sheen"></div>
+      <div class="f06-variantes-vig"></div>
+      <svg class="f06-variantes-grain" width="1080" height="1920" viewBox="0 0 1080 1920" aria-hidden="true">
+        <filter id="f06-variantes-noise" x="0" y="0" width="100%" height="100%">
+          <feTurbulence type="fractalNoise" baseFrequency="0.92" numOctaves="3" seed="7" stitchTiles="stitch" />
+        </filter>
+        <rect width="1080" height="1920" filter="url(#f06-variantes-noise)"></rect>
+      </svg>
+    </div>
+
+    <!-- level 2 — the system -->
+    <div class="f06-variantes-stage clip" data-start="0" data-duration="4" data-track-index="1">
+      <div class="f06-variantes-world">
+        <div class="f06-variantes-planes">
+          <div class="f06-variantes-plane" style="left:40px;top:280px;width:520px;height:720px;transform:rotateY(22deg) rotateX(-6deg) translateZ(-760px);"></div>
+          <div class="f06-variantes-plane" style="left:620px;top:170px;width:560px;height:840px;transform:rotateY(-20deg) rotateX(-4deg) translateZ(-900px);"></div>
+          <div class="f06-variantes-plane" style="left:210px;top:830px;width:720px;height:560px;transform:rotateY(10deg) rotateX(16deg) translateZ(-1180px);"></div>
+        </div>
+
+        <!-- branch connectors: anchored headline -> each variant slot -->
+        <svg class="f06-variantes-links" width="1080" height="1920" viewBox="0 0 1080 1920" aria-hidden="true">
+          <path class="f06-variantes-link" stroke-dasharray="400" d="M540 775 C 520 862, 316 886, 290 1012"></path>
+          <path class="f06-variantes-link" stroke-dasharray="270" d="M540 775 C 534 856, 512 900, 510 1012"></path>
+          <path class="f06-variantes-link" stroke-dasharray="350" d="M540 775 C 546 856, 730 892, 730 1012"></path>
+          <path class="f06-variantes-link" stroke-dasharray="540" d="M540 775 C 560 862, 944 888, 950 1012"></path>
+        </svg>
+
+        <!-- landing-mock: the morph anchor the variants are emitted from -->
+        <div class="f06-variantes-mock">
+          <div class="f06-variantes-mock-old">
+            <div class="f06-variantes-chrome">
+              <span class="f06-variantes-dot"></span>
+              <span class="f06-variantes-dot"></span>
+              <span class="f06-variantes-dot"></span>
+              <span class="f06-variantes-urlpill"></span>
+            </div>
+            <div class="f06-variantes-mock-body">
+              <div class="f06-variantes-hbar" style="width:88%;"></div>
+              <div class="f06-variantes-hbar soft" style="width:56%;"></div>
+              <div class="f06-variantes-bbar" style="width:92%;"></div>
+              <div class="f06-variantes-bbar" style="width:72%;margin-top:18px;"></div>
+              <div class="f06-variantes-cta"></div>
+            </div>
+          </div>
+          <div class="f06-variantes-mock-new">
+            <div class="f06-variantes-anchor-box"></div>
+            <div class="f06-variantes-ghost" style="left:56px;top:332px;width:520px;"></div>
+            <div class="f06-variantes-ghost" style="left:56px;top:370px;width:412px;"></div>
+            <div class="f06-variantes-ghost" style="left:56px;top:448px;width:196px;height:42px;border-radius:100px;"></div>
+          </div>
+          <div class="f06-variantes-reflect"></div>
+        </div>
+
+        <!-- variant-card 1 — same message, looser break -->
+        <div class="f06-variantes-card">
+          <div class="f06-variantes-cchrome"><span class="f06-variantes-cdot"></span><span class="f06-variantes-cdot"></span><span class="f06-variantes-cdot"></span></div>
+          <div class="f06-variantes-cbody">
+            <div class="f06-variantes-vh" style="width:86%;"></div>
+            <div class="f06-variantes-vh soft" style="width:48%;"></div>
+            <div class="f06-variantes-vb" style="width:94%;"></div>
+            <div class="f06-variantes-vb" style="width:68%;"></div>
+            <div class="f06-variantes-vc" style="width:46%;"></div>
+          </div>
+          <div class="f06-variantes-reflect"></div>
+        </div>
+
+        <!-- variant-card 2 — denser, three-line break -->
+        <div class="f06-variantes-card">
+          <div class="f06-variantes-cchrome"><span class="f06-variantes-cdot"></span><span class="f06-variantes-cdot"></span><span class="f06-variantes-cdot"></span></div>
+          <div class="f06-variantes-cbody">
+            <div class="f06-variantes-vh slim" style="width:62%;"></div>
+            <div class="f06-variantes-vh slim" style="width:92%;"></div>
+            <div class="f06-variantes-vh slim soft" style="width:40%;"></div>
+            <div class="f06-variantes-vb" style="width:86%;"></div>
+            <div class="f06-variantes-vc" style="width:58%;"></div>
+          </div>
+          <div class="f06-variantes-reflect"></div>
+        </div>
+
+        <!-- variant-card 3 — one heavy line -->
+        <div class="f06-variantes-card">
+          <div class="f06-variantes-cchrome"><span class="f06-variantes-cdot"></span><span class="f06-variantes-cdot"></span><span class="f06-variantes-cdot"></span></div>
+          <div class="f06-variantes-cbody">
+            <div class="f06-variantes-vh tall" style="width:94%;"></div>
+            <div class="f06-variantes-vh soft" style="width:34%;"></div>
+            <div class="f06-variantes-vb" style="width:90%;"></div>
+            <div class="f06-variantes-vb" style="width:78%;"></div>
+            <div class="f06-variantes-vb" style="width:54%;"></div>
+          </div>
+          <div class="f06-variantes-reflect"></div>
+        </div>
+
+        <!-- variant-card 4 — balanced two-line break -->
+        <div class="f06-variantes-card">
+          <div class="f06-variantes-cchrome"><span class="f06-variantes-cdot"></span><span class="f06-variantes-cdot"></span><span class="f06-variantes-cdot"></span></div>
+          <div class="f06-variantes-cbody">
+            <div class="f06-variantes-vh" style="width:54%;"></div>
+            <div class="f06-variantes-vh" style="width:82%;"></div>
+            <div class="f06-variantes-vb" style="width:62%;margin-top:26px;"></div>
+            <div class="f06-variantes-vc" style="width:70%;margin-top:34px;"></div>
+          </div>
+          <div class="f06-variantes-reflect"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- level 3 — hero typography (outside the camera world: it never moves) -->
+    <div class="f06-variantes-type clip" data-start="0" data-duration="4" data-track-index="2">
+      <div class="f06-variantes-statement">
+        <span>Ele cria novas formas de</span><span>apresentar sua mensagem.</span>
+      </div>
+    </div>
+  </div>
+
+  <script src="assets/vendor/gsap.min.js"></script>
+  <script>
+    (function () {
+      var FRAME = "06-variantes";
+      var r = document.querySelector('[data-composition-id="' + FRAME + '"]');
+      var q = function (s) { return r.querySelector(s); };
+      var qa = function (s) { return Array.prototype.slice.call(r.querySelectorAll(s)); };
+
+      var world = q(".f06-variantes-world");
+      var planes = q(".f06-variantes-planes");
+      var mock = q(".f06-variantes-mock");
+      var mOld = q(".f06-variantes-mock-old");
+      var mNew = q(".f06-variantes-mock-new");
+      var cards = qa(".f06-variantes-card");
+      var links = qa(".f06-variantes-link");
+      var type = q(".f06-variantes-statement");
+
+      // camera: slides 120px right, comes back 40px -> rests at +80 (world x -80)
+      var CAM_PEAK = -120;
+      var CAM_END = -80;
+
+      // handoff_out host positions; world x compensates the resting camera offset
+      var HOST_X = [-330, -110, 110, 330];
+      var CARD_X = HOST_X.map(function (v) { return v - CAM_END; }); // -250 / -30 / 190 / 410
+      var CARD_Y = 180;        // handoff_out: y +180px
+      var CARD_SCALE = 0.82;   // handoff_out: scale 0.82
+
+      // emit beats (match the branch clicks): 0.50 / 0.72 / 0.94 / 1.16
+      var EMIT = [0.5, 0.72, 0.94, 1.16];
+      var ROT0 = [-7, -3, 3, 7];
+      var DASH = [400, 270, 350, 540];
+
+      var tl = gsap.timeline({ paused: true });
+
+      /* ── t = 0 — inherited state (handoff_in) ──────────────────────────────
+         landing-mock: x 0, y -300px, scale 0.58, opacity 1, settled;
+         lab-planes in perspective.                                           */
+      tl.set(world, { x: 0 }, 0);
+      tl.set(planes, { opacity: 0.92 }, 0);
+      tl.set(mock, { x: 0, y: -300, scale: 0.58, opacity: 1, borderRadius: "20px" }, 0);
+      tl.set(mOld, { opacity: 1 }, 0);
+
+      /* ── Cena A (0.0–1.4s) — the branching ────────────────────────────────
+         card-morph-anchor: the page morphs down onto its headline (one tween,
+         uniform scale + paint-only channels) and emits four variant-cards that
+         grow out of that anchor along a curved path, cascading 0.22s apart.   */
+      tl.to(mock, {
+        scale: 0.335,
+        y: -112,
+        borderRadius: "47.8px",   // pre-scale: lands the variant-card's apparent 16px
+        boxShadow: "0 16px 40px rgba(0,0,0,0.30)",
+        opacity: 0.5,
+        duration: 0.6,
+        ease: "power2.inOut"
+      }, 0.3);
+      tl.to(mOld, { opacity: 0, duration: 0.24, ease: "power1.in" }, 0.3);
+      tl.fromTo(mNew, { opacity: 0 }, { opacity: 1, duration: 0.24, ease: "power1.out" }, 0.66);
+      tl.to(planes, { opacity: 0.55, duration: 0.7, ease: "power1.inOut" }, 0.3);
+
+      links.forEach(function (p, i) {
+        tl.fromTo(p,
+          { strokeDashoffset: DASH[i], opacity: 0 },
+          { strokeDashoffset: 0, opacity: 1, duration: 0.32, ease: "power2.out" },
+          EMIT[i] - 0.04);
+      });
+
+      cards.forEach(function (c, i) {
+        var t0 = EMIT[i];
+        // x and y ride different durations/eases -> the path bows outward (curved growth)
+        tl.fromTo(c, { opacity: 0 }, { opacity: 1, duration: 0.18, ease: "power1.out" }, t0);
+        tl.fromTo(c, { y: -200 }, { y: CARD_Y, duration: 0.38, ease: "power2.out" }, t0);
+        tl.fromTo(c, { x: 0 }, { x: CARD_X[i], duration: 0.46, ease: "power3.out" }, t0);
+        tl.fromTo(c, { scale: 0.3 }, { scale: CARD_SCALE, duration: 0.4, ease: "power2.out" }, t0);
+        tl.fromTo(c, { rotation: ROT0[i] }, { rotation: 0, duration: 0.46, ease: "power2.out" }, t0);
+      });
+
+      /* ── Cena B (0.4–1.2s) — lateral camera, level 1 + 2 only ─────────────
+         Hero typography lives outside .world, so no text ever drifts.        */
+      tl.to(world, { x: CAM_PEAK, duration: 0.42, ease: "power2.out" }, 0.4);
+      tl.to(world, { x: CAM_END, duration: 0.38, ease: "power2.inOut" }, 0.82);
+
+      /* ── Cena C (0.6–2.7s) — the phrase, one breath, fade + 0.98 -> 1.00 ── */
+      tl.fromTo(type,
+        { opacity: 0, scale: 0.98 },
+        { opacity: 1, scale: 1, duration: 0.56, ease: "power2.out" },
+        0.62);
+
+      /* ── Cena D (2.7–3.5s) — hold: nothing tweens after 1.62s ───────────── */
+
+      window.__timelines = window.__timelines || {};
+      window.__timelines[FRAME] = tl;
+      tl.seek(0);
+    })();
+  </script>
+</template>

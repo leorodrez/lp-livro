@@ -1,0 +1,597 @@
+<template>
+  <style>
+    @font-face {
+      font-family: "Sora";
+      font-weight: 600;
+      font-style: normal;
+      font-display: block;
+      src: url("assets/fonts/Sora-600.woff2") format("woff2");
+    }
+    @font-face {
+      font-family: "Sora";
+      font-weight: 700;
+      font-style: normal;
+      font-display: block;
+      src: url("assets/fonts/Sora-700.woff2") format("woff2");
+    }
+
+    #root {
+      position: relative;
+      width: 1080px;
+      height: 1920px;
+      overflow: hidden;
+      background: transparent;
+      font-family: "Sora", sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ---- clip layers ---- */
+    .f07-layer {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 1080px;
+      height: 1920px;
+    }
+
+    /* ---- level 1 : atmosphere ---- */
+    .f07-ground {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 1080px;
+      height: 1920px;
+      background:
+        radial-gradient(128% 104% at 16% 6%, #3a3a3a 0%, #2f2f2f 34%, #2b2b2b 58%, #1e1e1e 100%);
+    }
+    .f07-wash {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 1080px;
+      height: 1920px;
+      background: radial-gradient(62% 34% at 50% 102%, rgba(6, 182, 212, 0.08) 0%, rgba(6, 182, 212, 0) 72%);
+    }
+    .f07-grain {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 1080px;
+      height: 1920px;
+      opacity: 0.035;
+      mix-blend-mode: overlay;
+    }
+
+    /* ---- level 2 : the system, in depth ---- */
+    .f07-stage {
+      perspective: 2400px;
+      perspective-origin: 50% 59%;
+    }
+    .f07-cam {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 1080px;
+      height: 1920px;
+      transform-style: preserve-3d;
+    }
+    .f07-cards {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 1080px;
+      height: 1920px;
+      transform-style: preserve-3d;
+    }
+    .f07-slot {
+      position: absolute;
+      left: 400px;
+      top: 770px;
+      width: 280px;
+      height: 380px;
+      transform-style: preserve-3d;
+    }
+
+    .f07-card {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 280px;
+      height: 380px;
+      background: #f4f2ee;
+      border: 1px solid rgba(43, 43, 43, 0.1);
+      border-radius: 16px;
+      box-shadow: 0 30px 80px rgba(0, 0, 0, 0.45);
+      overflow: hidden;
+    }
+    .f07-refl {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 280px;
+      height: 48px;
+      background: linear-gradient(to bottom, rgba(255, 255, 255, 0.09), rgba(255, 255, 255, 0));
+    }
+    .f07-chrome {
+      position: absolute;
+      left: 22px;
+      top: 20px;
+      width: 60px;
+      height: 7px;
+    }
+    .f07-chrome i {
+      position: absolute;
+      top: 0;
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: rgba(43, 43, 43, 0.22);
+    }
+    .f07-chrome i:nth-child(1) { left: 0; }
+    .f07-chrome i:nth-child(2) { left: 12px; }
+    .f07-chrome i:nth-child(3) { left: 24px; }
+
+    .f07-hb {
+      position: absolute;
+      left: 22px;
+      height: 16px;
+      border-radius: 6px;
+      background: rgba(43, 43, 43, 0.78);
+    }
+    .f07-hb1 { top: 58px; }
+    .f07-hb2 { top: 82px; }
+    .f07-bb {
+      position: absolute;
+      left: 22px;
+      height: 8px;
+      border-radius: 6px;
+      background: rgba(43, 43, 43, 0.2);
+    }
+    .f07-bb1 { top: 120px; width: 212px; }
+    .f07-bb2 { top: 136px; width: 158px; }
+    .f07-btn {
+      position: absolute;
+      left: 22px;
+      top: 170px;
+      width: 104px;
+      height: 32px;
+      border-radius: 10px;
+      background: #2b2b2b;
+    }
+
+    /* feedback that stays on the surface */
+    .f07-marks {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 280px;
+      height: 380px;
+      border-radius: 16px;
+      overflow: hidden;
+      transform: translateZ(1px);
+      pointer-events: none;
+    }
+    .f07-ring {
+      position: absolute;
+      width: 36px;
+      height: 36px;
+      margin-left: -18px;
+      margin-top: -18px;
+      border-radius: 50%;
+      border: 2px solid rgba(6, 182, 212, 0.52);
+      background: rgba(6, 182, 212, 0.08);
+      opacity: 0;
+    }
+    .f07-ping {
+      position: absolute;
+      width: 52px;
+      height: 52px;
+      margin-left: -26px;
+      margin-top: -26px;
+      border-radius: 50%;
+      border: 1.5px solid rgba(6, 182, 212, 0.75);
+      opacity: 0;
+    }
+
+    /* the visitors : abstract cyan signals */
+    .f07-signals {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 280px;
+      height: 380px;
+      transform: translateZ(2px);
+      pointer-events: none;
+    }
+    .f07-sig {
+      position: absolute;
+      width: 0;
+      height: 0;
+      opacity: 0;
+    }
+    .f07-xw {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 0;
+      height: 0;
+    }
+    .f07-trail {
+      position: absolute;
+      left: -2px;
+      top: 2px;
+      width: 4px;
+      height: 86px;
+      border-radius: 2px;
+      transform-origin: 50% 0%;
+      background: linear-gradient(to bottom, rgba(6, 182, 212, 0.6), rgba(6, 182, 212, 0));
+      opacity: 0;
+    }
+    .f07-head {
+      position: absolute;
+      left: -7px;
+      top: -7px;
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: #06b6d4;
+      box-shadow: 0 0 12px rgba(6, 182, 212, 0.45);
+    }
+    .f07-head-cur {
+      left: -5px;
+      top: -4px;
+      width: 18px;
+      height: 22px;
+      border-radius: 0;
+      background: transparent;
+      box-shadow: none;
+    }
+    .f07-head-cur svg {
+      display: block;
+      width: 18px;
+      height: 22px;
+      filter: drop-shadow(0 0 8px rgba(6, 182, 212, 0.4));
+    }
+
+    /* ---- level 3 : hero typography, flat in the camera plane ---- */
+    .f07-copy {
+      position: absolute;
+      left: 88px;
+      top: 548px;
+      width: 824px;
+    }
+    .f07-line {
+      display: block;
+      font-family: "Sora", sans-serif;
+      font-size: 56px;
+      font-weight: 600;
+      line-height: 1.2;
+      letter-spacing: -0.018em;
+      color: #ffffff;
+      white-space: nowrap;
+      opacity: 0;
+    }
+    .f07-em {
+      position: relative;
+      display: inline-block;
+    }
+    .f07-em-c {
+      position: absolute;
+      left: 0;
+      top: 0;
+      color: #06b6d4;
+      white-space: nowrap;
+      opacity: 0;
+    }
+  </style>
+
+  <div
+    id="root"
+    data-composition-id="07-visitantes-avaliam"
+    data-duration="4.5"
+    data-width="1080"
+    data-height="1920"
+  >
+    <!-- level 1 -->
+    <div class="clip f07-layer f07-bg" data-start="0" data-duration="4.5" data-track-index="0">
+      <div class="f07-ground"></div>
+      <div class="f07-wash"></div>
+      <svg
+        class="f07-grain"
+        width="1080"
+        height="1920"
+        viewBox="0 0 1080 1920"
+        preserveAspectRatio="none"
+        aria-hidden="true"
+      >
+        <filter id="f07-grain-f" x="0" y="0" width="100%" height="100%">
+          <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="3" stitchTiles="stitch" seed="7" />
+          <feColorMatrix type="saturate" values="0" />
+        </filter>
+        <rect width="1080" height="1920" filter="url(#f07-grain-f)" />
+      </svg>
+    </div>
+
+    <!-- level 2 -->
+    <div
+      class="clip f07-layer f07-stage"
+      data-start="0"
+      data-duration="4.5"
+      data-track-index="1"
+      data-layout-allow-overflow
+    >
+      <div class="f07-cam" data-layout-allow-overflow>
+        <div class="f07-cards" data-layout-allow-overflow>
+          <div class="f07-slot" data-layout-allow-overflow>
+            <div class="f07-card">
+              <div class="f07-chrome"><i></i><i></i><i></i></div>
+              <div class="f07-hb f07-hb1" style="width: 200px"></div>
+              <div class="f07-hb f07-hb2" style="width: 128px"></div>
+              <div class="f07-bb f07-bb1"></div>
+              <div class="f07-bb f07-bb2"></div>
+              <div class="f07-btn"></div>
+              <div class="f07-refl"></div>
+            </div>
+            <div class="f07-marks"></div>
+            <div class="f07-signals" data-layout-allow-overflow></div>
+          </div>
+          <div class="f07-slot" data-layout-allow-overflow>
+            <div class="f07-card">
+              <div class="f07-chrome"><i></i><i></i><i></i></div>
+              <div class="f07-hb f07-hb1" style="width: 162px"></div>
+              <div class="f07-hb f07-hb2" style="width: 178px"></div>
+              <div class="f07-bb f07-bb1"></div>
+              <div class="f07-bb f07-bb2"></div>
+              <div class="f07-btn"></div>
+              <div class="f07-refl"></div>
+            </div>
+            <div class="f07-marks"></div>
+            <div class="f07-signals" data-layout-allow-overflow></div>
+          </div>
+          <div class="f07-slot" data-layout-allow-overflow>
+            <div class="f07-card">
+              <div class="f07-chrome"><i></i><i></i><i></i></div>
+              <div class="f07-hb f07-hb1" style="width: 232px"></div>
+              <div class="f07-hb f07-hb2" style="width: 90px"></div>
+              <div class="f07-bb f07-bb1"></div>
+              <div class="f07-bb f07-bb2"></div>
+              <div class="f07-btn"></div>
+              <div class="f07-refl"></div>
+            </div>
+            <div class="f07-marks"></div>
+            <div class="f07-signals" data-layout-allow-overflow></div>
+          </div>
+          <div class="f07-slot" data-layout-allow-overflow>
+            <div class="f07-card">
+              <div class="f07-chrome"><i></i><i></i><i></i></div>
+              <div class="f07-hb f07-hb1" style="width: 140px"></div>
+              <div class="f07-hb f07-hb2" style="width: 196px"></div>
+              <div class="f07-bb f07-bb1"></div>
+              <div class="f07-bb f07-bb2"></div>
+              <div class="f07-btn"></div>
+              <div class="f07-refl"></div>
+            </div>
+            <div class="f07-marks"></div>
+            <div class="f07-signals" data-layout-allow-overflow></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- level 3 -->
+    <div class="clip f07-layer f07-type" data-start="0" data-duration="4.5" data-track-index="2">
+      <div class="f07-copy">
+        <span class="f07-line">Coloca essas versões</span>
+        <span class="f07-line">para serem avaliadas</span>
+        <span class="f07-line">pelos próprios</span>
+        <span class="f07-line"
+          ><span class="f07-em">visitantes<span class="f07-em-c" aria-hidden="true">visitantes</span></span>.</span
+        >
+      </div>
+    </div>
+  </div>
+
+  <script src="assets/vendor/gsap.min.js"></script>
+  <script>
+    (function () {
+      var FID = "07-visitantes-avaliam";
+      var root = document.querySelector('[data-composition-id="' + FID + '"]');
+      var cam = root.querySelector(".f07-cam");
+      var slots = Array.prototype.slice.call(root.querySelectorAll(".f07-slot"));
+      var lines = Array.prototype.slice.call(root.querySelectorAll(".f07-line"));
+      var emCyan = root.querySelector(".f07-em-c");
+
+      var tl = gsap.timeline({ paused: true });
+
+      /* ---------- handoff_in : the four variant-cards, parked ---------- */
+      var X = [-330, -110, 110, 330];
+      var Z = [0, -90, -180, -270];
+      slots.forEach(function (s, i) {
+        gsap.set(s, { x: X[i], y: 180, scale: 0.82, z: 0, opacity: 1 });
+      });
+
+      /* ---------- Cena A (0.0-1.0s) : the planes separate ---------- */
+      tl.fromTo(
+        cam,
+        { rotationY: 0, rotationX: 0 },
+        { rotationY: 14, rotationX: -2.5, duration: 0.95, ease: "power2.inOut" },
+        0,
+      );
+      slots.forEach(function (s, i) {
+        tl.fromTo(s, { z: 0 }, { z: Z[i], duration: 0.86, ease: "power3.out" }, 0.06 + i * 0.03);
+      });
+
+      /* ---------- Cena C (0.7-3.0s) : the sentence, short 30px lateral slide ---------- */
+      var LINE_AT = [0.7, 0.82, 1.9, 2.02];
+      lines.forEach(function (el, i) {
+        tl.fromTo(
+          el,
+          { x: -30, opacity: 0 },
+          { x: 0, opacity: 1, duration: 0.46, ease: "power3.out" },
+          LINE_AT[i],
+        );
+      });
+      /* emphasis : colour settles onto already-legible white text */
+      tl.fromTo(
+        emCyan,
+        { opacity: 0 },
+        { opacity: 1, duration: 0.34, ease: "power1.inOut", immediateRender: false },
+        2.6,
+      );
+
+      /* ---------- Cena B (0.5-4.0s) : the visitors arrive ---------- */
+      /* baked, deterministic arrival schedule: [t, slot, localX, localY, lateralOffset, isCursor] */
+      var SIG = [
+        [0.55, 0, 96, 120, -150, 0],
+        [0.74, 2, 152, 104, 130, 0],
+        [0.92, 1, 112, 166, -110, 1],
+        [1.1, 3, 128, 122, 160, 0],
+        [1.28, 0, 188, 206, 140, 0],
+        [1.48, 1, 76, 108, -96, 0],
+        [1.68, 2, 98, 192, -140, 1],
+        [1.9, 0, 132, 272, 96, 0],
+        [2.1, 3, 84, 196, -126, 0],
+        [2.32, 1, 172, 238, 146, 0],
+        [2.54, 2, 176, 268, 104, 0],
+        [2.76, 0, 68, 180, -156, 1],
+        [3.04, 3, 160, 278, 124, 0],
+        [3.3, 1, 126, 306, -86, 0],
+      ];
+      /* nudge-curve : ramp-in 10% dist / 20% time, linear burst 65% / 18%, tail 25% / 62% */
+      var T = 0.66,
+        P1 = 0.132,
+        P2 = 0.119,
+        P3 = 0.409,
+        START_Y = 1150;
+      var CURSOR =
+        '<svg viewBox="0 0 18 22" aria-hidden="true"><path d="M1.6 1.2 L1.6 17.4 L6.1 13.1 L8.9 20.6 L12.1 19.2 L9.3 11.9 L15.2 11.4 Z" fill="#06b6d4"/></svg>';
+      var breathing = [];
+
+      SIG.forEach(function (d, i) {
+        var t0 = d[0],
+          si = d[1],
+          lx = d[2],
+          ly = d[3],
+          dx = d[4],
+          isCur = d[5];
+        var slot = slots[si];
+        var marks = slot.querySelector(".f07-marks");
+        var field = slot.querySelector(".f07-signals");
+
+        /* rings live in DOM from t=0, at the touch point, invisible */
+        var ring = document.createElement("div");
+        ring.className = "f07-ring";
+        ring.style.left = lx + "px";
+        ring.style.top = ly + "px";
+        marks.appendChild(ring);
+
+        var ping = document.createElement("div");
+        ping.className = "f07-ping";
+        ping.style.left = lx + "px";
+        ping.style.top = ly + "px";
+        marks.appendChild(ping);
+
+        var sig = document.createElement("div");
+        sig.className = "f07-sig";
+        sig.style.left = lx + "px";
+        sig.style.top = ly + "px";
+        var xw = document.createElement("div");
+        xw.className = "f07-xw";
+        var trail = document.createElement("div");
+        trail.className = "f07-trail";
+        var head = document.createElement("div");
+        head.className = "f07-head" + (isCur ? " f07-head-cur" : "");
+        if (isCur) head.innerHTML = CURSOR;
+        xw.appendChild(trail);
+        xw.appendChild(head);
+        sig.appendChild(xw);
+        field.appendChild(sig);
+
+        var D = START_Y - ly;
+
+        /* travel : three-phase slow-fast-slow climb from the base */
+        tl.fromTo(
+          sig,
+          { y: D, opacity: 0 },
+          { y: D * 0.9, opacity: 1, duration: P1, ease: "power3.in" },
+          t0,
+        );
+        tl.fromTo(
+          sig,
+          { y: D * 0.9 },
+          { y: D * 0.25, duration: P2, ease: "none", immediateRender: false },
+          t0 + P1,
+        );
+        tl.fromTo(
+          sig,
+          { y: D * 0.25 },
+          { y: 0, duration: P3, ease: "power4.out", immediateRender: false },
+          t0 + P1 + P2,
+        );
+        /* the lateral component that bows the path into a curve */
+        tl.fromTo(xw, { x: dx }, { x: 0, duration: T * 0.9, ease: "power2.out" }, t0);
+
+        /* short trail */
+        tl.fromTo(
+          trail,
+          { scaleY: 0.3, opacity: 0 },
+          { scaleY: 1, opacity: 0.55, duration: P1 + P2, ease: "power2.out" },
+          t0,
+        );
+        tl.fromTo(
+          trail,
+          { scaleY: 1, opacity: 0.55 },
+          { scaleY: 0.22, opacity: 0.28, duration: P3 * 0.8, ease: "power3.out", immediateRender: false },
+          t0 + P1 + P2,
+        );
+
+        /* the touch : press on the actor, then ring feedback that stays */
+        var at = t0 + T;
+        tl.fromTo(
+          head,
+          { scale: 1 },
+          { scale: 0.78, duration: 0.07, ease: "power2.in", immediateRender: false },
+          at - 0.07,
+        );
+        tl.fromTo(
+          head,
+          { scale: 0.78, opacity: 1 },
+          { scale: 0.56, opacity: 0.7, duration: 0.22, ease: "power2.out", immediateRender: false },
+          at,
+        );
+        tl.fromTo(
+          ring,
+          { scale: 0.2, opacity: 0 },
+          { scale: 1, opacity: 1, duration: 0.34, ease: "power3.out", immediateRender: false },
+          at,
+        );
+        tl.fromTo(
+          ping,
+          { scale: 0.25, opacity: 0.9 },
+          { scale: 3.2, opacity: 0, duration: 0.66, ease: "power2.out", immediateRender: false },
+          at,
+        );
+
+        if (at <= 3) breathing.push(trail);
+      });
+
+      /* ---------- Cena D (3.0-4.0s) : hold. Text dead still; only the signals breathe ---------- */
+      tl.fromTo(
+        breathing,
+        { y: 0 },
+        { y: -3, duration: 0.5, ease: "sine.inOut", immediateRender: false },
+        3.0,
+      );
+      tl.fromTo(
+        breathing,
+        { y: -3 },
+        { y: 0, duration: 0.5, ease: "sine.inOut", immediateRender: false },
+        3.5,
+      );
+
+      window.__timelines = window.__timelines || {};
+      window.__timelines[FID] = tl;
+      tl.seek(0);
+    })();
+  </script>
+</template>
