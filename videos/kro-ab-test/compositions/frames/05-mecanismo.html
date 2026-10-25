@@ -1,0 +1,268 @@
+<template>
+  <style>
+@font-face{font-family:'Manrope';font-style:normal;font-weight:400;font-display:block;src:url(assets/fonts/manrope-400-ext.woff2) format('woff2');unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;}
+@font-face{font-family:'Manrope';font-style:normal;font-weight:400;font-display:block;src:url(assets/fonts/manrope-400-lat.woff2) format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;}
+@font-face{font-family:'Manrope';font-style:normal;font-weight:500;font-display:block;src:url(assets/fonts/manrope-500-ext.woff2) format('woff2');unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;}
+@font-face{font-family:'Manrope';font-style:normal;font-weight:500;font-display:block;src:url(assets/fonts/manrope-500-lat.woff2) format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;}
+@font-face{font-family:'Manrope';font-style:normal;font-weight:600;font-display:block;src:url(assets/fonts/manrope-600-ext.woff2) format('woff2');unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;}
+@font-face{font-family:'Manrope';font-style:normal;font-weight:600;font-display:block;src:url(assets/fonts/manrope-600-lat.woff2) format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;}
+@font-face{font-family:'Manrope';font-style:normal;font-weight:700;font-display:block;src:url(assets/fonts/manrope-700-ext.woff2) format('woff2');unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;}
+@font-face{font-family:'Manrope';font-style:normal;font-weight:700;font-display:block;src:url(assets/fonts/manrope-700-lat.woff2) format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;}
+@font-face{font-family:'Manrope';font-style:normal;font-weight:800;font-display:block;src:url(assets/fonts/manrope-800-ext.woff2) format('woff2');unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;}
+@font-face{font-family:'Manrope';font-style:normal;font-weight:800;font-display:block;src:url(assets/fonts/manrope-800-lat.woff2) format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;}
+@font-face{font-family:'Sora';font-style:normal;font-weight:400;font-display:block;src:url(assets/fonts/sora-400-ext.woff2) format('woff2');unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;}
+@font-face{font-family:'Sora';font-style:normal;font-weight:400;font-display:block;src:url(assets/fonts/sora-400-lat.woff2) format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;}
+@font-face{font-family:'Sora';font-style:normal;font-weight:600;font-display:block;src:url(assets/fonts/sora-600-ext.woff2) format('woff2');unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;}
+@font-face{font-family:'Sora';font-style:normal;font-weight:600;font-display:block;src:url(assets/fonts/sora-600-lat.woff2) format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;}
+@font-face{font-family:'Sora';font-style:normal;font-weight:700;font-display:block;src:url(assets/fonts/sora-700-ext.woff2) format('woff2');unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;}
+@font-face{font-family:'Sora';font-style:normal;font-weight:700;font-display:block;src:url(assets/fonts/sora-700-lat.woff2) format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;}
+@font-face{font-family:'Sora';font-style:normal;font-weight:800;font-display:block;src:url(assets/fonts/sora-800-ext.woff2) format('woff2');unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;}
+@font-face{font-family:'Sora';font-style:normal;font-weight:800;font-display:block;src:url(assets/fonts/sora-800-lat.woff2) format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;}
+#root { width:1080px; height:1080px; position:relative; overflow:hidden; }
+#root * { box-sizing:border-box; margin:0; padding:0; }
+#f05-mecanismo-ground { position:absolute; inset:0; background:#2B2B2B; }
+
+/* the mock page — product UI, so Manrope throughout (brand type semantics) */
+.f05-mecanismo-card {
+  position:absolute; left:150px; top:260px;
+  width:780px; height:560px;
+  background:#FFFFFF; border-radius:14px; padding:40px;
+  font-family:'Manrope',sans-serif; color:#2B2B2B;
+  display:flex; flex-direction:column;
+}
+.f05-mecanismo-nav { height:38px; display:flex; align-items:center; justify-content:space-between; flex:none; }
+.f05-mecanismo-nav-brand { font-size:25px; font-weight:800; letter-spacing:-0.02em; }
+.f05-mecanismo-nav-right { display:flex; align-items:center; gap:20px; }
+.f05-mecanismo-nav-link { font-size:17px; font-weight:500; color:#6B6B6B; }
+.f05-mecanismo-nav-btn { font-size:15px; font-weight:600; color:#FFFFFF; background:#3F4A52; border-radius:100px; padding:9px 18px; }
+.f05-mecanismo-headline {
+  margin-top:26px; height:184px; width:700px; flex:none;
+  font-size:54px; font-weight:800; line-height:1.13; letter-spacing:-0.025em;
+}
+.f05-mecanismo-sub { margin-top:10px; font-size:22px; font-weight:400; color:#6B6B6B; flex:none; }
+.f05-mecanismo-btn {
+  margin-top:20px; height:52px; width:214px; border-radius:100px; flex:none;
+  background:#3F4A52; color:#FFFFFF; font-size:19px; font-weight:600;
+  display:flex; align-items:center; justify-content:center;
+}
+.f05-mecanismo-panel {
+  margin-top:20px; height:94px; border-radius:12px; flex:none;
+  background:#F1F4F5; border:1px solid #E3E8EA;
+  padding:19px 22px; display:flex; flex-direction:column; gap:11px;
+}
+.f05-mecanismo-panel-line { height:12px; border-radius:6px; background:#E3E8EA; }
+
+/* KRO's overlay layer — cyan is the single accent, and it never scales with the
+   page: the product's own UI does not shrink when it shows you more variants */
+.f05-mecanismo-pill {
+  position:absolute; height:34px; border-radius:100px;
+  background:rgba(6,182,212,0.14); border:1px solid rgba(6,182,212,0.4);
+  color:#06B6D4; font-family:'Manrope',sans-serif; font-size:15px; font-weight:600;
+  display:flex; align-items:center; padding:0 16px; white-space:nowrap;
+}
+.f05-mecanismo-modal {
+  position:absolute; width:236px; height:58px;
+  background:#1F1F1F; border:1px solid rgba(6,182,212,0.32); border-radius:12px;
+  font-family:'Manrope',sans-serif; display:flex; align-items:center; gap:11px; padding:0 15px;
+}
+.f05-mecanismo-dot { width:9px; height:9px; border-radius:50%; background:#06B6D4; flex:none; }
+.f05-mecanismo-mtxt { display:flex; flex-direction:column; gap:1px; }
+.f05-mecanismo-mlabel { font-size:12px; font-weight:600; color:#9A9A9A; letter-spacing:0.06em; text-transform:uppercase; }
+.f05-mecanismo-mnum { font-size:21px; font-weight:700; color:#FFFFFF; font-variant-numeric:tabular-nums; line-height:1.1; }
+#f05-mecanismo-colophon {
+  position:absolute; left:60px; top:1000px;
+  font-family:'Manrope',sans-serif; font-size:17px; font-weight:500; color:#929292;
+}
+.f05-mecanismo-crown {
+  position:absolute; height:34px; width:152px; border-radius:100px;
+  background:#06B6D4; color:#07323A;
+  font-family:'Manrope',sans-serif; font-size:15px; font-weight:800; letter-spacing:0.14em;
+  display:flex; align-items:center; justify-content:center;
+}
+.f05-mecanismo-ring { position:absolute; border:3px solid #06B6D4; border-radius:18px; }
+#f05-mecanismo-pill-A { left:122px; top:95px; }
+#f05-mecanismo-modal-A { left:199px; top:408px; }
+#f05-mecanismo-pill-B { left:568px; top:95px; }
+#f05-mecanismo-modal-B { left:645px; top:408px; }
+#f05-mecanismo-pill-C { left:122px; top:475px; }
+#f05-mecanismo-modal-C { left:199px; top:788px; }
+#f05-mecanismo-pill-D { left:568px; top:475px; }
+#f05-mecanismo-modal-D { left:645px; top:788px; }
+#f05-mecanismo-ring { left:561px; top:513px; width:404px; height:294px; }
+#f05-mecanismo-crown { left:687px; top:475px; }
+#f05-mecanismo-plate { position:absolute; inset:0; background:#2B2B2B; border-radius:44px; }
+#f05-mecanismo-band-top, #f05-mecanismo-band-bot {
+  position:absolute; left:0; width:1080px; height:540px; background:#7C3AED; }
+#f05-mecanismo-band-top { top:0; transform-origin:50% 0%; }
+#f05-mecanismo-band-bot { top:540px; transform-origin:50% 100%; }
+#f05-mecanismo-wordmark { position:absolute; left:66px; top:414px;
+  font-family:'Sora',sans-serif; font-size:33px; font-weight:700;
+  letter-spacing:-0.01em; color:rgba(255,255,255,0.7); }
+#f05-mecanismo-l1, #f05-mecanismo-l2, #f05-mecanismo-l3 { position:absolute; left:66px; width:960px;
+  font-family:'Sora',sans-serif; font-weight:700; font-size:52px; line-height:1.16;
+  letter-spacing:-0.028em; color:#FFFFFF; }
+#f05-mecanismo-l1 { top:492px; }
+#f05-mecanismo-l2 { top:557px; }
+#f05-mecanismo-l3 { top:622px; }
+.f05-mecanismo-win { color:#06B6D4; }
+  </style>
+  <div id="root" data-composition-id="05-mecanismo" data-start="0" data-duration="5" data-width="1080" data-height="1080">
+    <div class="clip" data-start="0" data-duration="5" data-track-index="0" id="f05-mecanismo-ground"></div>
+    <div class="clip" data-start="0" data-duration="5" data-track-index="1" id="f05-mecanismo-band-top"></div>
+    <div class="clip" data-start="0" data-duration="5" data-track-index="2" id="f05-mecanismo-band-bot"></div>
+    <div class="clip" data-start="0" data-duration="5" data-track-index="3" id="f05-mecanismo-stage" style="position:absolute;inset:0;">
+      <div id="f05-mecanismo-plate"></div>
+      <div class="f05-mecanismo-card" id="f05-mecanismo-card-A">
+        <div class="f05-mecanismo-nav" id="f05-mecanismo-nav-A">
+          <div class="f05-mecanismo-nav-brand">Nimbus AI</div>
+          <div class="f05-mecanismo-nav-right">
+            <span class="f05-mecanismo-nav-link">Produto</span>
+            <span class="f05-mecanismo-nav-link">Preços</span>
+            <span class="f05-mecanismo-nav-link">Entrar</span>
+            <span class="f05-mecanismo-nav-btn">Começar grátis</span>
+          </div>
+        </div>
+        <div class="f05-mecanismo-headline" id="f05-mecanismo-head-A">Suas reuniões viram anotações. Sozinhas.</div>
+        <div class="f05-mecanismo-sub" id="f05-mecanismo-sub-A">Conecte seu calendário. O resto é com a gente.</div>
+        <div class="f05-mecanismo-btn" id="f05-mecanismo-btn-A">Começar grátis</div>
+        <div class="f05-mecanismo-panel" id="f05-mecanismo-panel-A">
+          <div class="f05-mecanismo-panel-line" style="width:64%"></div>
+          <div class="f05-mecanismo-panel-line" style="width:88%"></div>
+          <div class="f05-mecanismo-panel-line" style="width:46%"></div>
+        </div>
+      </div>
+      <div class="f05-mecanismo-card" id="f05-mecanismo-card-B">
+        <div class="f05-mecanismo-nav" id="f05-mecanismo-nav-B">
+          <div class="f05-mecanismo-nav-brand">Nimbus AI</div>
+          <div class="f05-mecanismo-nav-right">
+            <span class="f05-mecanismo-nav-link">Produto</span>
+            <span class="f05-mecanismo-nav-link">Preços</span>
+            <span class="f05-mecanismo-nav-link">Entrar</span>
+            <span class="f05-mecanismo-nav-btn">Começar grátis</span>
+          </div>
+        </div>
+        <div class="f05-mecanismo-headline" id="f05-mecanismo-head-B">Nunca mais escreva uma ata de reunião.</div>
+        <div class="f05-mecanismo-sub" id="f05-mecanismo-sub-B">Conecte seu calendário. O resto é com a gente.</div>
+        <div class="f05-mecanismo-btn" id="f05-mecanismo-btn-B">Começar grátis</div>
+        <div class="f05-mecanismo-panel" id="f05-mecanismo-panel-B">
+          <div class="f05-mecanismo-panel-line" style="width:64%"></div>
+          <div class="f05-mecanismo-panel-line" style="width:88%"></div>
+          <div class="f05-mecanismo-panel-line" style="width:46%"></div>
+        </div>
+      </div>
+      <div class="f05-mecanismo-card" id="f05-mecanismo-card-C">
+        <div class="f05-mecanismo-nav" id="f05-mecanismo-nav-C">
+          <div class="f05-mecanismo-nav-brand">Nimbus AI</div>
+          <div class="f05-mecanismo-nav-right">
+            <span class="f05-mecanismo-nav-link">Produto</span>
+            <span class="f05-mecanismo-nav-link">Preços</span>
+            <span class="f05-mecanismo-nav-link">Entrar</span>
+            <span class="f05-mecanismo-nav-btn">Começar grátis</span>
+          </div>
+        </div>
+        <div class="f05-mecanismo-headline" id="f05-mecanismo-head-C">Sua reunião acabou. O resumo já está no seu e-mail.</div>
+        <div class="f05-mecanismo-sub" id="f05-mecanismo-sub-C">Conecte seu calendário. O resto é com a gente.</div>
+        <div class="f05-mecanismo-btn" id="f05-mecanismo-btn-C">Começar grátis</div>
+        <div class="f05-mecanismo-panel" id="f05-mecanismo-panel-C">
+          <div class="f05-mecanismo-panel-line" style="width:64%"></div>
+          <div class="f05-mecanismo-panel-line" style="width:88%"></div>
+          <div class="f05-mecanismo-panel-line" style="width:46%"></div>
+        </div>
+      </div>
+      <div class="f05-mecanismo-ring" id="f05-mecanismo-ring"></div>
+      <div class="f05-mecanismo-card" id="f05-mecanismo-card-D">
+        <div class="f05-mecanismo-nav" id="f05-mecanismo-nav-D">
+          <div class="f05-mecanismo-nav-brand">Nimbus AI</div>
+          <div class="f05-mecanismo-nav-right">
+            <span class="f05-mecanismo-nav-link">Produto</span>
+            <span class="f05-mecanismo-nav-link">Preços</span>
+            <span class="f05-mecanismo-nav-link">Entrar</span>
+            <span class="f05-mecanismo-nav-btn">Começar grátis</span>
+          </div>
+        </div>
+        <div class="f05-mecanismo-headline" id="f05-mecanismo-head-D">Você fala. A gente escreve. Ninguém digita nada.</div>
+        <div class="f05-mecanismo-sub" id="f05-mecanismo-sub-D">Conecte seu calendário. O resto é com a gente.</div>
+        <div class="f05-mecanismo-btn" id="f05-mecanismo-btn-D">Começar grátis</div>
+        <div class="f05-mecanismo-panel" id="f05-mecanismo-panel-D">
+          <div class="f05-mecanismo-panel-line" style="width:64%"></div>
+          <div class="f05-mecanismo-panel-line" style="width:88%"></div>
+          <div class="f05-mecanismo-panel-line" style="width:46%"></div>
+        </div>
+      </div>
+      <div class="f05-mecanismo-pill" id="f05-mecanismo-pill-A">versão A</div>
+      <div class="f05-mecanismo-pill" id="f05-mecanismo-pill-B">versão B</div>
+      <div class="f05-mecanismo-pill" id="f05-mecanismo-pill-C">versão C</div>
+      <div class="f05-mecanismo-modal" id="f05-mecanismo-modal-A">
+        <div class="f05-mecanismo-dot" id="f05-mecanismo-dot-A"></div>
+        <div class="f05-mecanismo-mtxt">
+          <div class="f05-mecanismo-mlabel" id="f05-mecanismo-mlabel-A">conversão</div>
+          <div class="f05-mecanismo-mnum" id="f05-mecanismo-num-A">3,1%</div>
+        </div>
+      </div>
+      <div class="f05-mecanismo-modal" id="f05-mecanismo-modal-B">
+        <div class="f05-mecanismo-dot" id="f05-mecanismo-dot-B"></div>
+        <div class="f05-mecanismo-mtxt">
+          <div class="f05-mecanismo-mlabel" id="f05-mecanismo-mlabel-B">conversão</div>
+          <div class="f05-mecanismo-mnum" id="f05-mecanismo-num-B">4,2%</div>
+        </div>
+      </div>
+      <div class="f05-mecanismo-modal" id="f05-mecanismo-modal-C">
+        <div class="f05-mecanismo-dot" id="f05-mecanismo-dot-C"></div>
+        <div class="f05-mecanismo-mtxt">
+          <div class="f05-mecanismo-mlabel" id="f05-mecanismo-mlabel-C">conversão</div>
+          <div class="f05-mecanismo-mnum" id="f05-mecanismo-num-C">2,7%</div>
+        </div>
+      </div>
+      <div class="f05-mecanismo-modal" id="f05-mecanismo-modal-D">
+        <div class="f05-mecanismo-dot" id="f05-mecanismo-dot-D"></div>
+        <div class="f05-mecanismo-mtxt">
+          <div class="f05-mecanismo-mlabel" id="f05-mecanismo-mlabel-D">conversão</div>
+          <div class="f05-mecanismo-mnum" id="f05-mecanismo-num-D">6,8%</div>
+        </div>
+      </div>
+      <div class="f05-mecanismo-crown" id="f05-mecanismo-crown">CAMPEÃ</div>
+    </div>
+    <div class="clip" data-start="0" data-duration="5" data-track-index="4" id="f05-mecanismo-wordmark">kro ai_</div>
+    <div class="clip" data-start="0" data-duration="5" data-track-index="5" id="f05-mecanismo-l1">O KRO AI automatiza</div>
+    <div class="clip" data-start="0" data-duration="5" data-track-index="6" id="f05-mecanismo-l2">seus testes A/B e acha</div>
+    <div class="clip" data-start="0" data-duration="5" data-track-index="7" id="f05-mecanismo-l3">a versão <span class="f05-mecanismo-win">campeã</span> da sua página.</div>
+  </div>
+  <script src="assets/vendor/gsap.min.js"></script>
+  <script>
+    window.__timelines = window.__timelines || {};
+    var tl = gsap.timeline({ paused: true });
+
+    // handoff_in: the grid exactly as frame 4 left it — full scale, D crowned and
+    // ringed, the other three receded to 0.55 opacity.
+    gsap.set(["#f05-mecanismo-card-A", "#f05-mecanismo-card-B", "#f05-mecanismo-card-C", "#f05-mecanismo-card-D"], { transformOrigin: "50% 50%" });
+    gsap.set("#f05-mecanismo-card-A", { x: -223, y: -260, scale: 0.48, opacity: 0.55 });
+    gsap.set("#f05-mecanismo-card-B", { x: 223, y: -260, scale: 0.48, opacity: 0.55 });
+    gsap.set("#f05-mecanismo-card-C", { x: -223, y: 120, scale: 0.48, opacity: 0.55 });
+    gsap.set("#f05-mecanismo-card-D", { x: 223, y: 120, scale: 0.52, opacity: 1 });
+    gsap.set("#f05-mecanismo-ring", { scale: 1.045, transformOrigin: "50% 50%" });
+    gsap.set(["#f05-mecanismo-pill-A", "#f05-mecanismo-pill-B", "#f05-mecanismo-pill-C",
+              "#f05-mecanismo-modal-A", "#f05-mecanismo-modal-B", "#f05-mecanismo-modal-C"], { opacity: 0.5 });
+    gsap.set("#f05-mecanismo-stage", { transformOrigin: "540px 470.5px" });
+    gsap.set(["#f05-mecanismo-band-top", "#f05-mecanismo-band-bot"], { scaleY: 0 });
+    gsap.set(["#f05-mecanismo-wordmark", "#f05-mecanismo-l1", "#f05-mecanismo-l2", "#f05-mecanismo-l3"], { opacity: 0 });
+
+    // Scene 1 (0.0-1.6): THE zoom-out — one continuous decelerating move takes the
+    // whole grid down to a thumbnail while the brand's purple field grows in from
+    // the top and bottom edges and takes over the charcoal stage.
+    tl.to("#f05-mecanismo-stage", { scale: 0.3, y: -234.5, duration: 1.55, ease: "power3.out" }, 0);
+    tl.to(["#f05-mecanismo-band-top", "#f05-mecanismo-band-bot"], { scaleY: 1, duration: 0.95, ease: "power2.inOut" }, 0.32);
+
+    // Scene 2 (1.6-2.4): the frame locks and the wordmark settles under the
+    // thumbnail — the type switches to the display face, so the viewer feels the
+    // speaker change from "the product on screen" to "the brand".
+    tl.fromTo("#f05-mecanismo-wordmark", { opacity: 0, y: 18 }, { opacity: 1, y: 0, duration: 0.46, ease: "power3.out" }, 1.66);
+
+    // Scene 3 (2.4-3.6): the title lands block by block, each line on its own beat.
+    tl.fromTo("#f05-mecanismo-l1", { opacity: 0, y: 28 }, { opacity: 1, y: 0, duration: 0.5, ease: "power3.out" }, 2.4);
+    tl.fromTo("#f05-mecanismo-l2", { opacity: 0, y: 28 }, { opacity: 1, y: 0, duration: 0.5, ease: "power3.out" }, 2.68);
+    tl.fromTo("#f05-mecanismo-l3", { opacity: 0, y: 28 }, { opacity: 1, y: 0, duration: 0.5, ease: "power3.out" }, 2.96);
+
+    // Scene 4 (3.6-4.5): hold. One word carries the cyan; nothing else moves.
+    window.__timelines["05-mecanismo"] = tl;
+  </script>
+</template>

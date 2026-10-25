@@ -1,0 +1,172 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+  </head>
+  <body>
+    <template>
+      <style>
+        #root { position: absolute; inset: 0; overflow: hidden; }
+        .scene {
+          position: absolute; inset: 0; overflow: hidden;
+          background: #1b1a1f;
+        }
+        
+  
+  .sys {
+    font-family: 'JetBrains Mono', monospace;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    font-size: 17px;
+    color: #06b6d4;
+  }
+  .sys-lo { color: #6f6f78; }
+  .metric {
+    font-family: 'JetBrains Mono', monospace;
+    font-variant-numeric: tabular-nums;
+    color: #06b6d4;
+    letter-spacing: 0.02em;
+  }
+  .badge {
+    display: inline-flex; align-items: center; gap: 9px;
+    font-family: 'JetBrains Mono', monospace; font-size: 15px; letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #06b6d4;
+    border: 1px solid rgba(6,182,212,0.45);
+    background: rgba(6,182,212,0.08);
+    padding: 7px 13px; border-radius: 4px;
+    white-space: nowrap;
+  }
+  .badge::before {
+    content: ""; width: 6px; height: 6px; border-radius: 50%;
+    background: #06b6d4; flex: 0 0 auto;
+  }
+  /* A voz do sistema nunca pousa direto sobre a página: ela vive numa lasca
+     escura por cima de tudo. É o que a separa do conteúdo — e o que a mantém
+     legível sobre qualquer superfície. */
+  .chip {
+    display: inline-block;
+    background: rgba(20,19,24,0.92);
+    padding: 9px 15px;
+    border-radius: 3px;
+    white-space: nowrap;
+  }
+  
+  .scene { background: #121216; }
+  .stage { position: absolute; inset: 0; perspective: 1500px; }
+  .world {
+    position: absolute; inset: 0;
+    transform-style: preserve-3d; transform-origin: 50% 50%;
+    will-change: transform;
+  }
+  /* Campo distante: já convergido, e alinhado à mesma malha do campo próximo.
+     É o resto do Brasil — a onda já passou por lá. */
+  .plain {
+    position: absolute;
+    left: -9205px;
+    top: -7458px;
+    width: 21400px; height: 17200px;
+    background-image: url("data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22214%22%20height%3D%22172%22%20viewBox%3D%220%200%20214%20172%22%3E%0A%3Crect%20x%3D%220%22%20y%3D%220%22%20width%3D%22214%22%20height%3D%22172%22%20fill%3D%22none%22%2F%3E%0A%3Crect%20x%3D%2213%22%20y%3D%2213%22%20width%3D%22188%22%20height%3D%22146%22%20fill%3D%22%23ffffff%22%2F%3E%0A%3Crect%20x%3D%2222%22%20y%3D%2222%22%20width%3D%2226%22%20height%3D%225%22%20rx%3D%222%22%20fill%3D%22%232b2b2b%22%2F%3E%0A%3Crect%20x%3D%22165%22%20y%3D%2221%22%20width%3D%2227%22%20height%3D%228%22%20rx%3D%223%22%20fill%3D%22%237c3aed%22%2F%3E%0A%3Crect%20x%3D%2222%22%20y%3D%2236%22%20width%3D%22170%22%20height%3D%221%22%20fill%3D%22%23e4e4e7%22%2F%3E%0A%3Crect%20x%3D%2222%22%20y%3D%2247%22%20width%3D%2286%22%20height%3D%229%22%20rx%3D%223%22%20fill%3D%22%232b2b2b%22%2F%3E%0A%3Crect%20x%3D%2222%22%20y%3D%2261%22%20width%3D%2256%22%20height%3D%229%22%20rx%3D%223%22%20fill%3D%22%232b2b2b%22%2F%3E%0A%3Crect%20x%3D%2222%22%20y%3D%2276%22%20width%3D%2271%22%20height%3D%224%22%20rx%3D%222%22%20fill%3D%22%23e4e4e7%22%2F%3E%0A%3Crect%20x%3D%2222%22%20y%3D%2284%22%20width%3D%2253%22%20height%3D%224%22%20rx%3D%222%22%20fill%3D%22%23e4e4e7%22%2F%3E%0A%3Crect%20x%3D%2222%22%20y%3D%2295%22%20width%3D%2242%22%20height%3D%2213%22%20rx%3D%224%22%20fill%3D%22%237c3aed%22%2F%3E%0A%3Crect%20x%3D%22155%22%20y%3D%2247%22%20width%3D%2237%22%20height%3D%2246%22%20rx%3D%224%22%20fill%3D%22%23ecedf0%22%2F%3E%0A%3C%2Fsvg%3E");
+    background-repeat: repeat;
+    background-size: 214px 172px;
+    background-color: #121216;
+    opacity: 0.9;
+  }
+  .blk { position: absolute; width: 188px; height: 146px; }
+  .v { position: absolute; inset: 0; background: #ffffff; border-radius: 3px; overflow: hidden; }
+  .v i { position: absolute; display: block; border-radius: 2px; }
+  .v .bar { background: #2b2b2b; }
+  .v .thin { background: #d9d9de; }
+  .after { opacity: 0; }
+  .wavebar {
+    position: absolute; left: -1500px; top: -618px;
+    width: 620px; height: 2316px;
+    background: linear-gradient(90deg,
+      rgba(124,58,237,0) 0%, rgba(124,58,237,0.5) 40%,
+      rgba(214,196,255,0.95) 50%, rgba(6,182,212,0.45) 60%, rgba(6,182,212,0) 100%);
+    transform: rotate(15deg) translateZ(6px);
+    mix-blend-mode: screen;
+    will-change: transform;
+    pointer-events: none;
+  }
+  
+      </style>
+
+      <div
+        id="root"
+        data-composition-id="s05"
+        data-width="1920"
+        data-height="1080"
+        data-duration="6"
+      >
+        <div class="scene">
+
+          <div class="stage">
+            <div class="world" id="world" data-layout-allow-overflow>
+              <div class="plain"></div>
+              <div class="wavebar" id="wavebar"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <script>
+        (function () {
+          window.__timelines = window.__timelines || {};
+          const tl = gsap.timeline({ paused: true });
+
+          // 195 quarteirões: cada um em duas versões empilhadas —
+          // "antes" (diversidade real) e "depois" (o mesmo ótimo). A onda
+          // crossfade um no outro; a convergência é literalmente esse fade.
+          const TILES = [[-1498,-1032,61,44,0,"#0f766e",0],[-1284,-1032,66,46,1,"#e0552f",0.17],[-1070,-1032,58,53,1,"#0f766e",0.33],[-856,-1032,76,47,1,"#9333ea",0.5],[-642,-1032,55,37,0,"#2563eb",0.67],[-428,-1032,68,44,1,"#1f9d55",0.83],[-214,-1032,66,55,1,"#d4a017",1],[0,-1032,79,36,0,"#d4a017",1.17],[214,-1032,79,42,0,"#1f9d55",1.33],[428,-1032,81,29,0,"#9333ea",1.5],[642,-1032,86,29,0,"#2563eb",1.67],[856,-1032,81,40,0,"#e0552f",1.83],[1070,-1032,65,32,0,"#1f9d55",2],[1284,-1032,70,33,1,"#1f9d55",2.17],[1498,-1032,69,54,0,"#2563eb",2.33],[-1498,-860,82,33,0,"#0f766e",0.07],[-1284,-860,64,37,0,"#2563eb",0.24],[-1070,-860,64,41,0,"#d4a017",0.4],[-856,-860,54,29,1,"#d4a017",0.57],[-642,-860,82,28,0,"#9333ea",0.74],[-428,-860,52,50,1,"#d4a017",0.9],[-214,-860,48,27,0,"#e0552f",1.07],[0,-860,77,38,1,"#d4a017",1.24],[214,-860,79,41,1,"#e0552f",1.4],[428,-860,47,55,1,"#9333ea",1.57],[642,-860,74,44,0,"#e0552f",1.74],[856,-860,56,49,0,"#2563eb",1.9],[1070,-860,69,35,1,"#0f766e",2.07],[1284,-860,70,31,0,"#1f9d55",2.24],[1498,-860,62,44,1,"#e0552f",2.4],[-1498,-688,66,44,0,"#d4a017",0.14],[-1284,-688,80,32,0,"#1f9d55",0.31],[-1070,-688,76,34,1,"#9333ea",0.47],[-856,-688,51,45,1,"#9333ea",0.64],[-642,-688,76,52,1,"#d4a017",0.81],[-428,-688,62,35,0,"#e0552f",0.97],[-214,-688,63,53,0,"#d4a017",1.14],[0,-688,48,31,0,"#2563eb",1.31],[214,-688,54,41,1,"#1f9d55",1.47],[428,-688,57,50,0,"#9333ea",1.64],[642,-688,79,43,1,"#1f9d55",1.81],[856,-688,61,44,1,"#e0552f",1.97],[1070,-688,82,38,0,"#1f9d55",2.14],[1284,-688,75,34,0,"#2563eb",2.31],[1498,-688,68,46,0,"#e0552f",2.47],[-1498,-516,54,42,0,"#e0552f",0.21],[-1284,-516,81,44,0,"#2563eb",0.37],[-1070,-516,53,29,0,"#9333ea",0.54],[-856,-516,66,32,1,"#d4a017",0.71],[-642,-516,62,36,0,"#1f9d55",0.87],[-428,-516,69,52,1,"#9333ea",1.04],[-214,-516,68,42,1,"#d4a017",1.21],[0,-516,66,35,0,"#1f9d55",1.37],[214,-516,60,44,0,"#0f766e",1.54],[428,-516,82,28,0,"#e0552f",1.71],[642,-516,79,49,1,"#9333ea",1.87],[856,-516,73,37,0,"#e0552f",2.04],[1070,-516,67,34,0,"#0f766e",2.21],[1284,-516,55,35,0,"#1f9d55",2.37],[1498,-516,54,27,1,"#0f766e",2.54],[-1498,-344,76,52,0,"#d4a017",0.28],[-1284,-344,82,39,1,"#9333ea",0.44],[-1070,-344,63,27,0,"#d4a017",0.61],[-856,-344,69,34,0,"#2563eb",0.78],[-642,-344,57,28,0,"#e0552f",0.94],[-428,-344,52,47,0,"#e0552f",1.11],[-214,-344,86,37,0,"#0f766e",1.28],[0,-344,59,35,0,"#0f766e",1.44],[214,-344,67,31,1,"#e0552f",1.61],[428,-344,75,55,1,"#d4a017",1.78],[642,-344,58,50,1,"#9333ea",1.94],[856,-344,52,53,0,"#0f766e",2.11],[1070,-344,75,47,1,"#e0552f",2.28],[1284,-344,52,54,1,"#9333ea",2.44],[1498,-344,64,44,0,"#d4a017",2.61],[-1498,-172,74,44,1,"#0f766e",0.35],[-1284,-172,52,28,1,"#1f9d55",0.51],[-1070,-172,82,46,0,"#0f766e",0.68],[-856,-172,79,56,1,"#9333ea",0.85],[-642,-172,86,38,0,"#2563eb",1.01],[-428,-172,53,53,1,"#2563eb",1.18],[-214,-172,59,54,1,"#1f9d55",1.35],[0,-172,81,45,1,"#9333ea",1.51],[214,-172,50,34,0,"#2563eb",1.68],[428,-172,55,28,0,"#0f766e",1.85],[642,-172,73,30,0,"#0f766e",2.01],[856,-172,83,44,0,"#9333ea",2.18],[1070,-172,83,42,0,"#2563eb",2.35],[1284,-172,56,34,1,"#d4a017",2.51],[1498,-172,77,53,0,"#2563eb",2.68],[-1498,0,72,50,0,"#e0552f",0.42],[-1284,0,64,45,0,"#1f9d55",0.58],[-1070,0,68,54,0,"#9333ea",0.75],[-856,0,68,41,0,"#1f9d55",0.92],[-642,0,68,31,0,"#e0552f",1.08],[-428,0,84,49,1,"#2563eb",1.25],[-214,0,60,38,0,"#0f766e",1.42],[0,0,69,53,0,"#9333ea",1.58],[214,0,72,31,1,"#0f766e",1.75],[428,0,71,52,0,"#d4a017",1.92],[642,0,71,39,1,"#e0552f",2.08],[856,0,58,54,1,"#9333ea",2.25],[1070,0,80,31,0,"#1f9d55",2.42],[1284,0,48,43,0,"#e0552f",2.58],[1498,0,73,27,1,"#e0552f",2.75],[-1498,172,67,39,0,"#9333ea",0.48],[-1284,172,64,41,0,"#1f9d55",0.65],[-1070,172,72,56,0,"#e0552f",0.82],[-856,172,56,33,1,"#2563eb",0.98],[-642,172,76,47,1,"#0f766e",1.15],[-428,172,55,39,1,"#1f9d55",1.32],[-214,172,64,37,0,"#d4a017",1.48],[0,172,82,40,0,"#1f9d55",1.65],[214,172,80,53,1,"#9333ea",1.82],[428,172,74,34,0,"#1f9d55",1.98],[642,172,63,38,0,"#2563eb",2.15],[856,172,46,52,1,"#1f9d55",2.32],[1070,172,47,48,1,"#1f9d55",2.48],[1284,172,66,29,0,"#9333ea",2.65],[1498,172,76,30,0,"#0f766e",2.82],[-1498,344,82,41,1,"#e0552f",0.55],[-1284,344,54,54,1,"#d4a017",0.72],[-1070,344,51,38,0,"#0f766e",0.89],[-856,344,62,39,0,"#e0552f",1.05],[-642,344,64,48,1,"#0f766e",1.22],[-428,344,51,28,0,"#2563eb",1.39],[-214,344,82,51,1,"#1f9d55",1.55],[0,344,80,30,0,"#1f9d55",1.72],[214,344,72,29,1,"#1f9d55",1.89],[428,344,81,44,1,"#d4a017",2.05],[642,344,85,36,1,"#0f766e",2.22],[856,344,71,46,0,"#1f9d55",2.39],[1070,344,49,32,0,"#d4a017",2.55],[1284,344,53,31,0,"#0f766e",2.72],[1498,344,68,55,0,"#1f9d55",2.89],[-1498,516,48,35,1,"#d4a017",0.62],[-1284,516,85,40,0,"#1f9d55",0.79],[-1070,516,65,34,0,"#d4a017",0.96],[-856,516,58,50,0,"#d4a017",1.12],[-642,516,74,46,0,"#9333ea",1.29],[-428,516,69,51,0,"#1f9d55",1.46],[-214,516,60,39,1,"#0f766e",1.62],[0,516,60,29,1,"#e0552f",1.79],[214,516,61,41,1,"#9333ea",1.96],[428,516,77,43,0,"#9333ea",2.12],[642,516,85,50,0,"#1f9d55",2.29],[856,516,61,53,0,"#1f9d55",2.46],[1070,516,81,42,0,"#d4a017",2.62],[1284,516,63,39,0,"#0f766e",2.79],[1498,516,54,35,0,"#9333ea",2.96],[-1498,688,51,55,0,"#d4a017",0.69],[-1284,688,52,27,1,"#e0552f",0.86],[-1070,688,62,54,0,"#0f766e",1.03],[-856,688,83,26,0,"#e0552f",1.19],[-642,688,77,48,0,"#0f766e",1.36],[-428,688,69,54,1,"#d4a017",1.53],[-214,688,67,28,0,"#9333ea",1.69],[0,688,57,51,0,"#1f9d55",1.86],[214,688,61,43,1,"#1f9d55",2.03],[428,688,47,41,0,"#0f766e",2.19],[642,688,81,32,1,"#2563eb",2.36],[856,688,52,36,1,"#1f9d55",2.53],[1070,688,78,33,0,"#e0552f",2.69],[1284,688,73,54,0,"#e0552f",2.86],[1498,688,52,39,0,"#1f9d55",3.03],[-1498,860,51,33,0,"#e0552f",0.76],[-1284,860,71,26,1,"#1f9d55",0.93],[-1070,860,82,40,0,"#e0552f",1.09],[-856,860,52,38,1,"#1f9d55",1.26],[-642,860,66,54,0,"#0f766e",1.43],[-428,860,58,29,0,"#2563eb",1.59],[-214,860,82,29,1,"#1f9d55",1.76],[0,860,66,40,1,"#d4a017",1.93],[214,860,63,54,0,"#d4a017",2.09],[428,860,77,44,0,"#2563eb",2.26],[642,860,52,56,0,"#9333ea",2.43],[856,860,68,44,0,"#9333ea",2.59],[1070,860,62,48,0,"#9333ea",2.76],[1284,860,61,39,0,"#1f9d55",2.93],[1498,860,68,56,1,"#1f9d55",3.09],[-1498,1032,55,51,0,"#d4a017",0.83],[-1284,1032,73,31,1,"#e0552f",1],[-1070,1032,81,43,1,"#2563eb",1.16],[-856,1032,59,28,1,"#9333ea",1.33],[-642,1032,78,45,0,"#9333ea",1.5],[-428,1032,65,32,0,"#0f766e",1.66],[-214,1032,69,44,1,"#0f766e",1.83],[0,1032,67,28,0,"#d4a017",2],[214,1032,82,41,0,"#0f766e",2.16],[428,1032,71,39,1,"#1f9d55",2.33],[642,1032,77,47,0,"#2563eb",2.5],[856,1032,61,42,0,"#d4a017",2.66],[1070,1032,71,33,0,"#d4a017",2.83],[1284,1032,78,30,0,"#2563eb",3],[1498,1032,51,28,0,"#e0552f",3.16]];
+          const CW = 188, CH = 146;
+          function variant(a, b, cen, acc, isAfter, id) {
+            const L1 = cen ? (100 - a) / 2 : 9, L2 = cen ? (100 - b) / 2 : 9;
+            return '<div class="v' + (isAfter ? ' after" id="' + id : '') + '">' +
+              '<i class="bar" style="left:9%;top:11%;width:22%;height:5%"></i>' +
+              '<i style="left:' + (cen ? 34 : 68) + '%;top:10%;width:24%;height:8%;background:' + acc + ';border-radius:3px"></i>' +
+              '<i class="thin" style="left:9%;top:24%;width:82%;height:1.5%"></i>' +
+              '<i class="bar" style="left:' + L1 + '%;top:36%;width:' + a + '%;height:9%"></i>' +
+              '<i class="bar" style="left:' + L2 + '%;top:50%;width:' + b + '%;height:9%"></i>' +
+              '<i style="left:' + (cen ? 36 : 9) + '%;top:70%;width:28%;height:12%;background:' + acc + ';border-radius:3px"></i>' +
+              '</div>';
+          }
+          const wavebarEl = document.getElementById("wavebar");
+          wavebarEl.insertAdjacentHTML("beforebegin", TILES.map(function (t, i) {
+            return '<div class="blk" style="left:' + (960 + t[0] - CW / 2) + 'px;top:' +
+              (540 + t[1] - CH / 2) + 'px">' +
+              variant(t[2], t[3], t[4], t[5], false, "") +
+              variant(64, 40, 0, "#7c3aed", true, "af-" + i) + '</div>';
+          }).join(""));
+
+          const world = document.querySelector("#world");
+          const cam = { x: 0, y: 0, z: 0, rx: 0, ry: 0 };
+          const drift = { dx: 0, dy: 0, drx: 0 };
+          function applyCamera() {
+            world.style.transform =
+              "translate3d(" + (cam.x + drift.dx) + "px," + (cam.y + drift.dy) + "px," + cam.z + "px)" +
+              " rotateX(" + (cam.rx + drift.drx) + "deg) rotateY(" + cam.ry + "deg)";
+          }
+          cam.rx = 70; cam.z = 320; cam.y = 90;
+          applyCamera();
+
+          // Crane-out contínuo. A câmera já não improvisa: sobe em linha reta.
+          tl.fromTo(cam, { rx: 70, z: 320, y: 90 },
+            { rx: 62, z: -300, y: -60, duration: 6, ease: "power1.inOut", onUpdate: applyCamera }, 0);
+
+          // A onda atravessa o mapa; a convergência vem logo atrás dela.
+          tl.fromTo("#wavebar", { x: 0, opacity: 0 }, { opacity: 1, duration: 0.4, ease: "power1.out" }, 0.2);
+          tl.to("#wavebar", { x: 4700, duration: 3.6, ease: "power1.inOut" }, 0.3);
+          tl.to("#wavebar", { opacity: 0, duration: 0.5, ease: "power1.in" }, 3.5);
+          // Cascata: cada quarteirão converge quando a onda passa por ele.
+          TILES.forEach(function (t, i) {
+            tl.to("#af-" + i, { opacity: 1, duration: 0.34, ease: "power2.out" }, 0.55 + t[6]);
+          });
+  
+          window.__timelines["s05"] = tl;
+        })();
+      </script>
+    </template>
+  </body>
+</html>

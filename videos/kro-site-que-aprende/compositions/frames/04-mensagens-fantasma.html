@@ -1,0 +1,282 @@
+<template>
+  <style>
+    /* ── fonts (self-hosted, project-root relative) ───────────────────── */
+    @font-face{font-family:"Sora";font-weight:400;font-style:normal;font-display:block;src:url("assets/fonts/Sora-400.woff2") format("woff2");}
+    @font-face{font-family:"Sora";font-weight:600;font-style:normal;font-display:block;src:url("assets/fonts/Sora-600.woff2") format("woff2");}
+
+    /* ── frame root: styled via #root, never a class ───────────────────── */
+    #root{
+      position:relative;
+      width:1080px;
+      height:1920px;
+      overflow:hidden;            /* required by viewport-change: the camera scales the world */
+      font-family:"Sora",sans-serif;
+      -webkit-font-smoothing:antialiased;
+    }
+
+    /* ═══ LEVEL 1 — atmosphere (full-bleed ground rides on a clip layer) ═══ */
+    .f04mf-ground{position:absolute;left:0;top:0;width:1080px;height:1920px;}
+    .f04mf-ground-base{
+      position:absolute;inset:0;
+      /* directional radial falloff from the upper left — never a flat light */
+      background:radial-gradient(124% 94% at 14% 6%,
+        #343434 0%, #2E2E2E 34%, #2B2B2B 58%, #1E1E1E 100%);
+    }
+    /* purple / cyan lighting carried in from frame 03 at 55% intensity */
+    .f04mf-light-a{
+      position:absolute;inset:0;opacity:0.55;
+      background:radial-gradient(64% 46% at 15% 9%,
+        rgba(124,58,237,0.30) 0%, rgba(124,58,237,0.10) 42%, rgba(124,58,237,0) 72%);
+    }
+    .f04mf-light-b{
+      position:absolute;inset:0;opacity:0.55;
+      background:radial-gradient(72% 42% at 86% 90%,
+        rgba(6,182,212,0.18) 0%, rgba(6,182,212,0.06) 44%, rgba(6,182,212,0) 70%);
+    }
+    .f04mf-grain{
+      position:absolute;left:0;top:0;width:1080px;height:1920px;
+      opacity:0.035;mix-blend-mode:overlay;pointer-events:none;
+    }
+
+    /* ═══ LEVEL 2 — the system: landing-mock + ghost headlines, in 3D ═══ */
+    .f04mf-system{position:absolute;left:0;top:0;width:1080px;height:1920px;}
+    /* the ONE camera wrapper — composite transform written only by applyCamera() */
+    .f04mf-world{
+      position:absolute;inset:0;
+      transform-origin:50% 50%;
+      will-change:transform;
+    }
+    .f04mf-stage{position:absolute;inset:0;perspective:2400px;perspective-origin:50% 50%;}
+    .f04mf-plane{position:absolute;inset:0;transform-style:preserve-3d;}
+
+    /* ghost-headlines — untested alternatives, receding depth planes */
+    .f04mf-ghost{
+      --dof:0px;
+      position:absolute;left:50%;
+      box-sizing:border-box;
+      filter:blur(var(--dof));
+      will-change:filter,transform,opacity;
+      opacity:0;
+    }
+    .f04mf-g1{top:1001px;width:760px;height:180px;margin-left:-380px;margin-top:-90px;padding:18px 54px 0;}
+    .f04mf-g2{top:951px;width:820px;height:190px;margin-left:-410px;margin-top:-95px;padding:20px 58px 0;}
+    .f04mf-g3{top:896px;width:890px;height:205px;margin-left:-445px;margin-top:-102px;padding:22px 62px 0;}
+    .f04mf-gbar{background:rgba(255,255,255,0.92);border-radius:6px;}
+    .f04mf-gthin{background:rgba(255,255,255,0.46);border-radius:6px;}
+    .f04mf-g1 .f04mf-gbar:nth-of-type(1){height:26px;width:70%;}
+    .f04mf-g1 .f04mf-gbar:nth-of-type(2){height:26px;width:44%;margin-top:14px;}
+    .f04mf-g2 .f04mf-gbar:nth-of-type(1){height:28px;width:66%;}
+    .f04mf-g2 .f04mf-gbar:nth-of-type(2){height:28px;width:50%;margin-top:15px;}
+    .f04mf-g2 .f04mf-gthin{height:10px;width:36%;margin-top:18px;}
+    .f04mf-g3 .f04mf-gbar:nth-of-type(1){height:30px;width:74%;}
+    .f04mf-g3 .f04mf-gbar:nth-of-type(2){height:30px;width:40%;margin-top:16px;}
+    .f04mf-g3 .f04mf-gthin{height:10px;width:30%;margin-top:20px;}
+
+    /* landing-mock — the locked page. A static site does not move. */
+    .f04mf-mock{
+      position:absolute;left:50%;top:1240px;
+      width:720px;height:470px;margin-left:-360px;margin-top:-235px;
+      background:#F4F2EE;border-radius:20px;
+      box-shadow:0 30px 80px rgba(0,0,0,0.45);
+      padding:30px 46px 44px;
+      box-sizing:border-box;
+      overflow:hidden;
+    }
+    .f04mf-sheen{
+      position:absolute;left:0;top:0;right:0;height:36%;
+      background:linear-gradient(180deg,rgba(255,255,255,0.09),rgba(255,255,255,0) 100%);
+      pointer-events:none;
+    }
+    .f04mf-chrome{position:relative;display:flex;gap:10px;}
+    .f04mf-chrome i{display:block;width:13px;height:13px;border-radius:50%;background:rgba(43,43,43,0.14);}
+    .f04mf-mh{position:relative;height:30px;border-radius:6px;background:rgba(43,43,43,0.80);}
+    .f04mf-mh-a{width:78%;margin-top:42px;}
+    .f04mf-mh-b{width:50%;margin-top:16px;}
+    .f04mf-mb{position:relative;height:11px;border-radius:6px;background:rgba(43,43,43,0.20);}
+    .f04mf-mb-a{width:92%;margin-top:40px;}
+    .f04mf-mb-b{width:64%;margin-top:14px;}
+    .f04mf-cta{
+      position:relative;margin-top:44px;width:208px;height:54px;
+      border-radius:100px;background:#2B2B2B;
+      display:flex;align-items:center;justify-content:center;
+    }
+    .f04mf-cta span{display:block;width:96px;height:10px;border-radius:6px;background:rgba(244,242,238,0.85);}
+
+    /* ═══ LEVEL 3 — hero typography: flat in the camera plane, never blurred ═══ */
+    .f04mf-hero{position:absolute;left:0;top:0;width:1080px;height:1920px;}
+    .f04mf-accent{
+      position:absolute;left:88px;top:448px;width:72px;height:4px;
+      border-radius:2px;background:#D8C0A7;
+      transform-origin:0% 50%;opacity:0;
+    }
+    .f04mf-type{position:absolute;left:88px;top:520px;width:904px;}
+    .f04mf-breath{opacity:0;will-change:transform,opacity;}
+    .f04mf-breath-2{margin-top:28px;}
+    .f04mf-line{
+      font-family:"Sora",sans-serif;font-weight:600;font-size:66px;line-height:1.16;
+      letter-spacing:-0.02em;color:#FFFFFF;
+    }
+  </style>
+
+  <div id="root"
+       data-composition-id="04-mensagens-fantasma"
+       data-width="1080"
+       data-height="1920" data-duration="6">
+
+    <!-- L1 — atmospheric ground (full duration, lowest track) -->
+    <div class="f04mf-ground clip" data-start="0" data-duration="6" data-track-index="0">
+      <div class="f04mf-ground-base"></div>
+      <div class="f04mf-light-a"></div>
+      <div class="f04mf-light-b"></div>
+      <svg class="f04mf-grain" width="1080" height="1920" viewBox="0 0 1080 1920" aria-hidden="true">
+        <filter id="04-mensagens-fantasma-grain" x="0" y="0" width="100%" height="100%">
+          <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="3" seed="7" stitchTiles="stitch"/>
+          <feColorMatrix type="saturate" values="0"/>
+        </filter>
+        <rect width="1080" height="1920" filter="url(#04-mensagens-fantasma-grain)"/>
+      </svg>
+    </div>
+
+    <!-- L2 — the system inside the camera + perspective -->
+    <div class="f04mf-system clip" data-start="0" data-duration="6" data-track-index="1">
+      <div class="f04mf-world" id="f04mf-world">
+        <div class="f04mf-stage">
+          <div class="f04mf-plane">
+
+            <!-- three ghost headlines, far → near -->
+            <div class="f04mf-ghost f04mf-g3" id="f04mf-ghost-3">
+              <div class="f04mf-gbar"></div>
+              <div class="f04mf-gbar"></div>
+              <div class="f04mf-gthin"></div>
+            </div>
+            <div class="f04mf-ghost f04mf-g2" id="f04mf-ghost-2">
+              <div class="f04mf-gbar"></div>
+              <div class="f04mf-gbar"></div>
+              <div class="f04mf-gthin"></div>
+            </div>
+            <div class="f04mf-ghost f04mf-g1" id="f04mf-ghost-1">
+              <div class="f04mf-gbar"></div>
+              <div class="f04mf-gbar"></div>
+            </div>
+
+            <!-- the locked page -->
+            <div class="f04mf-mock" id="f04mf-mock">
+              <div class="f04mf-sheen"></div>
+              <div class="f04mf-chrome"><i></i><i></i><i></i></div>
+              <div class="f04mf-mh f04mf-mh-a"></div>
+              <div class="f04mf-mh f04mf-mh-b"></div>
+              <div class="f04mf-mb f04mf-mb-a"></div>
+              <div class="f04mf-mb f04mf-mb-b"></div>
+              <div class="f04mf-cta"><span></span></div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- L3 — hero typography (onscreen_text, verbatim, in two breaths) -->
+    <div class="f04mf-hero clip" data-start="0" data-duration="6" data-track-index="2">
+      <div class="f04mf-accent" id="f04mf-accent"></div>
+      <div class="f04mf-type">
+        <div class="f04mf-breath f04mf-breath-1" id="f04mf-breath-1">
+          <div class="f04mf-line">E talvez essa nem seja</div>
+          <div class="f04mf-line">a melhor mensagem</div>
+        </div>
+        <div class="f04mf-breath f04mf-breath-2" id="f04mf-breath-2">
+          <div class="f04mf-line">para vender</div>
+          <div class="f04mf-line">o seu produto.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="assets/vendor/gsap.min.js"></script>
+  <script>
+    (function () {
+      var FRAME = "04-mensagens-fantasma";
+      var scope = document.querySelector('[data-composition-id="' + FRAME + '"]') || document;
+      var q = function (sel) { return scope.querySelector(sel); };
+
+      window.__timelines = window.__timelines || {};
+      var tl = gsap.timeline({ paused: true });
+
+      /* ── Cena A (0.0–4.3s) — viewport-change: the slow push-in ──────────
+         Single-wrapper composite camera: translate(x,y) scale(S), composed in
+         ONE place from the cam object. It carries the landing-mock handoff
+         contract verbatim:
+           handoff_in  @ t=0   → x 0, y +40px, scale 0.88, opacity 1
+           handoff_out @ t=5.5 → x 0, y +40px, scale 0.96, opacity 1, still
+         The push LANDS at 4.3s, so the whole 1.2s hold window is dead still
+         and nothing ever moves while the sentence is being read.           */
+      var world = q(".f04mf-world");
+      var cam = { scale: 0.88, x: 0, y: 40 };
+      function applyCamera() {
+        if (!world) return;
+        world.style.transform =
+          "translate(" + cam.x + "px, " + cam.y + "px) scale(" + cam.scale + ")";
+      }
+      applyCamera(); /* seed frame 0 */
+
+      tl.fromTo(
+        cam,
+        { scale: 0.88 },
+        { scale: 0.96, duration: 4.3, ease: "power1.inOut", onUpdate: applyCamera },
+        0
+      );
+
+      /* ── Cena B (0.3–2.48s) — the sentence, built in two breaths ────────
+         This frame's entrance: short 24px vertical displacement + fade,
+         480ms. Each breath arrives as one unit, then never moves again.    */
+      tl.fromTo(
+        q(".f04mf-accent"),
+        { opacity: 0, scaleX: 0.18 },
+        { opacity: 0.5, scaleX: 1, duration: 0.42, ease: "power2.out" },
+        0.15
+      );
+      tl.fromTo(
+        q(".f04mf-breath-1"),
+        { opacity: 0, y: 24 },
+        { opacity: 1, y: 0, duration: 0.48, ease: "power2.out" },
+        0.3
+      );
+      tl.fromTo(
+        q(".f04mf-breath-2"),
+        { opacity: 0, y: 24 },
+        { opacity: 1, y: 0, duration: 0.48, ease: "power2.out" },
+        2.0
+      );
+
+      /* ── Cena C (1.4–3.28s) — the ghosts (depth-of-field-blur) ──────────
+         Cascade, stagger 0.22s. Each untested variant recedes into its own
+         depth plane while fading to its ceiling opacity and settling at its
+         depth blur — derived per layer, so the falloff is identical on every
+         seek. Nothing ever exceeds 0.14; the hero type stays --dof: 0.      */
+      var ghosts = [
+        { sel: ".f04mf-g1", op: 0.14, blur: 3, z: -110, at: 1.40, dur: 1.20 },
+        { sel: ".f04mf-g2", op: 0.10, blur: 5, z: -230, at: 1.62, dur: 1.32 },
+        { sel: ".f04mf-g3", op: 0.07, blur: 7, z: -360, at: 1.84, dur: 1.44 }
+      ];
+      ghosts.forEach(function (g) {
+        var el = q(g.sel);
+        if (!el) return;
+        tl.fromTo(
+          el,
+          { opacity: 0, z: g.z + 150, "--dof": (g.blur * 0.45).toFixed(2) + "px" },
+          {
+            opacity: g.op,
+            z: g.z,
+            "--dof": g.blur + "px",
+            duration: g.dur,
+            ease: "power2.out"
+          },
+          g.at
+        );
+      });
+
+      /* ── Cena D (4.3–5.5s) — the hold. No tween lives past 4.3s. ─────── */
+
+      window.__timelines[FRAME] = tl;
+    })();
+  </script>
+</template>

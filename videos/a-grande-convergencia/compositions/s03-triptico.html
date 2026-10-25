@@ -1,0 +1,471 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+  </head>
+  <body>
+    <template>
+      <style>
+        #root { position: absolute; inset: 0; overflow: hidden; }
+        .scene {
+          position: absolute; inset: 0; overflow: hidden;
+          background: #1b1a1f;
+        }
+        
+  
+  .lp {
+    position: relative;
+    background: #ffffff;
+    color: #2b2b2b;
+    font-family: Inter, sans-serif;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+    /* Variáveis de convergência — animar estas É a convergência. */
+    --lp-accent: #7c3aed;
+    --lp-radius: 10px;
+    --lp-gap: 1;
+    --lp-align: left;
+    --lp-pad: 1;
+  }
+  .lp-nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: calc(22px * var(--lp-pad)) calc(34px * var(--lp-pad));
+    border-bottom: 1px solid #e4e4e7;
+    flex: 0 0 auto;
+  }
+  .lp-brand {
+    font-weight: 900;
+    letter-spacing: -0.02em;
+    font-size: 20px;
+    white-space: nowrap;
+  }
+  .lp-navlinks { display: flex; gap: 20px; }
+  .lp-navlink {
+    height: 7px; width: 42px; border-radius: 4px;
+    background: #e4e4e7;
+  }
+  .lp-navcta {
+    height: 26px; width: 84px;
+    border-radius: var(--lp-radius);
+    background: var(--lp-accent);
+  }
+  .lp-body {
+    flex: 1 1 auto;
+    display: flex;
+    gap: calc(40px * var(--lp-gap));
+    padding: calc(44px * var(--lp-pad)) calc(34px * var(--lp-pad));
+    align-items: center;
+    min-height: 0;
+  }
+  .lp-copy {
+    flex: 1 1 auto;
+    display: flex;
+    flex-direction: column;
+    gap: calc(18px * var(--lp-gap));
+    text-align: var(--lp-align);
+    align-items: var(--lp-items, flex-start);
+    min-width: 0;
+  }
+  .lp-h {
+    font-weight: 900;
+    font-size: 44px;
+    line-height: 1.02;
+    letter-spacing: -0.035em;
+    max-width: 15ch;
+  }
+  .lp-sub {
+    font-weight: 400;
+    font-size: 17px;
+    line-height: 1.45;
+    color: #6f6f76;
+    max-width: 30ch;
+  }
+  .lp-cta {
+    display: inline-block;
+    background: var(--lp-accent);
+    color: #ffffff;
+    font-weight: 700;
+    font-size: 16px;
+    letter-spacing: 0.06em;
+    padding: 15px 30px;
+    border-radius: var(--lp-radius);
+    white-space: nowrap;
+    align-self: var(--lp-items, flex-start);
+  }
+  .lp-proof {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 13px;
+    color: #6f6f76;
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .lp-dots { display: flex; }
+  .lp-dot {
+    width: 16px; height: 16px; border-radius: 50%;
+    background: #e4e4e7;
+    margin-left: -5px;
+    border: 2px solid #ffffff;
+  }
+  .lp-media {
+    flex: 0 0 auto;
+    background: linear-gradient(148deg, #f2f2f4 0%, #e6e6ea 100%);
+    border-radius: var(--lp-radius);
+    position: relative;
+    overflow: hidden;
+  }
+  /* Placeholder editorial abstrato — nunca stock photography. */
+  .lp-media::after {
+    content: "";
+    position: absolute;
+    left: 18%; top: 26%; width: 64%; height: 48%;
+    border-radius: 6px;
+    background: repeating-linear-gradient(
+      118deg, #e4e4e7 0 9px, #f7f7f9 9px 20px
+    );
+    opacity: 0.85;
+  }
+  .lp-media.round { border-radius: 50%; }
+  .lp-media.round::after { border-radius: 50%; left: 20%; top: 20%; width: 60%; height: 60%; }
+  
+  
+  .slim {
+    position: relative;
+    width: 100%; height: 100%;
+    background: #ffffff;
+    overflow: hidden;
+    box-sizing: border-box;
+    padding: 16px 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    --s-accent: #7c3aed;
+    --s-align: flex-start;
+  }
+  .slim-top {
+    display: flex; align-items: center; justify-content: space-between;
+    padding-bottom: 10px; border-bottom: 1px solid #e4e4e7;
+    flex: 0 0 auto;
+  }
+  .slim-brand { height: 9px; width: 54px; border-radius: 3px; background: #2b2b2b; }
+  .slim-pill { height: 12px; width: 40px; border-radius: 4px; background: var(--s-accent); }
+  .slim-main { flex: 1 1 auto; display: flex; gap: 14px; align-items: center; min-height: 0; }
+  .slim-col {
+    flex: 1 1 auto; display: flex; flex-direction: column;
+    gap: 9px; align-items: var(--s-align); min-width: 0;
+  }
+  .slim-h { height: 15px; border-radius: 4px; background: #2b2b2b; }
+  .slim-t { height: 7px; border-radius: 3px; background: #e4e4e7; }
+  .slim-btn { height: 22px; width: 74px; border-radius: 6px; background: var(--s-accent); }
+  .slim-img {
+    flex: 0 0 auto; border-radius: 6px;
+    background: linear-gradient(148deg, #f0f0f3 0%, #e3e3e8 100%);
+  }
+  
+  
+  .sys {
+    font-family: 'JetBrains Mono', monospace;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    font-size: 17px;
+    color: #06b6d4;
+  }
+  .sys-lo { color: #6f6f78; }
+  .metric {
+    font-family: 'JetBrains Mono', monospace;
+    font-variant-numeric: tabular-nums;
+    color: #06b6d4;
+    letter-spacing: 0.02em;
+  }
+  .badge {
+    display: inline-flex; align-items: center; gap: 9px;
+    font-family: 'JetBrains Mono', monospace; font-size: 15px; letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #06b6d4;
+    border: 1px solid rgba(6,182,212,0.45);
+    background: rgba(6,182,212,0.08);
+    padding: 7px 13px; border-radius: 4px;
+    white-space: nowrap;
+  }
+  .badge::before {
+    content: ""; width: 6px; height: 6px; border-radius: 50%;
+    background: #06b6d4; flex: 0 0 auto;
+  }
+  /* A voz do sistema nunca pousa direto sobre a página: ela vive numa lasca
+     escura por cima de tudo. É o que a separa do conteúdo — e o que a mantém
+     legível sobre qualquer superfície. */
+  .chip {
+    display: inline-block;
+    background: rgba(20,19,24,0.92);
+    padding: 9px 15px;
+    border-radius: 3px;
+    white-space: nowrap;
+  }
+  
+  .stage { position: absolute; inset: 0; perspective: 1400px; }
+  .world {
+    position: absolute; inset: 0;
+    transform-style: preserve-3d; transform-origin: 50% 50%;
+    will-change: transform;
+  }
+  .card {
+    position: absolute; top: 208px;
+    width: 520px; height: 664px;
+    border-radius: 12px;
+    box-shadow: 0 44px 96px rgba(0,0,0,0.5);
+    --lp-gap: 0.92;
+  }
+  .card .lp-h { font-size: 38px; max-width: 12ch; }
+  .card .lp-sub { font-size: 15px; max-width: 26ch; }
+  .card .lp-cta { font-size: 14px; padding: 13px 24px; }
+  .hs { position: relative; height: 82px; width: 400px; }
+  .hs > div { position: absolute; left: 0; top: 0; }
+  .cs { position: relative; height: 44px; width: 290px; }
+  .cs > div { position: absolute; left: 0; top: 0; }
+  .tick {
+    position: absolute; right: 22px; top: 20px;
+    width: 30px; height: 30px; border-radius: 50%;
+    background: #06b6d4; opacity: 0;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .tick svg { display: block; }
+  .far2 { position: absolute; border-radius: 8px; filter: blur(5px); opacity: 0.55; }
+  .conf {
+    position: absolute; left: 50%; bottom: 92px; transform: translateX(-50%);
+    opacity: 0;
+  }
+  
+      </style>
+
+      <div
+        id="root"
+        data-composition-id="s03"
+        data-width="1920"
+        data-height="1080"
+        data-duration="5"
+      >
+        <div class="scene">
+
+          <div class="stage">
+            <div class="world" id="world" data-layout-allow-overflow>
+              <div class="far2" style="left:2280px;top:451px;width:330px;height:246px;transform:translateZ(-933px)"><div class="slim " style="">
+      <div class="slim-top"><div class="slim-brand"></div><div class="slim-pill"></div></div>
+      <div class="slim-main">
+        <div class="slim-col">
+          <div class="slim-h" style="width:66%"></div>
+          <div class="slim-h" style="width:42%"></div>
+          <div class="slim-t" style="width:59%"></div>
+          <div class="slim-t" style="width:46%"></div>
+          <div class="slim-btn"></div>
+        </div>
+        <div class="slim-img" style="width:99px;height:123px"></div>
+      </div>
+    </div></div>
+              <div class="far2" style="left:2750px;top:512px;width:330px;height:246px;transform:translateZ(-594px)"><div class="slim " style="">
+      <div class="slim-top"><div class="slim-brand"></div><div class="slim-pill"></div></div>
+      <div class="slim-main">
+        <div class="slim-col">
+          <div class="slim-h" style="width:66%"></div>
+          <div class="slim-h" style="width:42%"></div>
+          <div class="slim-t" style="width:59%"></div>
+          <div class="slim-t" style="width:46%"></div>
+          <div class="slim-btn"></div>
+        </div>
+        <div class="slim-img" style="width:99px;height:123px"></div>
+      </div>
+    </div></div>
+              <div class="far2" style="left:3220px;top:539px;width:330px;height:246px;transform:translateZ(-701px)"><div class="slim " style="">
+      <div class="slim-top"><div class="slim-brand"></div><div class="slim-pill"></div></div>
+      <div class="slim-main">
+        <div class="slim-col">
+          <div class="slim-h" style="width:66%"></div>
+          <div class="slim-h" style="width:42%"></div>
+          <div class="slim-t" style="width:59%"></div>
+          <div class="slim-t" style="width:46%"></div>
+          <div class="slim-btn"></div>
+        </div>
+        <div class="slim-img" style="width:99px;height:123px"></div>
+      </div>
+    </div></div>
+              <div class="far2" style="left:3690px;top:322px;width:330px;height:246px;transform:translateZ(-520px)"><div class="slim " style="">
+      <div class="slim-top"><div class="slim-brand"></div><div class="slim-pill"></div></div>
+      <div class="slim-main">
+        <div class="slim-col">
+          <div class="slim-h" style="width:66%"></div>
+          <div class="slim-h" style="width:42%"></div>
+          <div class="slim-t" style="width:59%"></div>
+          <div class="slim-t" style="width:46%"></div>
+          <div class="slim-btn"></div>
+        </div>
+        <div class="slim-img" style="width:99px;height:123px"></div>
+      </div>
+    </div></div>
+              <div class="far2" style="left:4160px;top:399px;width:330px;height:246px;transform:translateZ(-591px)"><div class="slim " style="">
+      <div class="slim-top"><div class="slim-brand"></div><div class="slim-pill"></div></div>
+      <div class="slim-main">
+        <div class="slim-col">
+          <div class="slim-h" style="width:66%"></div>
+          <div class="slim-h" style="width:42%"></div>
+          <div class="slim-t" style="width:59%"></div>
+          <div class="slim-t" style="width:46%"></div>
+          <div class="slim-btn"></div>
+        </div>
+        <div class="slim-img" style="width:99px;height:123px"></div>
+      </div>
+    </div></div>
+              <div class="far2" style="left:4630px;top:533px;width:330px;height:246px;transform:translateZ(-659px)"><div class="slim " style="">
+      <div class="slim-top"><div class="slim-brand"></div><div class="slim-pill"></div></div>
+      <div class="slim-main">
+        <div class="slim-col">
+          <div class="slim-h" style="width:66%"></div>
+          <div class="slim-h" style="width:42%"></div>
+          <div class="slim-t" style="width:59%"></div>
+          <div class="slim-t" style="width:46%"></div>
+          <div class="slim-btn"></div>
+        </div>
+        <div class="slim-img" style="width:99px;height:123px"></div>
+      </div>
+    </div></div>
+              <div class="far2" style="left:5100px;top:329px;width:330px;height:246px;transform:translateZ(-474px)"><div class="slim " style="">
+      <div class="slim-top"><div class="slim-brand"></div><div class="slim-pill"></div></div>
+      <div class="slim-main">
+        <div class="slim-col">
+          <div class="slim-h" style="width:66%"></div>
+          <div class="slim-h" style="width:42%"></div>
+          <div class="slim-t" style="width:59%"></div>
+          <div class="slim-t" style="width:46%"></div>
+          <div class="slim-btn"></div>
+        </div>
+        <div class="slim-img" style="width:99px;height:123px"></div>
+      </div>
+    </div></div>
+              
+              <div class="lp card" id="card-0" style="left:96px;transform:translateZ(-30px) rotateY(7deg)">
+                <div class="lp-nav">
+                  <div class="lp-brand">CORVEN</div>
+                  <div class="lp-navlinks"><div class="lp-navlink"></div><div class="lp-navlink"></div><div class="lp-navcta"></div></div>
+                </div>
+                <div class="lp-body">
+                  <div class="lp-copy">
+                    <div class="hs"><div class="lp-h" id="h0-0" data-layout-allow-overlap>Potencialize resultados.</div><div class="lp-h" id="h0-1" data-layout-allow-overlap>Potencialize.</div><div class="lp-h" id="h0-2" data-layout-allow-overlap>Transforme.</div><div class="lp-h" id="h0-3" data-layout-allow-overlap>Transforme seu negócio.</div></div>
+                    <div class="lp-sub">Para quem precisa decidir com menos ruído.</div>
+                    <div class="cs">
+                      <div class="lp-cta" id="cta0-0" data-layout-allow-overlap>Pedir demonstração</div>
+                      <div class="lp-cta" id="cta0-1" data-layout-allow-overlap>COMEÇAR AGORA</div>
+                    </div>
+                  </div>
+                </div>
+                <div class="tick" id="tick-0"><svg width="15" height="12" viewBox="0 0 15 12" fill="none"><path d="M1.6 6.2 L5.4 10 L13.2 1.8" stroke="#ffffff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+              </div>
+              <div class="lp card" id="card-1" style="left:672px;transform:translateZ(40px) rotateY(0deg)">
+                <div class="lp-nav">
+                  <div class="lp-brand">AURORA</div>
+                  <div class="lp-navlinks"><div class="lp-navlink"></div><div class="lp-navlink"></div><div class="lp-navcta"></div></div>
+                </div>
+                <div class="lp-body">
+                  <div class="lp-copy">
+                    <div class="hs"><div class="lp-h" id="h1-0" data-layout-allow-overlap>Todo dia fresquinho.</div><div class="lp-h" id="h1-1" data-layout-allow-overlap>Potencialize.</div><div class="lp-h" id="h1-2" data-layout-allow-overlap>Transforme.</div><div class="lp-h" id="h1-3" data-layout-allow-overlap>Transforme seu negócio.</div></div>
+                    <div class="lp-sub">Para quem precisa decidir com menos ruído.</div>
+                    <div class="cs">
+                      <div class="lp-cta" id="cta1-0" data-layout-allow-overlap>Ver cardápio</div>
+                      <div class="lp-cta" id="cta1-1" data-layout-allow-overlap>COMEÇAR AGORA</div>
+                    </div>
+                  </div>
+                </div>
+                <div class="tick" id="tick-1"><svg width="15" height="12" viewBox="0 0 15 12" fill="none"><path d="M1.6 6.2 L5.4 10 L13.2 1.8" stroke="#ffffff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+              </div>
+              <div class="lp card" id="card-2" style="left:1248px;transform:translateZ(-30px) rotateY(-7deg)">
+                <div class="lp-nav">
+                  <div class="lp-brand">VÉRTICE</div>
+                  <div class="lp-navlinks"><div class="lp-navlink"></div><div class="lp-navlink"></div><div class="lp-navcta"></div></div>
+                </div>
+                <div class="lp-body">
+                  <div class="lp-copy">
+                    <div class="hs"><div class="lp-h" id="h2-0" data-layout-allow-overlap>Seu dinheiro rende mais.</div><div class="lp-h" id="h2-1" data-layout-allow-overlap>Potencialize.</div><div class="lp-h" id="h2-2" data-layout-allow-overlap>Transforme.</div><div class="lp-h" id="h2-3" data-layout-allow-overlap>Transforme seu negócio.</div></div>
+                    <div class="lp-sub">Para quem precisa decidir com menos ruído.</div>
+                    <div class="cs">
+                      <div class="lp-cta" id="cta2-0" data-layout-allow-overlap>Simular agora</div>
+                      <div class="lp-cta" id="cta2-1" data-layout-allow-overlap>COMEÇAR AGORA</div>
+                    </div>
+                  </div>
+                </div>
+                <div class="tick" id="tick-2"><svg width="15" height="12" viewBox="0 0 15 12" fill="none"><path d="M1.6 6.2 L5.4 10 L13.2 1.8" stroke="#ffffff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+              </div>
+            </div>
+          </div>
+          <div class="badge conf" id="conf">Confiança estatística: 99,4%</div>
+        </div>
+      </div>
+
+      <script>
+        (function () {
+          window.__timelines = window.__timelines || {};
+          const tl = gsap.timeline({ paused: true });
+
+          function stack(sel, n, at) {
+            for (let i = 0; i < n; i++) gsap.set(sel + i, { autoAlpha: i === 0 ? 1 : 0 });
+            for (let i = 1; i < n; i++) {
+              tl.set(sel + (i - 1), { autoAlpha: 0 }, at[i]);
+              tl.set(sel + i, { autoAlpha: 1 }, at[i]);
+            }
+          }
+
+          const world = document.querySelector("#world");
+          const cam = { x: 0, y: 0, z: 0, rx: 0, ry: 0 };
+          const drift = { dx: 0, dy: 0, drx: 0 };
+          function applyCamera() {
+            world.style.transform =
+              "translate3d(" + (cam.x + drift.dx) + "px," + (cam.y + drift.dy) + "px," + cam.z + "px)" +
+              " rotateX(" + (cam.rx + drift.drx) + "deg) rotateY(" + cam.ry + "deg)";
+          }
+          cam.x = 330; cam.z = -60;
+          applyCamera();
+
+          // Travelling lateral: a câmera desliza e continua encontrando páginas.
+          tl.fromTo(cam, { x: 330, z: -60 },
+            { x: 96, z: 10, duration: 1.5, ease: "power2.inOut", onUpdate: applyCamera }, 0);
+
+          stack("#h0-", 4, [0,1.18,1.96,2.74]);
+          stack("#cta0-", 2, [0,2.74]);
+          tl.fromTo("#tick-0", { opacity: 0, scale: 0.7 }, { opacity: 1, scale: 1, duration: 0.16, ease: "power3.out" }, 1.18);
+          tl.to("#tick-0", { opacity: 0, duration: 0.20, ease: "power1.in" }, 1.5999999999999999);
+          tl.fromTo("#tick-0", { opacity: 0, scale: 0.7 }, { opacity: 1, scale: 1, duration: 0.16, ease: "power3.out" }, 1.96);
+          tl.to("#tick-0", { opacity: 0, duration: 0.20, ease: "power1.in" }, 2.38);
+          tl.fromTo("#tick-0", { opacity: 0, scale: 0.7 }, { opacity: 1, scale: 1, duration: 0.16, ease: "power3.out" }, 2.74);
+          tl.to("#tick-0", { opacity: 0, duration: 0.20, ease: "power1.in" }, 3.16);
+          stack("#h1-", 4, [0,1.18,1.96,2.74]);
+          stack("#cta1-", 2, [0,2.74]);
+          tl.fromTo("#tick-1", { opacity: 0, scale: 0.7 }, { opacity: 1, scale: 1, duration: 0.16, ease: "power3.out" }, 1.18);
+          tl.to("#tick-1", { opacity: 0, duration: 0.20, ease: "power1.in" }, 1.5999999999999999);
+          tl.fromTo("#tick-1", { opacity: 0, scale: 0.7 }, { opacity: 1, scale: 1, duration: 0.16, ease: "power3.out" }, 1.96);
+          tl.to("#tick-1", { opacity: 0, duration: 0.20, ease: "power1.in" }, 2.38);
+          tl.fromTo("#tick-1", { opacity: 0, scale: 0.7 }, { opacity: 1, scale: 1, duration: 0.16, ease: "power3.out" }, 2.74);
+          tl.to("#tick-1", { opacity: 0, duration: 0.20, ease: "power1.in" }, 3.16);
+          stack("#h2-", 4, [0,1.18,1.96,2.74]);
+          stack("#cta2-", 2, [0,2.74]);
+          tl.fromTo("#tick-2", { opacity: 0, scale: 0.7 }, { opacity: 1, scale: 1, duration: 0.16, ease: "power3.out" }, 1.18);
+          tl.to("#tick-2", { opacity: 0, duration: 0.20, ease: "power1.in" }, 1.5999999999999999);
+          tl.fromTo("#tick-2", { opacity: 0, scale: 0.7 }, { opacity: 1, scale: 1, duration: 0.16, ease: "power3.out" }, 1.96);
+          tl.to("#tick-2", { opacity: 0, duration: 0.20, ease: "power1.in" }, 2.38);
+          tl.fromTo("#tick-2", { opacity: 0, scale: 0.7 }, { opacity: 1, scale: 1, duration: 0.16, ease: "power3.out" }, 2.74);
+          tl.to("#tick-2", { opacity: 0, duration: 0.20, ease: "power1.in" }, 3.16);
+          tl.fromTo("#conf", { opacity: 0, y: 12 },
+            { opacity: 1, y: 0, duration: 0.42, ease: "power3.out" }, 3.04);
+          tl.to("#conf", { opacity: 0, duration: 0.34, ease: "power1.in" }, 4.34);
+
+          // Repouso — depois segue, e o corredor não acaba.
+          tl.to(cam, { x: -640, z: 120, duration: 1.5, ease: "power2.inOut", onUpdate: applyCamera }, 3.5);
+          tl.fromTo(drift, { drx: 0.5 },
+            { drx: -0.5, duration: 2.5, ease: "sine.inOut", yoyo: true, repeat: 1, onUpdate: applyCamera }, 0);
+  
+          window.__timelines["s03"] = tl;
+        })();
+      </script>
+    </template>
+  </body>
+</html>

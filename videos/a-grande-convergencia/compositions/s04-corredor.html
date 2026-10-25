@@ -1,0 +1,286 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+  </head>
+  <body>
+    <template>
+      <style>
+        #root { position: absolute; inset: 0; overflow: hidden; }
+        .scene {
+          position: absolute; inset: 0; overflow: hidden;
+          background: #1b1a1f;
+        }
+        
+  
+  .slim {
+    position: relative;
+    width: 100%; height: 100%;
+    background: #ffffff;
+    overflow: hidden;
+    box-sizing: border-box;
+    padding: 16px 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    --s-accent: #7c3aed;
+    --s-align: flex-start;
+  }
+  .slim-top {
+    display: flex; align-items: center; justify-content: space-between;
+    padding-bottom: 10px; border-bottom: 1px solid #e4e4e7;
+    flex: 0 0 auto;
+  }
+  .slim-brand { height: 9px; width: 54px; border-radius: 3px; background: #2b2b2b; }
+  .slim-pill { height: 12px; width: 40px; border-radius: 4px; background: var(--s-accent); }
+  .slim-main { flex: 1 1 auto; display: flex; gap: 14px; align-items: center; min-height: 0; }
+  .slim-col {
+    flex: 1 1 auto; display: flex; flex-direction: column;
+    gap: 9px; align-items: var(--s-align); min-width: 0;
+  }
+  .slim-h { height: 15px; border-radius: 4px; background: #2b2b2b; }
+  .slim-t { height: 7px; border-radius: 3px; background: #e4e4e7; }
+  .slim-btn { height: 22px; width: 74px; border-radius: 6px; background: var(--s-accent); }
+  .slim-img {
+    flex: 0 0 auto; border-radius: 6px;
+    background: linear-gradient(148deg, #f0f0f3 0%, #e3e3e8 100%);
+  }
+  
+  
+  .sys {
+    font-family: 'JetBrains Mono', monospace;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    font-size: 17px;
+    color: #06b6d4;
+  }
+  .sys-lo { color: #6f6f78; }
+  .metric {
+    font-family: 'JetBrains Mono', monospace;
+    font-variant-numeric: tabular-nums;
+    color: #06b6d4;
+    letter-spacing: 0.02em;
+  }
+  .badge {
+    display: inline-flex; align-items: center; gap: 9px;
+    font-family: 'JetBrains Mono', monospace; font-size: 15px; letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #06b6d4;
+    border: 1px solid rgba(6,182,212,0.45);
+    background: rgba(6,182,212,0.08);
+    padding: 7px 13px; border-radius: 4px;
+    white-space: nowrap;
+  }
+  .badge::before {
+    content: ""; width: 6px; height: 6px; border-radius: 50%;
+    background: #06b6d4; flex: 0 0 auto;
+  }
+  /* A voz do sistema nunca pousa direto sobre a página: ela vive numa lasca
+     escura por cima de tudo. É o que a separa do conteúdo — e o que a mantém
+     legível sobre qualquer superfície. */
+  .chip {
+    display: inline-block;
+    background: rgba(20,19,24,0.92);
+    padding: 9px 15px;
+    border-radius: 3px;
+    white-space: nowrap;
+  }
+  
+  .stage { position: absolute; inset: 0; perspective: 1150px; }
+  .world {
+    position: absolute; inset: 0;
+    transform-style: preserve-3d; transform-origin: 50% 50%;
+    will-change: transform;
+  }
+  .fac {
+    position: absolute; border-radius: 9px;
+    box-shadow: 0 30px 70px rgba(0,0,0,0.5);
+    --dof: 0px;
+    filter: blur(var(--dof));
+    will-change: filter;
+  }
+  .wave {
+    position: absolute; left: 0; top: 0; right: 0; bottom: 0;
+    border-radius: 9px; pointer-events: none;
+    background: linear-gradient(102deg,
+      rgba(124,58,237,0) 40%, rgba(124,58,237,0.65) 48%,
+      rgba(255,255,255,0.85) 50%, rgba(6,182,212,0.55) 52%, rgba(6,182,212,0) 60%);
+    background-size: 320% 100%; background-position: 140% 0;
+    mix-blend-mode: screen; opacity: 0;
+  }
+  .hud {
+    position: absolute; left: 118px; bottom: 132px;
+    font-family: Inter, sans-serif; font-weight: 900;
+    font-size: 86px; letter-spacing: -0.04em; color: #ffffff;
+  }
+  .hud > div { position: absolute; left: 0; bottom: 0; white-space: nowrap; }
+  .echo {
+    position: absolute; font-family: Inter, sans-serif; font-weight: 900;
+    letter-spacing: -0.04em; color: #ffffff; white-space: nowrap;
+    opacity: 0;
+  }
+  
+      </style>
+
+      <div
+        id="root"
+        data-composition-id="s04"
+        data-width="1920"
+        data-height="1080"
+        data-duration="6"
+      >
+        <div class="scene">
+
+          <div class="stage">
+            <div class="world" id="world" data-layout-allow-overflow></div>
+          </div>
+          <div class="hud">
+            <div id="hud-0" data-layout-allow-overlap>24 horas.</div>
+            <div id="hud-1" data-layout-allow-overlap>7 dias.</div>
+            <div id="hud-2" data-layout-allow-overlap>Sempre testando.</div>
+          </div>
+          <div class="echo" id="echo-0" data-layout-allow-overlap style="left:118px;bottom:132px;font-size:86px">Sempre testando.</div>
+          <div class="echo" id="echo-1" data-layout-allow-overlap style="left:192px;bottom:190px;font-size:73px">Sempre testando.</div>
+          <div class="echo" id="echo-2" data-layout-allow-overlap style="left:266px;bottom:248px;font-size:60px">Sempre testando.</div>
+          <div class="echo" id="echo-3" data-layout-allow-overlap style="left:340px;bottom:306px;font-size:47px">Sempre testando.</div>
+          <div class="echo" id="echo-4" data-layout-allow-overlap style="left:414px;bottom:364px;font-size:34px">Sempre testando.</div>
+        </div>
+      </div>
+
+      <script>
+        (function () {
+          window.__timelines = window.__timelines || {};
+          const tl = gsap.timeline({ paused: true });
+
+          function stack(sel, n, at) {
+            for (let i = 0; i < n; i++) gsap.set(sel + i, { autoAlpha: i === 0 ? 1 : 0 });
+            for (let i = 1; i < n; i++) {
+              tl.set(sel + (i - 1), { autoAlpha: 0 }, at[i]);
+              tl.set(sel + i, { autoAlpha: 1 }, at[i]);
+            }
+          }
+
+          function slimHTML(w, h, a, b) {
+            return '<div class="slim">' +
+              '<div class="slim-top"><div class="slim-brand"></div><div class="slim-pill"></div></div>' +
+              '<div class="slim-main"><div class="slim-col">' +
+              '<div class="slim-h" style="width:' + a + '%"></div>' +
+              '<div class="slim-h" style="width:' + b + '%"></div>' +
+              '<div class="slim-t" style="width:' + Math.round(a * 0.9) + '%"></div>' +
+              '<div class="slim-t" style="width:' + Math.round(b * 1.1) + '%"></div>' +
+              '<div class="slim-btn"></div></div>' +
+              '<div class="slim-img" style="width:' + Math.round(w * 0.3) + 'px;height:' +
+              Math.round(h * 0.5) + 'px"></div></div></div>';
+          }
+          // Fachadas do corredor — montadas no load a partir dos parâmetros.
+          const PAGES = [{"x":-608,"y":15,"z":-331,"w":430,"h":320,"rot":34,"hw":[77,52],"dof":1},{"x":615,"y":15,"z":-316,"w":430,"h":320,"rot":-34,"hw":[65,51],"dof":1},{"x":-641,"y":-178,"z":-621,"w":430,"h":320,"rot":34,"hw":[61,53],"dof":2},{"x":632,"y":131,"z":-633,"w":430,"h":320,"rot":-34,"hw":[59,45],"dof":2},{"x":-580,"y":-53,"z":-919,"w":430,"h":320,"rot":34,"hw":[64,35],"dof":3},{"x":615,"y":-125,"z":-940,"w":430,"h":320,"rot":-34,"hw":[61,41],"dof":3},{"x":-604,"y":77,"z":-1203,"w":430,"h":320,"rot":34,"hw":[55,36],"dof":4},{"x":585,"y":77,"z":-1233,"w":430,"h":320,"rot":-34,"hw":[66,47],"dof":4},{"x":-622,"y":86,"z":-1572,"w":430,"h":320,"rot":34,"hw":[55,55],"dof":1},{"x":625,"y":107,"z":-1504,"w":430,"h":320,"rot":-34,"hw":[60,51],"dof":1},{"x":-633,"y":-172,"z":-1807,"w":430,"h":320,"rot":34,"hw":[57,48],"dof":2},{"x":621,"y":-29,"z":-1814,"w":430,"h":320,"rot":-34,"hw":[76,47],"dof":2},{"x":-630,"y":212,"z":-2169,"w":430,"h":320,"rot":34,"hw":[53,49],"dof":3},{"x":567,"y":159,"z":-2113,"w":430,"h":320,"rot":-34,"hw":[67,51],"dof":3},{"x":-636,"y":123,"z":-2484,"w":430,"h":320,"rot":34,"hw":[54,41],"dof":4},{"x":615,"y":-211,"z":-2472,"w":430,"h":320,"rot":-34,"hw":[84,44],"dof":4},{"x":-563,"y":177,"z":-2750,"w":430,"h":320,"rot":34,"hw":[69,33],"dof":1},{"x":561,"y":59,"z":-2750,"w":430,"h":320,"rot":-34,"hw":[80,38],"dof":1},{"x":-570,"y":174,"z":-3032,"w":430,"h":320,"rot":34,"hw":[57,46],"dof":2},{"x":602,"y":-123,"z":-3025,"w":430,"h":320,"rot":-34,"hw":[71,39],"dof":2},{"x":-630,"y":40,"z":-3374,"w":430,"h":320,"rot":34,"hw":[80,46],"dof":3},{"x":560,"y":-69,"z":-3304,"w":430,"h":320,"rot":-34,"hw":[64,48],"dof":3}];
+          const worldEl = document.getElementById("world");
+          worldEl.innerHTML = PAGES.map(function (p, i) {
+            return '<div class="fac" id="fac-' + i + '" style="left:' + (960 + p.x - p.w / 2) +
+              'px;top:' + (540 + p.y - p.h / 2) + 'px;width:' + p.w + 'px;height:' + p.h +
+              'px;transform:translateZ(' + p.z + 'px) rotateY(' + p.rot + 'deg);--dof:' +
+              (p.dof * 2) + 'px">' + slimHTML(p.w, p.h, p.hw[0], p.hw[1]) +
+              '<div class="wave" id="wave-' + i + '"></div></div>';
+          }).join("");
+
+          const world = document.querySelector("#world");
+          const cam = { x: 0, y: 0, z: 0, rx: 0, ry: 0 };
+          const drift = { dx: 0, dy: 0, drx: 0 };
+          function applyCamera() {
+            world.style.transform =
+              "translate3d(" + (cam.x + drift.dx) + "px," + (cam.y + drift.dy) + "px," + cam.z + "px)" +
+              " rotateX(" + (cam.rx + drift.drx) + "deg) rotateY(" + cam.ry + "deg)";
+          }
+          cam.z = 0;
+          applyCamera();
+
+          // Voo contínuo — cruzeiro, não investida. O corredor é infinito.
+          tl.fromTo(cam, { z: 0 },
+            { z: 2050, duration: 6, ease: "power1.inOut", onUpdate: applyCamera }, 0);
+          // Um plano nítido por vez.
+          tl.to(".fac", { "--dof": "0px", duration: 2.2, ease: "power2.out", stagger: 0.02 }, 1.2);
+
+          tl.fromTo("#wave-0", { opacity: 0, backgroundPosition: "140% 0" }, { opacity: 1, duration: 0.05, ease: "none" }, 0.5);
+          tl.to("#wave-0", { backgroundPosition: "-40% 0", duration: 0.30, ease: "power2.inOut" }, 0.5);
+          tl.to("#wave-0", { opacity: 0, duration: 0.08, ease: "none" }, 0.76);
+          tl.fromTo("#wave-1", { opacity: 0, backgroundPosition: "140% 0" }, { opacity: 1, duration: 0.05, ease: "none" }, 0.95);
+          tl.to("#wave-1", { backgroundPosition: "-40% 0", duration: 0.30, ease: "power2.inOut" }, 0.95);
+          tl.to("#wave-1", { opacity: 0, duration: 0.08, ease: "none" }, 1.21);
+          tl.fromTo("#wave-2", { opacity: 0, backgroundPosition: "140% 0" }, { opacity: 1, duration: 0.05, ease: "none" }, 1.3);
+          tl.to("#wave-2", { backgroundPosition: "-40% 0", duration: 0.30, ease: "power2.inOut" }, 1.3);
+          tl.to("#wave-2", { opacity: 0, duration: 0.08, ease: "none" }, 1.56);
+          tl.fromTo("#wave-3", { opacity: 0, backgroundPosition: "140% 0" }, { opacity: 1, duration: 0.05, ease: "none" }, 1.62);
+          tl.to("#wave-3", { backgroundPosition: "-40% 0", duration: 0.30, ease: "power2.inOut" }, 1.62);
+          tl.to("#wave-3", { opacity: 0, duration: 0.08, ease: "none" }, 1.88);
+          tl.fromTo("#wave-4", { opacity: 0, backgroundPosition: "140% 0" }, { opacity: 1, duration: 0.05, ease: "none" }, 1.9);
+          tl.to("#wave-4", { backgroundPosition: "-40% 0", duration: 0.30, ease: "power2.inOut" }, 1.9);
+          tl.to("#wave-4", { opacity: 0, duration: 0.08, ease: "none" }, 2.16);
+          tl.fromTo("#wave-5", { opacity: 0, backgroundPosition: "140% 0" }, { opacity: 1, duration: 0.05, ease: "none" }, 2.14);
+          tl.to("#wave-5", { backgroundPosition: "-40% 0", duration: 0.30, ease: "power2.inOut" }, 2.14);
+          tl.to("#wave-5", { opacity: 0, duration: 0.08, ease: "none" }, 2.40);
+          tl.fromTo("#wave-6", { opacity: 0, backgroundPosition: "140% 0" }, { opacity: 1, duration: 0.05, ease: "none" }, 2.36);
+          tl.to("#wave-6", { backgroundPosition: "-40% 0", duration: 0.30, ease: "power2.inOut" }, 2.36);
+          tl.to("#wave-6", { opacity: 0, duration: 0.08, ease: "none" }, 2.62);
+          tl.fromTo("#wave-7", { opacity: 0, backgroundPosition: "140% 0" }, { opacity: 1, duration: 0.05, ease: "none" }, 2.55);
+          tl.to("#wave-7", { backgroundPosition: "-40% 0", duration: 0.30, ease: "power2.inOut" }, 2.55);
+          tl.to("#wave-7", { opacity: 0, duration: 0.08, ease: "none" }, 2.81);
+          tl.fromTo("#wave-8", { opacity: 0, backgroundPosition: "140% 0" }, { opacity: 1, duration: 0.05, ease: "none" }, 2.72);
+          tl.to("#wave-8", { backgroundPosition: "-40% 0", duration: 0.30, ease: "power2.inOut" }, 2.72);
+          tl.to("#wave-8", { opacity: 0, duration: 0.08, ease: "none" }, 2.98);
+          tl.fromTo("#wave-9", { opacity: 0, backgroundPosition: "140% 0" }, { opacity: 1, duration: 0.05, ease: "none" }, 2.88);
+          tl.to("#wave-9", { backgroundPosition: "-40% 0", duration: 0.30, ease: "power2.inOut" }, 2.88);
+          tl.to("#wave-9", { opacity: 0, duration: 0.08, ease: "none" }, 3.14);
+          tl.fromTo("#wave-10", { opacity: 0, backgroundPosition: "140% 0" }, { opacity: 1, duration: 0.05, ease: "none" }, 3.02);
+          tl.to("#wave-10", { backgroundPosition: "-40% 0", duration: 0.30, ease: "power2.inOut" }, 3.02);
+          tl.to("#wave-10", { opacity: 0, duration: 0.08, ease: "none" }, 3.28);
+          tl.fromTo("#wave-11", { opacity: 0, backgroundPosition: "140% 0" }, { opacity: 1, duration: 0.05, ease: "none" }, 3.15);
+          tl.to("#wave-11", { backgroundPosition: "-40% 0", duration: 0.30, ease: "power2.inOut" }, 3.15);
+          tl.to("#wave-11", { opacity: 0, duration: 0.08, ease: "none" }, 3.41);
+          tl.fromTo("#wave-12", { opacity: 0, backgroundPosition: "140% 0" }, { opacity: 1, duration: 0.05, ease: "none" }, 3.27);
+          tl.to("#wave-12", { backgroundPosition: "-40% 0", duration: 0.30, ease: "power2.inOut" }, 3.27);
+          tl.to("#wave-12", { opacity: 0, duration: 0.08, ease: "none" }, 3.53);
+          tl.fromTo("#wave-13", { opacity: 0, backgroundPosition: "140% 0" }, { opacity: 1, duration: 0.05, ease: "none" }, 3.38);
+          tl.to("#wave-13", { backgroundPosition: "-40% 0", duration: 0.30, ease: "power2.inOut" }, 3.38);
+          tl.to("#wave-13", { opacity: 0, duration: 0.08, ease: "none" }, 3.64);
+          tl.fromTo("#wave-14", { opacity: 0, backgroundPosition: "140% 0" }, { opacity: 1, duration: 0.05, ease: "none" }, 3.48);
+          tl.to("#wave-14", { backgroundPosition: "-40% 0", duration: 0.30, ease: "power2.inOut" }, 3.48);
+          tl.to("#wave-14", { opacity: 0, duration: 0.08, ease: "none" }, 3.74);
+          tl.fromTo("#wave-15", { opacity: 0, backgroundPosition: "140% 0" }, { opacity: 1, duration: 0.05, ease: "none" }, 3.57);
+          tl.to("#wave-15", { backgroundPosition: "-40% 0", duration: 0.30, ease: "power2.inOut" }, 3.57);
+          tl.to("#wave-15", { opacity: 0, duration: 0.08, ease: "none" }, 3.83);
+          tl.fromTo("#wave-16", { opacity: 0, backgroundPosition: "140% 0" }, { opacity: 1, duration: 0.05, ease: "none" }, 3.66);
+          tl.to("#wave-16", { backgroundPosition: "-40% 0", duration: 0.30, ease: "power2.inOut" }, 3.66);
+          tl.to("#wave-16", { opacity: 0, duration: 0.08, ease: "none" }, 3.92);
+          tl.fromTo("#wave-17", { opacity: 0, backgroundPosition: "140% 0" }, { opacity: 1, duration: 0.05, ease: "none" }, 3.74);
+          tl.to("#wave-17", { backgroundPosition: "-40% 0", duration: 0.30, ease: "power2.inOut" }, 3.74);
+          tl.to("#wave-17", { opacity: 0, duration: 0.08, ease: "none" }, 4.00);
+          tl.fromTo("#wave-18", { opacity: 0, backgroundPosition: "140% 0" }, { opacity: 1, duration: 0.05, ease: "none" }, 3.81);
+          tl.to("#wave-18", { backgroundPosition: "-40% 0", duration: 0.30, ease: "power2.inOut" }, 3.81);
+          tl.to("#wave-18", { opacity: 0, duration: 0.08, ease: "none" }, 4.07);
+          tl.fromTo("#wave-19", { opacity: 0, backgroundPosition: "140% 0" }, { opacity: 1, duration: 0.05, ease: "none" }, 3.88);
+          tl.to("#wave-19", { backgroundPosition: "-40% 0", duration: 0.30, ease: "power2.inOut" }, 3.88);
+          tl.to("#wave-19", { opacity: 0, duration: 0.08, ease: "none" }, 4.14);
+          tl.fromTo("#wave-20", { opacity: 0, backgroundPosition: "140% 0" }, { opacity: 1, duration: 0.05, ease: "none" }, 3.94);
+          tl.to("#wave-20", { backgroundPosition: "-40% 0", duration: 0.30, ease: "power2.inOut" }, 3.94);
+          tl.to("#wave-20", { opacity: 0, duration: 0.08, ease: "none" }, 4.20);
+          tl.fromTo("#wave-21", { opacity: 0, backgroundPosition: "140% 0" }, { opacity: 1, duration: 0.05, ease: "none" }, 4);
+          tl.to("#wave-21", { backgroundPosition: "-40% 0", duration: 0.30, ease: "power2.inOut" }, 4);
+          tl.to("#wave-21", { opacity: 0, duration: 0.08, ease: "none" }, 4.26);
+
+          stack("#hud-", 3, [0,2.05,3.55]);
+          tl.fromTo("#hud-0", { y: 26 }, { y: 0, duration: 0.5, ease: "power3.out" }, 0.55);
+
+          // A última frase se multiplica fisicamente ao fundo.
+          tl.fromTo("#echo-0", { opacity: 0 }, { opacity: 0.50, duration: 0.30, ease: "power2.out" }, 4.35);
+          tl.fromTo("#echo-1", { opacity: 0 }, { opacity: 0.42, duration: 0.30, ease: "power2.out" }, 4.52);
+          tl.fromTo("#echo-2", { opacity: 0 }, { opacity: 0.34, duration: 0.30, ease: "power2.out" }, 4.69);
+          tl.fromTo("#echo-3", { opacity: 0 }, { opacity: 0.26, duration: 0.30, ease: "power2.out" }, 4.86);
+          tl.fromTo("#echo-4", { opacity: 0 }, { opacity: 0.18, duration: 0.30, ease: "power2.out" }, 5.03);
+  
+          window.__timelines["s04"] = tl;
+        })();
+      </script>
+    </template>
+  </body>
+</html>

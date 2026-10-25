@@ -1,0 +1,368 @@
+<template>
+  <style>
+    @font-face{font-family:"Sora";font-weight:600;font-style:normal;font-display:block;src:url("assets/fonts/Sora-600.woff2") format("woff2");}
+    @font-face{font-family:"Sora";font-weight:700;font-style:normal;font-display:block;src:url("assets/fonts/Sora-700.woff2") format("woff2");}
+
+    #root{
+      position:relative;
+      width:1080px;
+      height:1920px;
+      overflow:hidden;
+    }
+
+    /* ── level 1 · atmosphere ─────────────────────────────────────────── */
+    .cv14-ground{
+      position:absolute; inset:0;
+      background:
+        radial-gradient(1500px 1500px at 16% 10%, #343434 0%, #2E2E2E 38%, #2B2B2B 62%, #1E1E1E 100%);
+    }
+    .cv14-grain{position:absolute;inset:0;opacity:0.035;pointer-events:none;}
+    .cv14-grain svg{display:block;width:1080px;height:1920px;}
+    .cv14-converge{
+      position:absolute; inset:0; opacity:0;
+      background:
+        radial-gradient(640px 640px at 50% 65.8%, rgba(6,182,212,0.15) 0%, rgba(6,182,212,0.07) 42%, rgba(6,182,212,0) 72%);
+    }
+
+    /* ── level 2 · the system (perspective world) ─────────────────────── */
+    .cv14-level2{
+      position:absolute; inset:0;
+      perspective:2400px;
+    }
+    .cv14-world{
+      position:absolute; inset:0;
+      transform-style:preserve-3d;
+      transform-origin:50% 50%;
+      will-change:transform;
+    }
+
+    .cv14-mock{
+      position:absolute; left:190px; top:940px; width:700px; height:820px;
+      background:#F4F2EE;
+      border-radius:20px;
+      overflow:hidden;
+      box-shadow:0 30px 80px rgba(0,0,0,0.45);
+    }
+    .cv14-sheen{
+      position:absolute; left:0; top:0; width:700px; height:140px;
+      background:linear-gradient(180deg, rgba(255,255,255,0.55) 0%, rgba(255,255,255,0) 100%);
+      opacity:0.18;
+    }
+    .cv14-chrome{position:absolute; left:48px; top:32px; width:120px; height:10px;}
+    .cv14-chrome i{
+      position:absolute; top:0; width:10px; height:10px; border-radius:50%;
+      background:rgba(43,43,43,0.16);
+    }
+    .cv14-chrome i:nth-child(1){left:0;}
+    .cv14-chrome i:nth-child(2){left:20px;}
+    .cv14-chrome i:nth-child(3){left:40px;}
+
+    .cv14-bar{position:absolute; border-radius:6px;}
+    .cv14-h1{left:48px; top:86px;  width:540px; height:30px; background:rgba(43,43,43,0.80);}
+    .cv14-h2{left:48px; top:134px; width:400px; height:30px; background:rgba(43,43,43,0.80);}
+    .cv14-b1{left:48px; top:200px; width:570px; height:14px; background:rgba(43,43,43,0.22);}
+    .cv14-b2{left:48px; top:232px; width:480px; height:14px; background:rgba(43,43,43,0.22);}
+    .cv14-lnk{left:340px; top:372px; width:170px; height:14px; background:rgba(43,43,43,0.30);}
+    .cv14-d1{left:48px; top:426px; width:604px; height:1px; background:rgba(43,43,43,0.10); border-radius:0;}
+    .cv14-a1{left:90px;  top:452px; width:320px; height:20px; background:rgba(43,43,43,0.28);}
+    .cv14-a2{left:90px;  top:488px; width:220px; height:14px; background:rgba(43,43,43,0.16);}
+    .cv14-d2{left:48px; top:532px; width:604px; height:1px; background:rgba(43,43,43,0.10); border-radius:0;}
+    .cv14-s1{left:330px; top:542px; width:300px; height:20px; background:rgba(43,43,43,0.28);}
+    .cv14-s2{left:330px; top:578px; width:200px; height:14px; background:rgba(43,43,43,0.16);}
+    .cv14-d3{left:48px; top:622px; width:604px; height:1px; background:rgba(43,43,43,0.10); border-radius:0;}
+    .cv14-c1{left:90px;  top:660px; width:380px; height:20px; background:rgba(43,43,43,0.20);}
+    .cv14-c2{left:90px;  top:696px; width:260px; height:14px; background:rgba(43,43,43,0.12);}
+
+    .cv14-btn{
+      position:absolute; left:185px; top:280px; width:330px; height:88px;
+      background:#2B2B2B; border-radius:100px;
+    }
+    .cv14-btn span{
+      position:absolute; left:105px; top:38px; width:120px; height:12px;
+      border-radius:6px; background:rgba(244,242,238,0.92);
+    }
+
+    .cv14-journey{
+      position:absolute; left:0; top:0; width:1080px; height:1920px;
+      transform:translateZ(4px);
+      pointer-events:none;
+    }
+    .cv14-journey path{
+      fill:none;
+      stroke:rgba(6,182,212,0.88);
+      stroke-width:3;
+      stroke-linecap:round;
+      stroke-linejoin:round;
+    }
+
+    .cv14-ring{
+      position:absolute; width:60px; height:60px; border-radius:50%;
+      border:2px solid rgba(6,182,212,0.92);
+      opacity:0;
+    }
+    .cv14-r1{left:620px; top:1462px;}
+    .cv14-r2{left:370px; top:1372px;}
+    .cv14-r3{left:630px; top:1289px;}
+
+    .cv14-dot{
+      position:absolute; left:540px; top:960px; width:14px; height:14px;
+      margin:-7px 0 0 -7px; border-radius:50%;
+      background:#06B6D4;
+      box-shadow:0 0 18px rgba(6,182,212,0.45);
+    }
+
+    .cv14-conv{
+      position:absolute; left:0; top:0; width:1080px; height:1920px;
+      transform:translateZ(6px);
+      pointer-events:none;
+    }
+    .cv14-conv path{
+      fill:none;
+      stroke:#06B6D4;
+      stroke-width:3.5;
+      stroke-linecap:round;
+    }
+
+    /* ── level 3 · hero typography (flat, never blurred) ──────────────── */
+    .cv14-copy{
+      position:absolute; left:88px; top:548px; width:904px;
+      font-family:"Sora", sans-serif;
+      font-weight:600;
+      font-size:66px;
+      letter-spacing:-0.02em;
+      color:#FFFFFF;
+    }
+    .cv14-ln{overflow:hidden; margin-bottom:-0.16em;}
+    .cv14-ln:last-child{margin-bottom:0;}
+    .cv14-ln-i{display:block; line-height:1.36; white-space:nowrap;}
+    .cv14-em{color:#FFFFFF;}
+  </style>
+
+  <div
+    id="root"
+    data-composition-id="14-cada-visita"
+    data-width="1080"
+    data-height="1920"
+    data-duration="4.5"
+  >
+    <!-- level 1 -->
+    <div class="cv14-ground clip" data-start="0" data-duration="4.5" data-track-index="0"></div>
+
+    <div class="cv14-grain clip" data-start="0" data-duration="4.5" data-track-index="1">
+      <svg viewBox="0 0 1080 1920" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+        <filter id="cv14-noise" x="0" y="0" width="100%" height="100%">
+          <feTurbulence type="fractalNoise" baseFrequency="0.82" numOctaves="3" seed="11" stitchTiles="stitch"/>
+          <feColorMatrix type="saturate" values="0"/>
+        </filter>
+        <rect width="1080" height="1920" filter="url(#cv14-noise)"/>
+      </svg>
+    </div>
+
+    <div id="cv14-converge" class="cv14-converge clip" data-start="0" data-duration="4.5" data-track-index="2"></div>
+
+    <!-- level 2 -->
+    <div class="cv14-level2 clip" data-start="0" data-duration="4.5" data-track-index="3">
+      <div id="cv14-world" class="cv14-world" data-layout-allow-overflow>
+
+        <div class="cv14-mock">
+          <div class="cv14-chrome"><i></i><i></i><i></i></div>
+          <div class="cv14-bar cv14-h1"></div>
+          <div class="cv14-bar cv14-h2"></div>
+          <div class="cv14-bar cv14-b1"></div>
+          <div class="cv14-bar cv14-b2"></div>
+          <div id="cv14-btn" class="cv14-btn"><span></span></div>
+          <div class="cv14-bar cv14-lnk"></div>
+          <div class="cv14-bar cv14-d1"></div>
+          <div class="cv14-bar cv14-a1"></div>
+          <div class="cv14-bar cv14-a2"></div>
+          <div class="cv14-bar cv14-d2"></div>
+          <div class="cv14-bar cv14-s1"></div>
+          <div class="cv14-bar cv14-s2"></div>
+          <div class="cv14-bar cv14-d3"></div>
+          <div class="cv14-bar cv14-c1"></div>
+          <div class="cv14-bar cv14-c2"></div>
+          <div class="cv14-sheen"></div>
+        </div>
+
+        <svg class="cv14-journey" viewBox="0 0 1080 1920" xmlns="http://www.w3.org/2000/svg">
+          <path
+            id="cv14-path"
+            d="M 420 1580 C 500 1572 606 1540 650 1492 C 694 1444 486 1448 400 1402 C 314 1356 604 1370 660 1319 C 700 1283 616 1288 540 1264"
+          />
+        </svg>
+
+        <div id="cv14-r1" class="cv14-ring cv14-r1"></div>
+        <div id="cv14-r2" class="cv14-ring cv14-r2"></div>
+        <div id="cv14-r3" class="cv14-ring cv14-r3"></div>
+
+        <div id="cv14-dot" class="cv14-dot"></div>
+
+        <svg class="cv14-conv" viewBox="0 0 1080 1920" xmlns="http://www.w3.org/2000/svg">
+          <path id="cv14-conv-r" d="M 540 1200 H 661 A 64 64 0 0 1 661 1328 H 540"/>
+          <path id="cv14-conv-l" d="M 540 1200 H 419 A 64 64 0 0 0 419 1328 H 540"/>
+        </svg>
+
+      </div>
+    </div>
+
+    <!-- level 3 -->
+    <div class="cv14-copy clip" data-start="0" data-duration="4.5" data-track-index="4">
+      <div class="cv14-ln"><span id="cv14-l1" class="cv14-ln-i">Significa</span></div>
+      <div class="cv14-ln"><span id="cv14-l2" class="cv14-ln-i">aproveitar melhor</span></div>
+      <div class="cv14-ln"><span id="cv14-l3" class="cv14-ln-i"><span id="cv14-em" class="cv14-em">cada visita</span> que você</span></div>
+      <div class="cv14-ln"><span id="cv14-l4" class="cv14-ln-i">já conquistou.</span></div>
+    </div>
+  </div>
+
+  <script src="assets/vendor/gsap.min.js"></script>
+  <script>
+    (function () {
+      var root = document.querySelector('[data-composition-id="14-cada-visita"]');
+      if (!root) return;
+
+      var world = root.querySelector("#cv14-world");
+      var dot = root.querySelector("#cv14-dot");
+      var path = root.querySelector("#cv14-path");
+      var btn = root.querySelector("#cv14-btn");
+      var convR = root.querySelector("#cv14-conv-r");
+      var convL = root.querySelector("#cv14-conv-l");
+
+      /* ---- setup: measure the journey path once (never in onUpdate) ---- */
+      var len = 985;
+      try {
+        var m = path.getTotalLength();
+        if (m && isFinite(m) && m > 1) len = m;
+      } catch (e) {}
+      path.style.strokeDasharray = String(len);
+      path.style.strokeDashoffset = String(len);
+
+      // touch points, resolved to path fractions by deterministic sampling
+      var TOUCH = [
+        [650, 1492],
+        [400, 1402],
+        [660, 1319]
+      ];
+      var FRAC = [0.3, 0.56, 0.8];
+      try {
+        for (var t = 0; t < TOUCH.length; t++) {
+          var bestF = FRAC[t];
+          var bestD = Infinity;
+          for (var i = 0; i <= 600; i++) {
+            var l = (i / 600) * len;
+            var p = path.getPointAtLength(l);
+            var dx = p.x - TOUCH[t][0];
+            var dy = p.y - TOUCH[t][1];
+            var d = dx * dx + dy * dy;
+            if (d < bestD) {
+              bestD = d;
+              bestF = l / len;
+            }
+          }
+          FRAC[t] = bestF;
+        }
+      } catch (e2) {}
+
+      // conversion ring halves: measured dash geometry, drawn later
+      [convR, convL].forEach(function (el) {
+        var L = 443;
+        try {
+          var mm = el.getTotalLength();
+          if (mm && isFinite(mm) && mm > 1) L = mm;
+        } catch (e3) {}
+        el.setAttribute("data-len", String(L));
+        el.style.strokeDasharray = String(L);
+        el.style.strokeDashoffset = String(L);
+      });
+
+      /* ---- single camera + journey state, one writer ---- */
+      var cam = { x: 0, y: 36, scale: 0.88 };
+      var jr = { p: 0 };
+      var LEAD = 0.075; // the path draws ahead of the signal
+
+      gsap.set(dot, { z: 8 });
+
+      function render() {
+        world.style.transform =
+          "translate3d(" + cam.x + "px," + cam.y + "px,0) scale(" + cam.scale + ")";
+        var pt;
+        try {
+          pt = path.getPointAtLength(jr.p * len);
+        } catch (e4) {
+          pt = null;
+        }
+        if (pt) gsap.set(dot, { x: pt.x - 540, y: pt.y - 960 });
+        var dp = jr.p + LEAD;
+        if (dp > 1) dp = 1;
+        path.style.strokeDashoffset = String(len * (1 - dp));
+      }
+
+      var tl = gsap.timeline({ paused: true });
+
+      /* ================= Scene A (0.0–2.6s) — the single journey ======= */
+      // leg 1 — continues the rise handed over by frame 13 (constant speed in)
+      tl.fromTo(jr, { p: 0 }, { p: FRAC[0], duration: 0.72, ease: "none" }, 0);
+      // leg 2
+      tl.fromTo(jr, { p: FRAC[0] }, { p: FRAC[1], duration: 0.68, ease: "power1.inOut" }, 0.76);
+      // leg 3
+      tl.fromTo(jr, { p: FRAC[1] }, { p: FRAC[2], duration: 0.64, ease: "power1.inOut" }, 1.48);
+      // leg 4 — arrival on the button
+      tl.fromTo(jr, { p: FRAC[2] }, { p: 1, duration: 0.28, ease: "power2.out" }, 2.16);
+
+      // short touch-feedback rings (from-state is invisible → seek-safe)
+      [["#cv14-r1", 0.72], ["#cv14-r2", 1.44], ["#cv14-r3", 2.12]].forEach(function (r) {
+        var sel = r[0];
+        var at = r[1];
+        tl.fromTo(
+          sel,
+          { opacity: 0, scale: 0.25 },
+          { opacity: 0.95, scale: 0.72, duration: 0.12, ease: "none", immediateRender: false },
+          at
+        );
+        tl.to(sel, { opacity: 0, scale: 1.5, duration: 0.34, ease: "power2.out" }, at + 0.12);
+      });
+
+      // virtual camera — two motivated legs, both at rest well before the hold
+      tl.fromTo(cam, { scale: 0.88, y: 36 }, { scale: 0.925, y: 10, duration: 1.05, ease: "power2.out" }, 0);
+      tl.fromTo(cam, { scale: 0.925, y: 10 }, { scale: 0.96, y: 0, duration: 1.15, ease: "power3.out" }, 1.05);
+
+      /* ================= Scene B (2.4–2.9s) — the action =============== */
+      // the signal is absorbed by the button
+      tl.fromTo(dot, { scale: 1, opacity: 1 }, { scale: 0.3, opacity: 0, duration: 0.12, ease: "power2.in" }, 2.4);
+      // compression 0.96 → elastic release 1.0 (280ms)
+      tl.fromTo(btn, { scale: 1 }, { scale: 0.96, duration: 0.1, ease: "power2.in" }, 2.42);
+      tl.fromTo(btn, { scale: 0.96 }, { scale: 1, duration: 0.28, ease: "elastic.out(1, 0.55)" }, 2.52);
+      // the conversion ring opens and STAYS — no number, no percentage, no uplift
+      tl.fromTo(
+        convR,
+        { strokeDashoffset: parseFloat(convR.getAttribute("data-len")) },
+        { strokeDashoffset: 0, duration: 0.42, ease: "power2.out" },
+        2.52
+      );
+      tl.fromTo(
+        convL,
+        { strokeDashoffset: parseFloat(convL.getAttribute("data-len")) },
+        { strokeDashoffset: 0, duration: 0.42, ease: "power2.out" },
+        2.52
+      );
+      // the light begins to converge on the centre — settled before the hold
+      tl.fromTo("#cv14-converge", { opacity: 0 }, { opacity: 1, duration: 0.46, ease: "power1.out" }, 2.52);
+
+      /* ================= Scene C (0.3–3.0s) — the sentence ============= */
+      var LINE_DUR = 0.56;
+      tl.fromTo("#cv14-l1", { yPercent: 108, opacity: 0 }, { yPercent: 0, opacity: 1, duration: LINE_DUR, ease: "power3.out" }, 0.3);
+      tl.fromTo("#cv14-l2", { yPercent: 108, opacity: 0 }, { yPercent: 0, opacity: 1, duration: LINE_DUR, ease: "power3.out" }, 0.44);
+      tl.fromTo("#cv14-l3", { yPercent: 108, opacity: 0 }, { yPercent: 0, opacity: 1, duration: LINE_DUR, ease: "power3.out" }, 1.5);
+      tl.fromTo("#cv14-l4", { yPercent: 108, opacity: 0 }, { yPercent: 0, opacity: 1, duration: LINE_DUR, ease: "power3.out" }, 1.66);
+      // semantic colour settling onto already-legible white text
+      tl.fromTo("#cv14-em", { color: "#FFFFFF" }, { color: "#06B6D4", duration: 0.3, ease: "power1.inOut" }, 2.5);
+
+      /* ================= Scene D (3.0–4.0s) — hold, nothing moves ====== */
+
+      tl.eventCallback("onUpdate", render);
+      render();
+
+      window.__timelines = window.__timelines || {};
+      window.__timelines["14-cada-visita"] = tl;
+    })();
+  </script>
+</template>

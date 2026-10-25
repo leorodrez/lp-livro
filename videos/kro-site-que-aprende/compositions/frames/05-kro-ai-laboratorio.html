@@ -1,0 +1,455 @@
+<template>
+  <div id="root" data-composition-id="05-kro-ai-laboratorio" data-width="1080" data-height="1920" data-duration="5.5">
+    <style>
+      /* ---- fonts (self-hosted, deterministic — paths are project-root relative) ---- */
+      @font-face{font-family:"Manrope";font-weight:400;font-style:normal;font-display:block;src:url("assets/fonts/Manrope-400.woff2") format("woff2");}
+      @font-face{font-family:"Manrope";font-weight:500;font-style:normal;font-display:block;src:url("assets/fonts/Manrope-500.woff2") format("woff2");}
+      @font-face{font-family:"Manrope";font-weight:600;font-style:normal;font-display:block;src:url("assets/fonts/Manrope-600.woff2") format("woff2");}
+      @font-face{font-family:"Manrope";font-weight:700;font-style:normal;font-display:block;src:url("assets/fonts/Manrope-700.woff2") format("woff2");}
+      @font-face{font-family:"Manrope";font-weight:800;font-style:normal;font-display:block;src:url("assets/fonts/Manrope-800.woff2") format("woff2");}
+      @font-face{font-family:"Sora";font-weight:400;font-style:normal;font-display:block;src:url("assets/fonts/Sora-400.woff2") format("woff2");}
+      @font-face{font-family:"Sora";font-weight:600;font-style:normal;font-display:block;src:url("assets/fonts/Sora-600.woff2") format("woff2");}
+      @font-face{font-family:"Sora";font-weight:700;font-style:normal;font-display:block;src:url("assets/fonts/Sora-700.woff2") format("woff2");}
+      @font-face{font-family:"Sora";font-weight:800;font-style:normal;font-display:block;src:url("assets/fonts/Sora-800.woff2") format("woff2");}
+
+      /* ---- root: no background here (the full-bleed ground rides on a clip layer) ---- */
+      #root{
+        position:absolute; inset:0;
+        width:1080px; height:1920px;
+        overflow:hidden;
+        font-family:"Manrope", sans-serif;
+        -webkit-font-smoothing:antialiased;
+      }
+
+      .f05kro-layer{
+        position:absolute; left:0; top:0;
+        width:1080px; height:1920px;
+        overflow:hidden;
+        pointer-events:none;
+      }
+
+      /* ========== LEVEL 1 — atmospheric ground ========== */
+      .f05kro-ground{
+        position:absolute; inset:0;
+        background:
+          radial-gradient(1500px 1500px at 18% 14%, #343434 0%, #2B2B2B 46%, #1E1E1E 100%);
+      }
+      .f05kro-bloom-purple{
+        position:absolute; inset:0;
+        background:
+          radial-gradient(720px 720px at 22% 24%, rgba(124,58,237,0.42) 0%, rgba(124,58,237,0.20) 38%, rgba(124,58,237,0.00) 72%),
+          radial-gradient(520px 520px at 46% 52%, rgba(124,58,237,0.16) 0%, rgba(124,58,237,0.00) 70%);
+      }
+      .f05kro-bloom-cyan{
+        position:absolute; inset:0;
+        background:
+          radial-gradient(640px 560px at 101% 72%, rgba(6,182,212,0.22) 0%, rgba(6,182,212,0.00) 66%),
+          radial-gradient(420px 420px at -6% 86%, rgba(6,182,212,0.12) 0%, rgba(6,182,212,0.00) 70%);
+      }
+      .f05kro-grain{
+        position:absolute; inset:0;
+        opacity:0.035;
+        mix-blend-mode:overlay;
+      }
+
+      /* ========== LEVEL 2 — the system, inside perspective ========== */
+      .f05kro-camlayer{ perspective:2400px; perspective-origin:540px 960px; }
+      .f05kro-cam{
+        position:absolute; left:0; top:0; width:1080px; height:1920px;
+        transform-origin:540px 960px;
+        transform-style:preserve-3d;
+      }
+
+      /* -- the landing-mock group (handoff element) -- */
+      .f05kro-mockwrap{
+        position:absolute; left:90px; top:450px;
+        width:900px; height:1020px;
+        transform-style:preserve-3d;
+      }
+      .f05kro-ghost{
+        position:absolute; left:0; top:0;
+        width:900px; height:1020px;
+        border-radius:20px;
+        background:rgba(244,242,238,0.42);
+        border:1px solid rgba(244,242,238,0.30);
+      }
+      .f05kro-mock{
+        position:absolute; left:0; top:0;
+        width:900px; height:1020px;
+        border-radius:20px;
+        background:#F4F2EE;
+        box-shadow:0 30px 80px rgba(0,0,0,0.45);
+        transform-style:preserve-3d;
+      }
+      .f05kro-reflect{
+        position:absolute; left:0; top:0; width:900px; height:140px;
+        border-radius:20px 20px 0 0;
+        background:linear-gradient(180deg, rgba(255,255,255,0.10) 0%, rgba(255,255,255,0.00) 100%);
+      }
+      .f05kro-chrome{
+        position:absolute; left:0; top:0; width:900px; height:78px;
+        border-radius:20px 20px 0 0;
+        border-bottom:1px solid rgba(43,43,43,0.10);
+      }
+      .f05kro-dot{
+        position:absolute; top:31px; width:16px; height:16px; border-radius:50%;
+        background:rgba(43,43,43,0.18);
+      }
+      .f05kro-hlsh{
+        position:absolute; left:34px; top:176px; width:832px; height:148px;
+        background:radial-gradient(ellipse 60% 56% at 50% 54%, rgba(43,43,43,0.22) 0%, rgba(43,43,43,0.00) 76%);
+      }
+      /* the headline block that detaches from the page plane */
+      .f05kro-hl{
+        position:absolute; left:64px; top:160px; width:772px; height:98px;
+        transform-style:preserve-3d;
+      }
+      .f05kro-hlbar{
+        position:absolute; left:0; height:38px; border-radius:8px;
+        background:#2B2B2B;
+      }
+      .f05kro-sel{
+        position:absolute; left:-18px; top:-18px; width:804px; height:130px;
+        border:2px solid rgba(124,58,237,0.78);
+        border-radius:10px;
+      }
+      .f05kro-handle{
+        position:absolute; width:14px; height:14px; border-radius:3px;
+        background:#7C3AED;
+      }
+      .f05kro-bodybar{
+        position:absolute; left:64px; height:14px; border-radius:7px;
+        background:rgba(43,43,43,0.18);
+      }
+      .f05kro-cta{
+        position:absolute; left:64px; top:452px; width:320px; height:76px;
+        border-radius:100px; background:#2B2B2B;
+      }
+      .f05kro-ctabar{
+        position:absolute; left:100px; top:483px; width:148px; height:14px;
+        border-radius:7px; background:#F4F2EE;
+      }
+      .f05kro-block{
+        position:absolute; left:64px; top:600px; width:772px; height:338px;
+        border-radius:16px;
+        background:linear-gradient(160deg, rgba(43,43,43,0.08) 0%, rgba(43,43,43,0.04) 100%);
+        border:1px solid rgba(43,43,43,0.10);
+      }
+
+      /* -- the laboratory: four lab-planes stitched by cyan system-links -- */
+      .f05kro-lab{
+        position:absolute; left:-260px; top:530px;
+        width:1600px; height:700px;
+        transform-style:preserve-3d;
+      }
+      .f05kro-links{ position:absolute; left:0; top:0; width:1600px; height:700px; }
+      .f05kro-plane{
+        position:absolute; left:800px; top:350px;
+        width:300px; height:190px;
+        border-radius:16px;
+        background:rgba(255,255,255,0.04);
+        border:1px solid rgba(6,182,212,0.22);
+        box-shadow:0 24px 60px rgba(0,0,0,0.38);
+        backface-visibility:hidden;
+      }
+      .f05kro-pbar{
+        position:absolute; left:26px; height:10px; border-radius:5px;
+        background:rgba(255,255,255,0.18);
+      }
+      .f05kro-ptrack{
+        position:absolute; left:26px; top:132px; width:248px; height:12px;
+        border-radius:6px; background:rgba(6,182,212,0.08);
+        overflow:hidden;
+      }
+      .f05kro-pfill{
+        position:absolute; left:0; top:0; height:12px; border-radius:6px;
+        background:#06B6D4;
+        transform-origin:0% 50%;
+      }
+
+      /* ========== legibility scrim (between system and type) ========== */
+      .f05kro-scrim{
+        position:absolute; left:0; top:960px; width:1080px; height:960px;
+        background:linear-gradient(180deg, rgba(30,30,30,0.00) 0%, rgba(30,30,30,0.40) 26%, rgba(30,30,30,0.58) 60%, rgba(30,30,30,0.62) 100%);
+      }
+
+      /* ========== LEVEL 3 — hero typography, flat in the camera plane ========== */
+      .f05kro-accent{
+        position:absolute; left:88px; top:1026px; width:72px; height:4px;
+        background:#7C3AED;
+        transform-origin:0% 50%;
+      }
+      .f05kro-type{
+        position:absolute; left:88px; top:1082px; width:904px;
+      }
+      .f05kro-line{ height:78px; overflow:hidden; }
+      .f05kro-inner{
+        display:block;
+        font-family:"Sora", sans-serif;
+        font-weight:600;
+        font-size:66px;
+        line-height:78px;
+        letter-spacing:-0.02em;
+        color:#FFFFFF;
+        white-space:nowrap;
+      }
+      .f05kro-em{ color:#FFFFFF; }
+
+      .f05kro-mark{
+        position:absolute; left:88px; top:296px; width:190px; height:60px;
+        object-fit:contain;
+      }
+    </style>
+
+    <!-- ===== LEVEL 1 · atmospheric ground (full-bleed, on a clip layer) ===== -->
+    <div class="clip f05kro-layer" data-start="0" data-duration="5.5" data-track-index="0">
+      <div class="f05kro-ground"></div>
+      <div class="f05kro-bloom-cyan" id="f05kro-cyan"></div>
+      <div class="f05kro-bloom-purple" id="f05kro-purple"></div>
+      <div class="f05kro-grain">
+        <svg width="1080" height="1920" viewBox="0 0 1080 1920" xmlns="http://www.w3.org/2000/svg">
+          <filter id="f05kro-noise" x="0" y="0" width="100%" height="100%">
+            <feTurbulence type="fractalNoise" baseFrequency="0.82" numOctaves="3" seed="7" stitchTiles="stitch"/>
+          </filter>
+          <rect width="1080" height="1920" filter="url(#f05kro-noise)"/>
+        </svg>
+      </div>
+    </div>
+
+    <!-- ===== LEVEL 2 · the system in perspective ===== -->
+    <div class="clip f05kro-layer f05kro-camlayer" data-start="0" data-duration="5.5" data-track-index="1">
+      <div class="f05kro-cam" id="f05kro-cam">
+
+        <!-- the laboratory (behind and below the page) -->
+        <div class="f05kro-lab" id="f05kro-lab">
+          <svg class="f05kro-links" viewBox="0 0 1600 700" xmlns="http://www.w3.org/2000/svg">
+            <path class="f05kro-link" data-len="540" d="M800 426 L280 310" fill="none" stroke="#06B6D4" stroke-width="2.4" stroke-linecap="round" opacity="0.55"/>
+            <path class="f05kro-link" data-len="190" d="M800 426 L615 445" fill="none" stroke="#06B6D4" stroke-width="2.4" stroke-linecap="round" opacity="0.55"/>
+            <path class="f05kro-link" data-len="190" d="M800 426 L985 445" fill="none" stroke="#06B6D4" stroke-width="2.4" stroke-linecap="round" opacity="0.55"/>
+            <path class="f05kro-link" data-len="540" d="M800 426 L1320 310" fill="none" stroke="#06B6D4" stroke-width="2.4" stroke-linecap="round" opacity="0.55"/>
+            <circle class="f05kro-node" cx="800" cy="426" r="6" fill="#06B6D4"/>
+            <circle class="f05kro-node" cx="280" cy="310" r="4.5" fill="#06B6D4"/>
+            <circle class="f05kro-node" cx="615" cy="445" r="4.5" fill="#06B6D4"/>
+            <circle class="f05kro-node" cx="985" cy="445" r="4.5" fill="#06B6D4"/>
+            <circle class="f05kro-node" cx="1320" cy="310" r="4.5" fill="#06B6D4"/>
+          </svg>
+
+          <div class="f05kro-plane" data-target-x="-520" data-target-y="-40" data-ry="18">
+            <div class="f05kro-pbar" style="top:30px; width:196px;"></div>
+            <div class="f05kro-pbar" style="top:58px; width:126px;"></div>
+            <div class="f05kro-ptrack"><div class="f05kro-pfill" data-fill="0.40" style="width:248px;"></div></div>
+          </div>
+          <div class="f05kro-plane" data-target-x="-185" data-target-y="95" data-ry="8">
+            <div class="f05kro-pbar" style="top:30px; width:172px;"></div>
+            <div class="f05kro-pbar" style="top:58px; width:148px;"></div>
+            <div class="f05kro-ptrack"><div class="f05kro-pfill" data-fill="0.62" style="width:248px;"></div></div>
+          </div>
+          <div class="f05kro-plane" data-target-x="185" data-target-y="95" data-ry="-8">
+            <div class="f05kro-pbar" style="top:30px; width:208px;"></div>
+            <div class="f05kro-pbar" style="top:58px; width:112px;"></div>
+            <div class="f05kro-ptrack"><div class="f05kro-pfill" data-fill="0.78" style="width:248px;"></div></div>
+          </div>
+          <div class="f05kro-plane" data-target-x="520" data-target-y="-40" data-ry="-18">
+            <div class="f05kro-pbar" style="top:30px; width:160px;"></div>
+            <div class="f05kro-pbar" style="top:58px; width:136px;"></div>
+            <div class="f05kro-ptrack"><div class="f05kro-pfill" data-fill="0.54" style="width:248px;"></div></div>
+          </div>
+        </div>
+
+        <!-- the landing-mock group -->
+        <div class="f05kro-mockwrap" id="f05kro-mockwrap">
+          <div class="f05kro-ghost" id="f05kro-ghostA"></div>
+          <div class="f05kro-ghost" id="f05kro-ghostB"></div>
+
+          <div class="f05kro-mock">
+            <div class="f05kro-chrome"></div>
+            <div class="f05kro-dot" style="left:40px;"></div>
+            <div class="f05kro-dot" style="left:70px;"></div>
+            <div class="f05kro-dot" style="left:100px;"></div>
+            <div class="f05kro-reflect"></div>
+
+            <div class="f05kro-hlsh" id="f05kro-hlsh"></div>
+
+            <div class="f05kro-hl" id="f05kro-hl">
+              <div class="f05kro-hlbar" style="top:0; width:772px;"></div>
+              <div class="f05kro-hlbar" style="top:60px; width:478px;"></div>
+              <div class="f05kro-sel" id="f05kro-sel">
+                <div class="f05kro-handle f05kro-hd" style="left:-8px;  top:-8px;"></div>
+                <div class="f05kro-handle f05kro-hd" style="left:794px; top:-8px;"></div>
+                <div class="f05kro-handle f05kro-hd" style="left:-8px;  top:120px;"></div>
+                <div class="f05kro-handle f05kro-hd" style="left:794px; top:120px;"></div>
+              </div>
+            </div>
+
+            <div class="f05kro-bodybar" style="top:318px; width:664px;"></div>
+            <div class="f05kro-bodybar" style="top:356px; width:492px;"></div>
+            <div class="f05kro-cta"></div>
+            <div class="f05kro-ctabar"></div>
+            <div class="f05kro-block"></div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ===== legibility scrim ===== -->
+    <div class="clip f05kro-layer" data-start="0" data-duration="5.5" data-track-index="2">
+      <div class="f05kro-scrim"></div>
+    </div>
+
+    <!-- ===== LEVEL 3 · hero typography (flat, never blurred, never moved while read) ===== -->
+    <div class="clip f05kro-layer" data-start="0" data-duration="5.5" data-track-index="3">
+      <div class="f05kro-accent" id="f05kro-accent"></div>
+      <div class="f05kro-type">
+        <div class="f05kro-line"><span class="f05kro-inner f05kro-a">O <span class="f05kro-em f05kro-emA">KRO AI</span> transforma</span></div>
+        <div class="f05kro-line"><span class="f05kro-inner f05kro-a">seu site em</span></div>
+        <div class="f05kro-line"><span class="f05kro-inner f05kro-b">um <span class="f05kro-em f05kro-emB">laborat&oacute;rio</span></span></div>
+        <div class="f05kro-line"><span class="f05kro-inner f05kro-b"><span class="f05kro-em f05kro-emB">de crescimento</span>.</span></div>
+      </div>
+    </div>
+
+    <!-- ===== corner watermark ===== -->
+    <div class="clip f05kro-layer" data-start="0" data-duration="5.5" data-track-index="4">
+      <img class="f05kro-mark" id="f05kro-mark" src="assets/kro-logo-light.png" alt="">
+    </div>
+
+    <script src="assets/vendor/gsap.min.js"></script>
+    <script>
+      (function () {
+        function build() {
+          var gsap = window.gsap;
+          var root = document.querySelector('[data-composition-id="05-kro-ai-laboratorio"]');
+          if (!gsap || !root) return;
+          var q = function (s) { return root.querySelector(s); };
+          var qa = function (s) { return Array.prototype.slice.call(root.querySelectorAll(s)); };
+
+          var cam      = q('#f05kro-cam');
+          var lab      = q('#f05kro-lab');
+          var mockwrap = q('#f05kro-mockwrap');
+          var ghostA   = q('#f05kro-ghostA');
+          var ghostB   = q('#f05kro-ghostB');
+          var hl       = q('#f05kro-hl');
+          var hlsh     = q('#f05kro-hlsh');
+          var sel      = q('#f05kro-sel');
+          var handles  = qa('.f05kro-hd');
+          var planes   = qa('.f05kro-plane');
+          var links    = qa('.f05kro-link');
+          var nodes    = qa('.f05kro-node');
+          var fills    = qa('.f05kro-pfill');
+          var purple   = q('#f05kro-purple');
+          var cyan     = q('#f05kro-cyan');
+          var accent   = q('#f05kro-accent');
+          var mark     = q('#f05kro-mark');
+          var linesA   = qa('.f05kro-a');
+          var linesB   = qa('.f05kro-b');
+          var emA      = qa('.f05kro-emA');
+          var emB      = qa('.f05kro-emB');
+
+          /* ---------- static state (all 3D placement owned by GSAP — never CSS transform) ---------- */
+          /* handoff_in: landing-mock at x 0, y +40, scale 0.96, opacity 1, still; ghosts at 0.14 */
+          gsap.set(mockwrap, { x: 0, y: 40, scale: 0.96, opacity: 1, transformOrigin: '50% 50%' });
+          gsap.set(cam,      { z: 0, rotationX: 0 });
+          gsap.set(lab,      { x: 0, y: 0, z: -160 });
+          gsap.set(ghostA,   { x: -46, y: -34, z: -34, opacity: 0.14 });
+          gsap.set(ghostB,   { x: 52,  y: 38,  z: -62, opacity: 0.14 });
+          gsap.set(hl,       { z: 0, scale: 1, transformOrigin: '50% 50%' });
+          gsap.set(hlsh,     { opacity: 0 });
+          gsap.set(sel,      { opacity: 0 });
+          gsap.set(handles,  { scale: 0.4, transformOrigin: '50% 50%' });
+          gsap.set(purple,   { opacity: 0.12 });
+          gsap.set(cyan,     { opacity: 0.9 });
+          gsap.set(accent,   { scaleX: 0, opacity: 1 });
+          gsap.set(mark,     { opacity: 0 });
+          gsap.set(planes,   { xPercent: -50, yPercent: -50, x: 0, y: 0, z: 0, rotationY: 0, scale: 0.6, opacity: 0, transformOrigin: '50% 50%' });
+          gsap.set(fills,    { scaleX: 0 });
+          gsap.set(nodes,    { opacity: 0, transformOrigin: '50% 50%' });
+          links.forEach(function (p) {
+            var L = Number(p.dataset.len);
+            gsap.set(p, { strokeDasharray: L, strokeDashoffset: L });
+          });
+          gsap.set(linesA.concat(linesB), { yPercent: 108, opacity: 0 });
+
+          var tl = gsap.timeline({ paused: true });
+
+          /* ================= CENA A (0.0–0.5s) — a virada: purple assume a dominante ================= */
+          tl.to(purple, { opacity: 1, duration: 0.55, ease: 'power2.out' }, 0);
+          tl.to(cyan,   { opacity: 0.45, duration: 0.55, ease: 'power2.out' }, 0);
+          /* os ghosts do frame anterior GANHAM CORPO em vez de desaparecer */
+          tl.to([ghostA, ghostB], { opacity: 0.30, duration: 0.5, ease: 'power2.out' }, 0);
+          tl.to(mark, { opacity: 0.18, duration: 0.7, ease: 'power2.out' }, 0.15);
+
+          /* ======== CENA B (0.2–1.8s) — a headline se desprende do plano (spring-pop, overshoot 4%) ======== */
+          tl.fromTo(hl, { z: 0 }, { z: 90, duration: 0.62, ease: 'power3.out' }, 0.2);
+          tl.fromTo(hl, { scale: 1 }, { scale: 1.04, duration: 0.5, ease: 'power3.out' }, 0.2);
+          tl.to(hl, { scale: 1, duration: 0.42, ease: 'power2.inOut' }, 0.7);
+          tl.fromTo(hlsh, { opacity: 0 }, { opacity: 1, duration: 0.6, ease: 'power2.out' }, 0.22);
+          /* o objeto rigido virou objeto manipulavel */
+          tl.fromTo(sel, { opacity: 0 }, { opacity: 1, duration: 0.45, ease: 'power2.out' }, 1.0);
+          tl.fromTo(handles, { scale: 0.4 }, { scale: 1, duration: 0.34, ease: 'power3.out', stagger: 0.05 }, 1.05);
+
+          /* ================= CENA C (0.6–2.4s) — dolly-out: a pagina vira parte de um sistema ================= */
+          tl.to(cam, { z: -420, rotationX: -6, duration: 1.8, ease: 'power3.out' }, 0.6);
+          /* handoff_out: landing-mock em x 0, y -300, scale 0.58, opacity 1, assentada */
+          tl.to(mockwrap, { y: -300, scale: 0.58, duration: 1.8, ease: 'power3.out' }, 0.6);
+
+          /* center-outward-expansion: quatro lab-planes se abrem a partir do centro */
+          var EXPAND_AT = 0.8, EXPAND_DUR = 1.4, STAGGER = 0.06, EXPAND_EASE = 'power3.out';
+          planes.forEach(function (el, i) {
+            tl.fromTo(el,
+              { xPercent: -50, yPercent: -50, x: 0, y: 0, rotationY: 0, scale: 0.6, opacity: 0 },
+              {
+                x: Number(el.dataset.targetX),
+                y: Number(el.dataset.targetY),
+                rotationY: Number(el.dataset.ry),
+                scale: 1,
+                opacity: 1,
+                duration: EXPAND_DUR,
+                ease: EXPAND_EASE
+              },
+              EXPAND_AT + i * STAGGER);
+          });
+
+          /* system-links em cyan costuram os planos ao objeto */
+          links.forEach(function (p, i) {
+            tl.to(p, { strokeDashoffset: 0, duration: 0.85, ease: 'power2.out' }, 1.45 + i * 0.05);
+          });
+          tl.to(nodes, { opacity: 0.9, duration: 0.4, ease: 'power2.out', stagger: 0.05 }, 1.6);
+          /* leitura de potencial (valores de demonstracao de produto) */
+          fills.forEach(function (f, i) {
+            tl.to(f, { scaleX: Number(f.dataset.fill), duration: 0.6, ease: 'power3.out' }, 1.9 + i * 0.08);
+          });
+
+          /* ================= CENA D (1.3–4.0s) — a frase (camera ja parada em 2.4s) ================= */
+          tl.to(accent, { scaleX: 1, duration: 0.5, ease: 'power3.out' }, 1.15);
+
+          /* entrada: linha subindo dentro da propria mascara (nunca typewriter) */
+          linesA.forEach(function (el, i) {
+            tl.fromTo(el, { yPercent: 108, opacity: 0 },
+              { yPercent: 0, opacity: 1, duration: 0.58, ease: 'power3.out' }, 1.3 + i * 0.12);
+          });
+          /* a cor assenta 240ms DEPOIS do fragmento estar legivel em branco */
+          tl.to(emA, { color: '#7C3AED', duration: 0.38, ease: 'power1.inOut' }, 2.24);
+
+          linesB.forEach(function (el, i) {
+            tl.fromTo(el, { yPercent: 108, opacity: 0 },
+              { yPercent: 0, opacity: 1, duration: 0.58, ease: 'power3.out' }, 2.6 + i * 0.12);
+          });
+          tl.to(emB, { color: '#7C3AED', duration: 0.38, ease: 'power1.inOut' }, 3.54);
+
+          /* ================= CENA E (4.0–5.0s) — hold: o sistema respira, o texto nao ================= */
+          tl.to(lab, { y: 0.4, duration: 1.0, ease: 'none' }, 4.0);
+
+          window.__timelines = window.__timelines || {};
+          window.__timelines['05-kro-ai-laboratorio'] = tl;
+        }
+
+        if (window.gsap) {
+          build();
+        } else {
+          var tag = document.querySelector('script[src="assets/vendor/gsap.min.js"]');
+          if (tag) tag.addEventListener('load', build);
+        }
+      })();
+    </script>
+  </div>
+</template>

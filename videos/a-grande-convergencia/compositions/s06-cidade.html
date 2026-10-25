@@ -1,0 +1,181 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+  </head>
+  <body>
+    <template>
+      <style>
+        #root { position: absolute; inset: 0; overflow: hidden; }
+        .scene {
+          position: absolute; inset: 0; overflow: hidden;
+          background: #1b1a1f;
+        }
+        
+  
+  .sys {
+    font-family: 'JetBrains Mono', monospace;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    font-size: 17px;
+    color: #06b6d4;
+  }
+  .sys-lo { color: #6f6f78; }
+  .metric {
+    font-family: 'JetBrains Mono', monospace;
+    font-variant-numeric: tabular-nums;
+    color: #06b6d4;
+    letter-spacing: 0.02em;
+  }
+  .badge {
+    display: inline-flex; align-items: center; gap: 9px;
+    font-family: 'JetBrains Mono', monospace; font-size: 15px; letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #06b6d4;
+    border: 1px solid rgba(6,182,212,0.45);
+    background: rgba(6,182,212,0.08);
+    padding: 7px 13px; border-radius: 4px;
+    white-space: nowrap;
+  }
+  .badge::before {
+    content: ""; width: 6px; height: 6px; border-radius: 50%;
+    background: #06b6d4; flex: 0 0 auto;
+  }
+  /* A voz do sistema nunca pousa direto sobre a página: ela vive numa lasca
+     escura por cima de tudo. É o que a separa do conteúdo — e o que a mantém
+     legível sobre qualquer superfície. */
+  .chip {
+    display: inline-block;
+    background: rgba(20,19,24,0.92);
+    padding: 9px 15px;
+    border-radius: 3px;
+    white-space: nowrap;
+  }
+  
+  .scene { background: #121216; }
+  .stage { position: absolute; inset: 0; perspective: 1500px; }
+  .world {
+    position: absolute; inset: 0;
+    transform-style: preserve-3d; transform-origin: 50% 50%;
+    will-change: transform;
+  }
+  /* A cidade É a malha de páginas, estendida até o horizonte. Um único plano
+     tilado: custo de DOM zero e literalmente sem fim dentro do quadro. */
+  .plain {
+    position: absolute;
+    left: -13485px;
+    top: -10898px;
+    width: 32100px; height: 25800px;
+    background-image: url("data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22214%22%20height%3D%22172%22%20viewBox%3D%220%200%20214%20172%22%3E%0A%3Crect%20x%3D%220%22%20y%3D%220%22%20width%3D%22214%22%20height%3D%22172%22%20fill%3D%22none%22%2F%3E%0A%3Crect%20x%3D%2213%22%20y%3D%2213%22%20width%3D%22188%22%20height%3D%22146%22%20fill%3D%22%23ffffff%22%2F%3E%0A%3Crect%20x%3D%2222%22%20y%3D%2222%22%20width%3D%2226%22%20height%3D%225%22%20rx%3D%222%22%20fill%3D%22%232b2b2b%22%2F%3E%0A%3Crect%20x%3D%22165%22%20y%3D%2221%22%20width%3D%2227%22%20height%3D%228%22%20rx%3D%223%22%20fill%3D%22%237c3aed%22%2F%3E%0A%3Crect%20x%3D%2222%22%20y%3D%2236%22%20width%3D%22170%22%20height%3D%221%22%20fill%3D%22%23e4e4e7%22%2F%3E%0A%3Crect%20x%3D%2222%22%20y%3D%2247%22%20width%3D%2286%22%20height%3D%229%22%20rx%3D%223%22%20fill%3D%22%232b2b2b%22%2F%3E%0A%3Crect%20x%3D%2222%22%20y%3D%2261%22%20width%3D%2256%22%20height%3D%229%22%20rx%3D%223%22%20fill%3D%22%232b2b2b%22%2F%3E%0A%3Crect%20x%3D%2222%22%20y%3D%2276%22%20width%3D%2271%22%20height%3D%224%22%20rx%3D%222%22%20fill%3D%22%23e4e4e7%22%2F%3E%0A%3Crect%20x%3D%2222%22%20y%3D%2284%22%20width%3D%2253%22%20height%3D%224%22%20rx%3D%222%22%20fill%3D%22%23e4e4e7%22%2F%3E%0A%3Crect%20x%3D%2222%22%20y%3D%2295%22%20width%3D%2242%22%20height%3D%2213%22%20rx%3D%224%22%20fill%3D%22%237c3aed%22%2F%3E%0A%3Crect%20x%3D%22155%22%20y%3D%2247%22%20width%3D%2237%22%20height%3D%2246%22%20rx%3D%224%22%20fill%3D%22%23ecedf0%22%2F%3E%0A%3C%2Fsvg%3E");
+    background-repeat: repeat;
+    background-size: 214px 172px;
+    background-color: #121216;
+    opacity: 0.9;
+  }
+  /* Iluminação: a linha onde a cidade encontra o vazio. */
+  .horizon {
+    position: absolute; left: 0; right: 0;
+    height: 420px;
+    background: linear-gradient(to bottom,
+      rgba(18,18,22,0) 0%, rgba(18,18,22,0.55) 52%,
+      rgba(124,58,237,0.16) 74%, rgba(18,18,22,0) 100%);
+    pointer-events: none;
+  }
+  .haze {
+    position: absolute; inset: 0; pointer-events: none;
+    opacity: 0;
+    background: linear-gradient(to bottom,
+      rgba(18,18,22,0.97) 0%, rgba(18,18,22,0.93) 32%,
+      rgba(18,18,22,0.34) 48%, rgba(18,18,22,0) 64%);
+  }
+  .ind {
+    position: absolute;
+    font-family: 'JetBrains Mono', monospace; font-variant-numeric: tabular-nums;
+    font-size: 22px; color: #06b6d4;
+    opacity: 0; white-space: nowrap;
+  }
+  .hud2 {
+    position: absolute; left: 0; right: 0; top: 150px;
+    font-family: Inter, sans-serif; font-weight: 900;
+    font-size: 112px; letter-spacing: -0.04em; color: #ffffff;
+    text-align: center; height: 130px;
+  }
+  .hud2 > div { position: absolute; left: 0; right: 0; top: 0; white-space: nowrap; }
+  
+      </style>
+
+      <div
+        id="root"
+        data-composition-id="s06"
+        data-width="1920"
+        data-height="1080"
+        data-duration="6"
+      >
+        <div class="scene">
+
+          <div class="stage">
+            <div class="world" id="world" data-layout-allow-overflow>
+              <div class="plain"></div>
+            </div>
+          </div>
+          <div class="haze" id="haze"></div>
+          <div class="horizon" id="horizon" style="top:216px"></div>
+          <div class="ind chip" id="ind-0" style="left:250px;top:690px">+1,2%</div>
+          <div class="ind chip" id="ind-1" style="left:1470px;top:636px">+0,4%</div>
+          <div class="ind chip" id="ind-2" style="left:806px;top:902px">+2,1%</div>
+          <div class="ind chip" id="ind-3" style="left:1560px;top:890px">+0,9%</div>
+          <div class="ind chip" id="ind-4" style="left:356px;top:560px">+1,7%</div>
+          <div class="hud2">
+            <div id="h6-0" style="opacity:0" data-layout-allow-overlap>Funcionou.</div>
+            <div id="h6-1" style="opacity:0" data-layout-allow-overlap>Para todo mundo.</div>
+          </div>
+        </div>
+      </div>
+
+      <script>
+        (function () {
+          window.__timelines = window.__timelines || {};
+          const tl = gsap.timeline({ paused: true });
+
+          const world = document.querySelector("#world");
+          const cam = { x: 0, y: 0, z: 0, rx: 0, ry: 0 };
+          const drift = { dx: 0, dy: 0, drx: 0 };
+          function applyCamera() {
+            world.style.transform =
+              "translate3d(" + (cam.x + drift.dx) + "px," + (cam.y + drift.dy) + "px," + cam.z + "px)" +
+              " rotateX(" + (cam.rx + drift.drx) + "deg) rotateY(" + cam.ry + "deg)";
+          }
+          // Continua a pose com que a cena 05 termina e continua subindo, até a
+          // cidade encontrar o horizonte.
+          cam.rx = 62; cam.z = -300; cam.y = -60;
+          applyCamera();
+
+          // Pull-back monumental: quase nenhuma animação individual.
+          // A escala É o espetáculo.
+          tl.fromTo(cam, { rx: 62, z: -300, y: -60 },
+            { rx: 76, z: -1180, y: -150, duration: 6, ease: "power1.inOut", onUpdate: applyCamera }, 0);
+          tl.fromTo("#haze", { opacity: 0 },
+            { opacity: 1, duration: 1.9, ease: "power1.inOut" }, 0.15);
+          tl.fromTo("#horizon", { y: 42, opacity: 0.2 },
+            { y: -30, opacity: 1, duration: 6, ease: "power1.inOut" }, 0);
+
+          tl.fromTo("#ind-0", { opacity: 0, y: 10 }, { opacity: 0.95, y: 0, duration: 0.4, ease: "power2.out" }, 0.70);
+          tl.fromTo("#ind-1", { opacity: 0, y: 10 }, { opacity: 0.95, y: 0, duration: 0.4, ease: "power2.out" }, 0.98);
+          tl.fromTo("#ind-2", { opacity: 0, y: 10 }, { opacity: 0.95, y: 0, duration: 0.4, ease: "power2.out" }, 1.26);
+          tl.fromTo("#ind-3", { opacity: 0, y: 10 }, { opacity: 0.95, y: 0, duration: 0.4, ease: "power2.out" }, 1.54);
+          tl.fromTo("#ind-4", { opacity: 0, y: 10 }, { opacity: 0.95, y: 0, duration: 0.4, ease: "power2.out" }, 1.82);
+          tl.to(".ind", { opacity: 0, duration: 0.5, ease: "power1.in" }, 3.0);
+
+          // "Funcionou." — pausa — "Para todo mundo."
+          tl.fromTo("#h6-0", { opacity: 0 }, { opacity: 1, duration: 0.5, ease: "power2.out" }, 3.1);
+          tl.to("#h6-0", { opacity: 0, duration: 0.3, ease: "power1.in" }, 4.3);
+          tl.fromTo("#h6-1", { opacity: 0 }, { opacity: 1, duration: 0.5, ease: "power2.out" }, 4.75);
+          tl.to("#h6-1", { opacity: 0, duration: 0.22, ease: "power1.in" }, 5.82);
+  
+          window.__timelines["s06"] = tl;
+        })();
+      </script>
+    </template>
+  </body>
+</html>

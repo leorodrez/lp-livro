@@ -1,0 +1,331 @@
+<template>
+  <style>
+    /* ── fonts (self-hosted, project-root relative — frame.md) ───────────── */
+    @font-face{font-family:"Sora";font-weight:600;font-style:normal;font-display:block;src:url("assets/fonts/Sora-600.woff2") format("woff2");}
+    @font-face{font-family:"Sora";font-weight:700;font-style:normal;font-display:block;src:url("assets/fonts/Sora-700.woff2") format("woff2");}
+
+    /* ── root (styled by #root, never by a class) ────────────────────────── */
+    #root{position:absolute;inset:0;width:1080px;height:1920px;overflow:hidden;}
+    #root .clip{position:absolute;inset:0;}
+
+    /* ── L1 · atmosphere: charcoal ground, radial falloff upper-left, grain ─ */
+    .f09pr-ground{
+      background:
+        radial-gradient(1500px 1280px at 16% 10%, #343434 0%, #2B2B2B 44%, #262626 72%, #1E1E1E 100%);
+    }
+    .f09pr-grain{position:absolute;inset:0;width:1080px;height:1920px;opacity:0.032;pointer-events:none;}
+
+    /* ── L2 · system (perspective 2400px, preserve-3d) ──────────────────── */
+    .f09pr-space{perspective:2400px;perspective-origin:540px 600px;}
+    .f09pr-stage{
+      position:absolute;left:0;top:0;width:1080px;height:1200px;
+      transform-style:preserve-3d;
+    }
+    .f09pr-unit{
+      position:absolute;left:50%;top:50%;width:480px;
+      transform-style:preserve-3d;backface-visibility:hidden;
+      will-change:transform,opacity;
+    }
+    .f09pr-skin{position:relative;width:480px;}
+    .f09pr-skin.f09pr-dim{filter:blur(4px);}
+
+    /* variant-card — the landing-mock reduced, one abstract headline variant */
+    .f09pr-card{
+      position:relative;z-index:2;
+      width:480px;height:256px;
+      display:flex;flex-direction:column;
+      padding:24px;box-sizing:border-box;
+      background:#F4F2EE;
+      border:1px solid rgba(43,43,43,0.10);
+      border-radius:16px;
+      box-shadow:0 30px 80px rgba(0,0,0,0.45);
+      overflow:hidden;
+    }
+    .f09pr-sheen{
+      position:absolute;left:0;right:0;top:0;height:34%;
+      background:linear-gradient(180deg, rgba(255,255,255,0.09) 0%, rgba(255,255,255,0) 100%);
+      pointer-events:none;
+    }
+    .f09pr-chrome{position:relative;display:flex;gap:7px;margin-bottom:22px;}
+    .f09pr-chrome i{display:block;width:8px;height:8px;border-radius:50%;background:rgba(43,43,43,0.18);}
+    .f09pr-hl{position:relative;height:17px;border-radius:6px;background:rgba(43,43,43,0.80);margin-bottom:10px;}
+    .f09pr-hl2{margin-bottom:18px;}
+    .f09pr-bd{position:relative;height:7px;border-radius:4px;background:rgba(43,43,43,0.18);margin-bottom:8px;}
+    .f09pr-cta{position:relative;margin-top:auto;width:106px;height:30px;border-radius:100px;background:#2B2B2B;}
+
+    /* potential-bar — observed potential, below each variant, on the ground */
+    .f09pr-barwrap{position:relative;margin-top:22px;height:10px;}
+    .f09pr-bar{
+      position:relative;z-index:2;display:block;width:480px;height:10px;
+      border-radius:6px;background:rgba(6,182,212,0.10);overflow:hidden;
+    }
+    .f09pr-fill{
+      display:block;width:100%;height:100%;border-radius:6px;
+      background:#06B6D4;transform-origin:left center;
+    }
+
+    /* the only glow in the frame: focused variant + its potential-bar */
+    .f09pr-glow-top{
+      position:absolute;z-index:1;left:44px;right:44px;top:-24px;height:72px;
+      border-radius:50%;background:#7C3AED;filter:blur(40px);opacity:0;
+    }
+    .f09pr-glow-bar{
+      position:absolute;z-index:1;left:-20px;right:-20px;top:-20px;height:50px;
+      background:radial-gradient(58% 100% at 40% 50%, rgba(6,182,212,0.95) 0%, rgba(6,182,212,0) 74%);
+      filter:blur(18px);opacity:0;
+    }
+
+    /* ── L3 · hero typography: flat in the camera plane, no perspective ──── */
+    .f09pr-accent{
+      position:absolute;left:88px;top:1042px;width:72px;height:4px;
+      background:#06B6D4;transform-origin:left center;
+    }
+    .f09pr-hero{position:absolute;left:88px;top:1092px;width:832px;}
+    .f09pr-line{
+      display:block;position:relative;
+      font-family:"Sora",sans-serif;font-weight:600;font-size:56px;line-height:1.2;
+      letter-spacing:-0.018em;color:#FFFFFF;white-space:nowrap;
+      padding:7px 0;
+      clip-path:inset(0 100% 0 0);
+    }
+    .f09pr-l3{margin-top:14px;}
+    .f09pr-res{color:#FFFFFF;}
+  </style>
+
+  <div id="root" data-composition-id="09-potencial-resultado" data-width="1080" data-height="1920">
+
+    <!-- L1 — atmosphere (full-bleed ground on a clip layer, never on #root) -->
+    <div class="clip f09pr-ground" data-start="0" data-duration="4.5" data-track-index="0">
+      <svg class="f09pr-grain" width="1080" height="1920" viewBox="0 0 1080 1920"
+           xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <filter id="f09pr-grain-filter" x="0" y="0" width="100%" height="100%">
+          <feTurbulence type="fractalNoise" baseFrequency="0.82" numOctaves="3" seed="9" stitchTiles="stitch"/>
+        </filter>
+        <rect width="1080" height="1920" filter="url(#f09pr-grain-filter)"/>
+      </svg>
+    </div>
+
+    <!-- L2 — the system: four variants reordered by observed potential -->
+    <div class="clip f09pr-space" data-start="0" data-duration="4.5" data-track-index="1">
+      <div class="f09pr-stage">
+
+        <!-- variant-card #1 — recedes to z -80 (second in the new order) -->
+        <div class="f09pr-unit" data-tx="-312" data-ty="-235" data-tz="-80" data-fill="0.52">
+          <div class="f09pr-skin f09pr-dim">
+            <div class="f09pr-card">
+              <div class="f09pr-sheen"></div>
+              <div class="f09pr-chrome"><i></i><i></i><i></i></div>
+              <div class="f09pr-hl" style="width:72%"></div>
+              <div class="f09pr-hl f09pr-hl2" style="width:46%"></div>
+              <div class="f09pr-bd" style="width:93%"></div>
+              <div class="f09pr-bd" style="width:64%"></div>
+              <div class="f09pr-cta"></div>
+            </div>
+            <div class="f09pr-barwrap">
+              <div class="f09pr-bar"><span class="f09pr-fill"></span></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- variant-card #2 — the focused variant: comes to the front plane -->
+        <div class="f09pr-unit f09pr-focus" data-tx="0" data-ty="0" data-tz="0" data-fill="0.88">
+          <div class="f09pr-skin">
+            <div class="f09pr-glow-top"></div>
+            <div class="f09pr-card">
+              <div class="f09pr-sheen"></div>
+              <div class="f09pr-chrome"><i></i><i></i><i></i></div>
+              <div class="f09pr-hl" style="width:80%"></div>
+              <div class="f09pr-hl f09pr-hl2" style="width:54%"></div>
+              <div class="f09pr-bd" style="width:95%"></div>
+              <div class="f09pr-bd" style="width:71%"></div>
+              <div class="f09pr-cta"></div>
+            </div>
+            <div class="f09pr-barwrap">
+              <div class="f09pr-glow-bar"></div>
+              <div class="f09pr-bar"><span class="f09pr-fill"></span></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- variant-card #3 — recedes to z -160 -->
+        <div class="f09pr-unit" data-tx="312" data-ty="-210" data-tz="-160" data-fill="0.34">
+          <div class="f09pr-skin f09pr-dim">
+            <div class="f09pr-card">
+              <div class="f09pr-sheen"></div>
+              <div class="f09pr-chrome"><i></i><i></i><i></i></div>
+              <div class="f09pr-hl" style="width:63%"></div>
+              <div class="f09pr-hl f09pr-hl2" style="width:51%"></div>
+              <div class="f09pr-bd" style="width:90%"></div>
+              <div class="f09pr-bd" style="width:58%"></div>
+              <div class="f09pr-cta"></div>
+            </div>
+            <div class="f09pr-barwrap">
+              <div class="f09pr-bar"><span class="f09pr-fill"></span></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- variant-card #4 — recedes to z -240 -->
+        <div class="f09pr-unit" data-tx="10" data-ty="255" data-tz="-240" data-fill="0.21">
+          <div class="f09pr-skin f09pr-dim">
+            <div class="f09pr-card">
+              <div class="f09pr-sheen"></div>
+              <div class="f09pr-chrome"><i></i><i></i><i></i></div>
+              <div class="f09pr-hl" style="width:77%"></div>
+              <div class="f09pr-hl f09pr-hl2" style="width:39%"></div>
+              <div class="f09pr-bd" style="width:88%"></div>
+              <div class="f09pr-bd" style="width:69%"></div>
+              <div class="f09pr-cta"></div>
+            </div>
+            <div class="f09pr-barwrap">
+              <div class="f09pr-bar"><span class="f09pr-fill"></span></div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- L3 — hero typography (onscreen_text, verbatim) -->
+    <div class="clip" data-start="0" data-duration="4.5" data-track-index="2">
+      <div class="f09pr-accent"></div>
+      <div class="f09pr-hero">
+        <span class="f09pr-line f09pr-l1">E mostra quais mensagens</span>
+        <span class="f09pr-line f09pr-l2">t&#234;m mais potencial</span>
+        <span class="f09pr-line f09pr-l3">para gerar <span class="f09pr-res">resultado</span>.</span>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    (function () {
+      var FRAME = "09-potencial-resultado";
+      var root = document.querySelector('[data-composition-id="' + FRAME + '"]');
+      var q = function (s) { return root.querySelector(s); };
+      var qa = function (s) { return Array.prototype.slice.call(root.querySelectorAll(s)); };
+
+      var tl = gsap.timeline({ paused: true });
+
+      var stage = q(".f09pr-stage");
+      var units = qa(".f09pr-unit");           // DOM order 0..3 = variant #1..#4
+      var n = units.length;
+      var WINNER = 1;                          // variant-card #2
+
+      /* ── depth-scatter-assemble — every scattered value index-derived ──── */
+      var GOLDEN = Math.PI * (3 - Math.sqrt(5));
+      var RADIUS = 320;
+      var Z_NEAR = -10, Z_FAR = -70;           // shallow start: all three then recede
+      var TUMBLE = 18;                         // one-faced cards — kept well under 80
+      var ASSEMBLE_DUR = 1.05, STAGGER = 0.06, ASSEMBLE_START = 0.08;
+
+      var scatter = units.map(function (el, i) {
+        var a = i * GOLDEN;
+        var depthT = n > 1 ? i / (n - 1) : 0;
+        return {
+          x: Math.cos(a) * RADIUS,
+          y: Math.sin(a) * RADIUS,
+          z: Z_NEAR - depthT * (Z_NEAR - Z_FAR),
+          rotationX: Math.sin(a) * TUMBLE,
+          rotationY: Math.cos(a) * TUMBLE,
+          scale: 1,
+          opacity: 0.45
+        };
+      });
+
+      /* handoff_in — variant-card #2 starts exactly where frame 08 left it */
+      scatter[WINNER] = {
+        x: -40, y: 120, z: 0, rotationX: 0, rotationY: 0, scale: 0.94, opacity: 1
+      };
+
+      /* park the cloud BEFORE any tween so frame 0 is the inherited state */
+      units.forEach(function (el, i) {
+        var s = scatter[i];
+        gsap.set(el, {
+          xPercent: -50, yPercent: -50,
+          x: s.x, y: s.y, z: s.z,
+          rotationX: s.rotationX, rotationY: s.rotationY,
+          scale: s.scale, opacity: s.opacity
+        });
+      });
+
+      /* Cena A (0.0–1.4s) — the reorganization. Gentle cloud life underneath. */
+      tl.fromTo(stage,
+        { rotationY: -5, rotationX: 2.5 },
+        { rotationY: 0, rotationX: 0, duration: 1.25, ease: "power2.out" },
+        0);
+
+      units.forEach(function (el, i) {
+        var s = scatter[i];
+        var win = i === WINNER;
+        tl.fromTo(el,
+          {
+            x: s.x, y: s.y, z: s.z,
+            rotationX: s.rotationX, rotationY: s.rotationY,
+            scale: s.scale, opacity: s.opacity
+          },
+          {
+            /* handoff_out — focus centred and flat; losers recede, never vanish */
+            x: Number(el.dataset.tx),
+            y: Number(el.dataset.ty),
+            z: Number(el.dataset.tz),
+            rotationX: 0, rotationY: 0,
+            scale: 1,
+            opacity: win ? 1 : 0.3,
+            duration: ASSEMBLE_DUR,
+            ease: "power3.out"
+          },
+          ASSEMBLE_START + i * STAGGER);
+      });
+
+      /* observed potential measuring itself — scaleX fills, never width */
+      units.forEach(function (el, i) {
+        tl.fromTo(el.querySelector(".f09pr-fill"),
+          { scaleX: 0 },
+          { scaleX: Number(el.dataset.fill), duration: 0.70, ease: "power2.out" },
+          0.30 + i * 0.07);
+      });
+
+      /* Cena B (1.0–2.2s) — the light. Bloom-and-hold, nothing else glows. */
+      tl.fromTo(q(".f09pr-glow-top"),
+        { opacity: 0, scale: 0.92 },
+        { opacity: 0.38, scale: 1, duration: 0.75, ease: "power2.out" },
+        1.05);
+      tl.fromTo(q(".f09pr-glow-bar"),
+        { opacity: 0, scale: 0.90 },
+        { opacity: 0.34, scale: 1, duration: 0.70, ease: "power2.out" },
+        1.25);
+
+      /* Cena C (0.5–3.3s) — the phrase. Lateral mask-reveal from the left. */
+      function maskReveal(el, at, dur) {
+        var p = { v: 0 };
+        tl.fromTo(p, { v: 0 }, {
+          v: 1, duration: dur, ease: "power2.out",
+          onUpdate: function () {
+            el.style.clipPath = "inset(0 " + ((1 - p.v) * 100).toFixed(3) + "% 0 0)";
+          }
+        }, at);
+        tl.set(el, { clipPath: "inset(0 0% 0 0)" }, at + dur);
+      }
+
+      tl.fromTo(q(".f09pr-accent"),
+        { scaleX: 0 }, { scaleX: 1, duration: 0.30, ease: "power2.out" }, 0.38);
+
+      maskReveal(q(".f09pr-l1"), 0.50, 0.54);
+      maskReveal(q(".f09pr-l2"), 0.59, 0.54);
+      maskReveal(q(".f09pr-l3"), 2.00, 0.54);
+
+      /* colour lands on text that is already legible in white — no glow */
+      tl.fromTo(q(".f09pr-res"),
+        { color: "#FFFFFF" },
+        { color: "#06B6D4", duration: 0.34, ease: "power1.inOut" },
+        2.74);
+
+      /* Cena D (3.3–4.5s) — every tween is done by 3.08s: a still image. */
+      tl.to({ hold: 0 }, { hold: 1, duration: 1.42, ease: "none" }, 3.08);
+
+      window.__timelines = window.__timelines || {};
+      window.__timelines[FRAME] = tl;
+    })();
+  </script>
+</template>

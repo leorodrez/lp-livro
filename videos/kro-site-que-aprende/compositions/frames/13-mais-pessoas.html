@@ -1,0 +1,325 @@
+<template>
+  <style>
+@font-face{font-family:"Manrope";font-weight:400;font-style:normal;font-display:block;src:url("assets/fonts/Manrope-400.woff2") format("woff2");}
+@font-face{font-family:"Manrope";font-weight:500;font-style:normal;font-display:block;src:url("assets/fonts/Manrope-500.woff2") format("woff2");}
+@font-face{font-family:"Manrope";font-weight:600;font-style:normal;font-display:block;src:url("assets/fonts/Manrope-600.woff2") format("woff2");}
+@font-face{font-family:"Manrope";font-weight:700;font-style:normal;font-display:block;src:url("assets/fonts/Manrope-700.woff2") format("woff2");}
+@font-face{font-family:"Manrope";font-weight:800;font-style:normal;font-display:block;src:url("assets/fonts/Manrope-800.woff2") format("woff2");}
+@font-face{font-family:"Sora";font-weight:400;font-style:normal;font-display:block;src:url("assets/fonts/Sora-400.woff2") format("woff2");}
+@font-face{font-family:"Sora";font-weight:600;font-style:normal;font-display:block;src:url("assets/fonts/Sora-600.woff2") format("woff2");}
+@font-face{font-family:"Sora";font-weight:700;font-style:normal;font-display:block;src:url("assets/fonts/Sora-700.woff2") format("woff2");}
+@font-face{font-family:"Sora";font-weight:800;font-style:normal;font-display:block;src:url("assets/fonts/Sora-800.woff2") format("woff2");}
+
+#root{position:relative;width:1080px;height:1920px;overflow:hidden;
+  font-family:"Manrope","Helvetica Neue",Arial,sans-serif;-webkit-font-smoothing:antialiased}
+#root *{box-sizing:border-box;margin:0;padding:0}
+#root .clip{position:absolute;inset:0}
+
+/* ── LEVEL 1 — atmospheric ground (full-bleed, on a clip layer) ─────────── */
+#f13-ground{background:#2B2B2B}
+.f13-falloff{position:absolute;inset:0;
+  background:
+    radial-gradient(1500px 1700px at 20% 12%, #343434 0%, rgba(52,52,52,0) 62%),
+    radial-gradient(1700px 1900px at 86% 102%, #1E1E1E 0%, rgba(30,30,30,0) 58%)}
+.f13-vignette{position:absolute;inset:0;pointer-events:none;
+  background:radial-gradient(1250px 1560px at 50% 46%, rgba(0,0,0,0) 44%, rgba(0,0,0,.52) 100%)}
+.f13-grain{position:absolute;inset:-40px;pointer-events:none;opacity:.032;mix-blend-mode:overlay;
+  background-size:220px 220px;
+  background-image:url("data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22220%22%20height%3D%22220%22%3E%3Cfilter%20id%3D%22n%22%3E%3CfeTurbulence%20type%3D%22fractalNoise%22%20baseFrequency%3D%220.82%22%20numOctaves%3D%223%22%20stitchTiles%3D%22stitch%22%20seed%3D%227%22%2F%3E%3CfeColorMatrix%20type%3D%22saturate%22%20values%3D%220%22%2F%3E%3C%2Ffilter%3E%3Crect%20width%3D%22220%22%20height%3D%22220%22%20filter%3D%22url(%23n)%22%20opacity%3D%220.5%22%2F%3E%3C%2Fsvg%3E")}
+
+/* ── LEVEL 2 — the system, inside the perspective camera ────────────────── */
+#f13-stage{perspective:2400px;perspective-origin:50% 52%}
+#f13-world{position:absolute;left:50%;top:50%;width:1600px;height:3600px;
+  margin-left:-800px;margin-top:-1800px;
+  transform-style:preserve-3d;transform-origin:50% 50%;will-change:transform}
+
+/* the new traffic — further away in depth, which is why it can be let go */
+#f13-flows{position:absolute;inset:0;transform:translateZ(-260px)}
+#f13-flows svg{display:block;width:100%;height:100%;overflow:visible}
+.f13-flow-tail{fill:none;stroke:rgba(6,182,212,0.18);stroke-linecap:round}
+.f13-flow-head{fill:none;stroke:rgba(93,216,235,0.50);stroke-linecap:round}
+
+/* the landing page — the object the camera chooses instead */
+#f13-page{position:absolute;left:240px;top:2150px;width:1120px;height:1100px;
+  background:#F4F2EE;border-radius:20px;overflow:hidden;
+  box-shadow:0 30px 80px rgba(0,0,0,.45);transform:translateZ(0)}
+.f13-sheen{position:absolute;left:0;top:0;width:100%;height:96px;
+  background:linear-gradient(180deg, rgba(255,255,255,.085) 0%, rgba(255,255,255,0) 100%)}
+.f13-chrome{position:absolute;left:0;top:0;width:100%;height:64px;
+  border-bottom:1px solid rgba(43,43,43,.10)}
+.f13-cdot{position:absolute;top:24px;width:16px;height:16px;border-radius:50%;
+  background:rgba(43,43,43,.16)}
+.f13-bar{position:absolute;background:rgba(43,43,43,.82);border-radius:10px}
+.f13-eyebrow{position:absolute;left:60px;top:140px;width:150px;height:14px;border-radius:7px;
+  background:rgba(43,43,43,.20)}
+.f13-line{position:absolute;background:rgba(43,43,43,.26);border-radius:8px}
+.f13-cta{position:absolute;left:60px;top:424px;width:290px;height:74px;border-radius:100px;
+  background:#2B2B2B}
+.f13-cta-i{position:absolute;left:80px;top:31px;width:130px;height:12px;border-radius:6px;
+  background:rgba(244,242,238,.90)}
+.f13-rule{position:absolute;left:60px;top:560px;width:1000px;height:1px;
+  background:rgba(43,43,43,.10)}
+.f13-card{position:absolute;top:600px;width:300px;height:230px;border-radius:16px;
+  background:rgba(43,43,43,.04);border:1px solid rgba(43,43,43,.09)}
+.f13-card-img{position:absolute;left:20px;top:20px;width:258px;height:110px;border-radius:10px;
+  background:rgba(43,43,43,.08)}
+.f13-card-b{position:absolute;background:rgba(43,43,43,.18);border-radius:6px;height:12px}
+.f13-foot{position:absolute;background:rgba(43,43,43,.12);border-radius:7px;height:14px}
+
+/* signal-dots — the visits that already arrived */
+.f13-sig{position:absolute;width:56px;height:56px;margin-left:-28px;margin-top:-28px}
+.f13-sig-trail{position:absolute;left:26px;top:-26px;width:4px;height:30px;border-radius:2px;
+  background:linear-gradient(to top, rgba(6,182,212,.42), rgba(6,182,212,0))}
+.f13-sig-dot{position:absolute;left:19px;top:19px;width:18px;height:18px;border-radius:50%;
+  background:#06B6D4;box-shadow:0 0 14px rgba(6,182,212,.38), 0 0 0 5px rgba(6,182,212,.12)}
+#f13-rise{position:absolute;left:422px;top:650px;width:4px;height:120px;border-radius:2px;
+  transform-origin:50% 100%;
+  background:linear-gradient(to top, rgba(6,182,212,.52), rgba(6,182,212,0))}
+
+/* ── reading pool — keeps the flood from fighting the sentence ──────────── */
+#f13-scrim{pointer-events:none;
+  background:linear-gradient(180deg,
+    rgba(30,30,30,0) 0px, rgba(30,30,30,0) 420px,
+    rgba(30,30,30,.60) 560px, rgba(30,30,30,.60) 1000px,
+    rgba(30,30,30,0) 1140px, rgba(30,30,30,0) 1920px)}
+
+/* ── LEVEL 3 — hero typography, flat in the camera plane ────────────────── */
+.f13-breath,#f13-handoff{position:absolute;left:88px;width:840px;
+  font-family:"Sora","Helvetica Neue",Arial,sans-serif;font-weight:600;font-size:64px;
+  line-height:1.16;letter-spacing:-0.02em;color:#FFFFFF}
+#f13-b1{top:520px}
+#f13-b2{top:694px}
+#f13-b3{top:869px}
+#f13-handoff{top:1082px}
+  </style>
+
+  <div id="root" data-composition-id="13-mais-pessoas" data-start="0" data-duration="6.5" data-width="1080" data-height="1920">
+
+    <!-- level 1 ──────────────────────────────────────────────────────────── -->
+    <div class="clip" id="f13-ground" data-start="0" data-duration="6.5" data-track-index="0">
+      <div class="f13-falloff"></div>
+      <div class="f13-vignette"></div>
+      <div class="f13-grain"></div>
+    </div>
+
+    <!-- level 2 ──────────────────────────────────────────────────────────── -->
+    <div class="clip" id="f13-stage" data-start="0" data-duration="6.5" data-track-index="1" data-layout-allow-overflow>
+      <div id="f13-world" data-layout-allow-overflow>
+
+        <div id="f13-flows" data-layout-allow-overflow>
+          <svg id="f13-flows-svg" viewBox="0 0 1600 3600" preserveAspectRatio="none"></svg>
+        </div>
+
+        <div id="f13-page">
+          <div class="f13-sheen"></div>
+          <div class="f13-chrome"></div>
+          <div class="f13-cdot" style="left:50px"></div>
+          <div class="f13-cdot" style="left:82px"></div>
+          <div class="f13-cdot" style="left:114px"></div>
+
+          <div class="f13-eyebrow"></div>
+          <div class="f13-bar" style="left:60px;top:188px;width:880px;height:46px"></div>
+          <div class="f13-bar" style="left:60px;top:248px;width:650px;height:46px"></div>
+          <div class="f13-line" style="left:60px;top:330px;width:780px;height:16px"></div>
+          <div class="f13-line" style="left:60px;top:362px;width:660px;height:16px"></div>
+          <div class="f13-cta"><div class="f13-cta-i"></div></div>
+          <div class="f13-rule"></div>
+
+          <div class="f13-card" style="left:60px">
+            <div class="f13-card-img"></div>
+            <div class="f13-card-b" style="left:20px;top:152px;width:200px"></div>
+            <div class="f13-card-b" style="left:20px;top:182px;width:148px"></div>
+          </div>
+          <div class="f13-card" style="left:400px">
+            <div class="f13-card-img"></div>
+            <div class="f13-card-b" style="left:20px;top:152px;width:214px"></div>
+            <div class="f13-card-b" style="left:20px;top:182px;width:132px"></div>
+          </div>
+          <div class="f13-card" style="left:740px">
+            <div class="f13-card-img"></div>
+            <div class="f13-card-b" style="left:20px;top:152px;width:186px"></div>
+            <div class="f13-card-b" style="left:20px;top:182px;width:160px"></div>
+          </div>
+          <div class="f13-foot" style="left:60px;top:880px;width:1000px"></div>
+          <div class="f13-foot" style="left:60px;top:916px;width:860px"></div>
+          <div class="f13-foot" style="left:60px;top:952px;width:920px"></div>
+
+          <div id="f13-rise"></div>
+          <div class="f13-sig" id="f13-s1" style="left:180px;top:170px"><div class="f13-sig-trail"></div><div class="f13-sig-dot"></div></div>
+          <div class="f13-sig" id="f13-s2" style="left:740px;top:280px"><div class="f13-sig-trail"></div><div class="f13-sig-dot"></div></div>
+          <div class="f13-sig" id="f13-s3" style="left:400px;top:410px"><div class="f13-sig-trail"></div><div class="f13-sig-dot"></div></div>
+          <div class="f13-sig" id="f13-s4" style="left:940px;top:510px"><div class="f13-sig-trail"></div><div class="f13-sig-dot"></div></div>
+          <div class="f13-sig" id="f13-s5" style="left:590px;top:630px"><div class="f13-sig-trail"></div><div class="f13-sig-dot"></div></div>
+          <div class="f13-sig" id="f13-s6" style="left:424px;top:770px"><div class="f13-sig-trail"></div><div class="f13-sig-dot"></div></div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="clip" id="f13-scrim" data-start="0" data-duration="6.5" data-track-index="2"></div>
+
+    <!-- level 3 ──────────────────────────────────────────────────────────── -->
+    <div class="clip" id="f13-type" data-start="0" data-duration="6.5" data-track-index="3">
+      <div class="f13-breath" id="f13-b1"><div>Porque aumentar</div><div>o faturamento</div></div>
+      <div class="f13-breath" id="f13-b2"><div>não significa apenas</div><div>trazer mais pessoas</div></div>
+      <div class="f13-breath" id="f13-b3"><div>para o seu site.</div></div>
+      <div id="f13-handoff"><div>seus clientes.</div></div>
+    </div>
+
+  </div>
+
+  <script src="assets/vendor/gsap.min.js"></script>
+  <script>
+    window.__timelines = window.__timelines || {};
+    (function () {
+      var tl = gsap.timeline({ paused: true });
+
+      // ── the camera (viewport-change: ONE .world wrapper, ONE cam state) ──
+      // World box 1600x3600, origin 50% 50% == canvas centre.
+      //   screenX = 540 + S*(wx-800)          screenY = 960 + S*(wy-1800) + cam.y
+      var world = document.getElementById("f13-world");
+      var cam = { s: 0.70, x: 0, y: 0 };
+      function applyCamera() {
+        world.style.transform =
+          "translate(" + cam.x + "px," + cam.y + "px) scale(" + cam.s + ")";
+      }
+      applyCamera(); // seed frame 0
+
+      // depth-of-field writers (proxy-tweened -> seek-safe)
+      var flows = document.getElementById("f13-flows");
+      var page = document.getElementById("f13-page");
+      var dofFar = { b: 0 };
+      var dofNear = { b: 6 };
+      function applyFar() { flows.style.filter = "blur(" + dofFar.b + "px)"; }
+      function applyNear() { page.style.filter = "blur(" + dofNear.b + "px)"; }
+      applyFar();
+      applyNear();
+
+      // ── the flood: 22 traffic-flows, built deterministically ────────────
+      var NS = "http://www.w3.org/2000/svg";
+      var svg = document.getElementById("f13-flows-svg");
+      var EY = 2090; // every flow aims just above the page's top edge
+      var specs = [];
+      var i;
+
+      // family A — in over the top edge
+      var aSx = [60, 280, 480, 700, 900, 1120, 1340, 1540];
+      var aEx = [360, 450, 540, 650, 760, 880, 1010, 1180];
+      var aBow = [-300, 240, -220, 300, -260, 200, -340, 260];
+      var aT = [0.00, 0.26, 0.10, 0.40, 0.18, 0.50, 0.32, 0.58];
+      var aW = [6, 5, 6.5, 5.5, 6, 5, 6.5, 5.5];
+      for (i = 0; i < 8; i++) {
+        specs.push({
+          d: "M " + aSx[i] + " 190 Q " + ((aSx[i] + aEx[i]) / 2 + aBow[i]) +
+             " 1292 " + aEx[i] + " " + EY,
+          t: aT[i], w: aW[i]
+        });
+      }
+      // family B — in off the left edge
+      var bSy = [760, 1050, 1340, 1620, 1900, 640, 1480];
+      var bEx = [300, 350, 410, 320, 380, 270, 440];
+      var bT = [0.06, 0.22, 0.36, 0.14, 0.46, 0.30, 0.54];
+      var bW = [5.5, 6, 5, 6.5, 5.5, 6, 5];
+      for (i = 0; i < 7; i++) {
+        specs.push({
+          d: "M -150 " + bSy[i] + " Q " + (-150 + (bEx[i] + 150) * 0.80) + " " +
+             (bSy[i] + (EY - bSy[i]) * 0.14) + " " + bEx[i] + " " + EY,
+          t: bT[i], w: bW[i]
+        });
+      }
+      // family C — in off the right edge
+      var cSy = [700, 990, 1280, 1560, 1860, 600, 1420];
+      var cEx = [1240, 1160, 1280, 1190, 1100, 1300, 1150];
+      var cT = [0.12, 0.28, 0.42, 0.20, 0.52, 0.04, 0.60];
+      var cW = [6, 5.5, 6.5, 5, 6, 5.5, 6.5];
+      for (i = 0; i < 7; i++) {
+        specs.push({
+          d: "M 1760 " + cSy[i] + " Q " + (1760 + (cEx[i] - 1760) * 0.80) + " " +
+             (cSy[i] + (EY - cSy[i]) * 0.14) + " " + cEx[i] + " " + EY,
+          t: cT[i], w: cW[i]
+        });
+      }
+
+      var DT = 460; // tail streak length (the motion-blur trail), world px
+      var DH = 120; // bright head length, world px
+      specs.forEach(function (sp, k) {
+        var g = document.createElementNS(NS, "g");
+        var tail = document.createElementNS(NS, "path");
+        var head = document.createElementNS(NS, "path");
+        tail.setAttribute("d", sp.d);
+        head.setAttribute("d", sp.d);
+        tail.setAttribute("class", "f13-flow-tail");
+        head.setAttribute("class", "f13-flow-head");
+        tail.setAttribute("stroke-width", sp.w);
+        head.setAttribute("stroke-width", sp.w * 1.1);
+        g.appendChild(tail);
+        g.appendChild(head);
+        svg.appendChild(g);
+
+        var L = tail.getTotalLength(); // static geometry, measured once at setup
+        tail.setAttribute("stroke-dasharray", DT + " " + (L + DT * 2));
+        head.setAttribute("stroke-dasharray", DH + " " + (L + DT * 2));
+
+        // dash travels the path: offset DT (before the start) -> -L (past the end).
+        // the head rides the tail's leading edge: offsetHead = offsetTail - DT + DH
+        function pass(t0, dur, ease) {
+          tl.fromTo(tail, { strokeDashoffset: DT },
+            { strokeDashoffset: -L, duration: dur, ease: ease }, t0);
+          tl.fromTo(head, { strokeDashoffset: DH },
+            { strokeDashoffset: -L - DT + DH, duration: dur, ease: ease }, t0);
+        }
+        // Scene A (0.0-1.6) — the flood arrives, sharp, fast, many.
+        pass(sp.t, 0.88 + (k % 3) * 0.07, "power1.in");
+        // Scenes B/C — they keep arriving, out of focus, irrelevant. Last
+        // pass lands at 4.52s so the 4.7s hold is completely still.
+        pass(1.78 + (k % 7) * 0.26, 1.18, "none");
+      });
+
+      // ── Scene A/handoff_in: the previous sentence lets go while the page
+      //    comes back into focus (hero type 'seus clientes.' x0 y+160 s1 o1) ─
+      tl.fromTo("#f13-handoff", { opacity: 1 },
+        { opacity: 0, duration: 0.4, ease: "power1.inOut" }, 0);
+      tl.fromTo(dofNear, { b: 6 },
+        { b: 0, duration: 0.42, ease: "power2.out", onUpdate: applyNear }, 0);
+
+      // ── Scene C: the film's longest sentence, in three breaths.
+      //    fade + 18px rise, 500ms each — this frame's entrance. ────────────
+      tl.fromTo("#f13-b1", { opacity: 0, y: 18 },
+        { opacity: 1, y: 0, duration: 0.5, ease: "power2.out" }, 0.40);
+      tl.fromTo("#f13-b2", { opacity: 0, y: 18 },
+        { opacity: 1, y: 0, duration: 0.5, ease: "power2.out" }, 1.90);
+      tl.fromTo("#f13-b3", { opacity: 0, y: 18 },
+        { opacity: 1, y: 0, duration: 0.5, ease: "power2.out" }, 3.40);
+
+      // ── Scene B (1.6-3.2): the camera REFUSES to follow the new flows.
+      //    It pushes INTO the page (0.70 -> 0.88) and the depth-of-field
+      //    sends everything that is still arriving to 9px of blur. ──────────
+      tl.fromTo(cam, { s: 0.70, y: 0 },
+        { s: 0.88, y: -210, duration: 1.6, ease: "power3.inOut", onUpdate: applyCamera }, 1.60);
+      tl.fromTo(dofFar, { b: 0 },
+        { b: 9, duration: 1.6, ease: "power3.inOut", onUpdate: applyFar }, 1.60);
+      tl.fromTo(flows, { opacity: 1 },
+        { opacity: 0.44, duration: 1.6, ease: "power2.inOut" }, 1.60);
+
+      // what stays in focus: the six visits that already arrived
+      var sigs = ["#f13-s1", "#f13-s2", "#f13-s3", "#f13-s4", "#f13-s5", "#f13-s6"];
+      var sigT = [1.70, 1.88, 2.04, 2.18, 2.34, 2.50];
+      gsap.set(sigs, { transformOrigin: "50% 50%" });
+      gsap.set("#f13-rise", { transformOrigin: "50% 100%" });
+      sigs.forEach(function (sel, k) {
+        tl.fromTo(sel, { opacity: 0.38, scale: 0.82 },
+          { opacity: 1, scale: 1, duration: 0.62, ease: "power2.out" }, sigT[k]);
+      });
+
+      // ── Scene D (4.7-6.0): 1.3s of stillness. At 5.70 one of the six
+      //    signals leaves the group and starts climbing the page — the cut
+      //    comes out of it. handoff_out: x -120, y +620, scale 1, opacity 1. ─
+      tl.fromTo("#f13-s6", { y: 0 },
+        { y: -120, duration: 0.30, ease: "power2.in" }, 5.70);
+      tl.fromTo("#f13-rise", { scaleY: 0 },
+        { scaleY: 1, duration: 0.30, ease: "power2.in" }, 5.70);
+
+      window.__timelines["13-mais-pessoas"] = tl;
+    })();
+  </script>
+</template>

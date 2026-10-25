@@ -1,0 +1,191 @@
+/* ═══════════════════════════════════════════════════════════════════════
+   KRO AI × Apple Brasil — sistema visual do filme
+   Registro A = a página (Apple-neutro).  Registro B = o sistema (KRO).
+   O acento ciano só aparece quando o sistema executa uma de suas seis
+   funções: seleção · teste · fluxo · métrica · vencedora · aprendizado.
+   ═══════════════════════════════════════════════════════════════════════ */
+
+@font-face{font-family:"Inter";font-weight:400;font-style:normal;font-display:block;src:url("../../assets/fonts/Inter-400.woff2") format("woff2")}
+@font-face{font-family:"Inter";font-weight:500;font-style:normal;font-display:block;src:url("../../assets/fonts/Inter-500.woff2") format("woff2")}
+@font-face{font-family:"Inter";font-weight:600;font-style:normal;font-display:block;src:url("../../assets/fonts/Inter-600.woff2") format("woff2")}
+@font-face{font-family:"Inter";font-weight:700;font-style:normal;font-display:block;src:url("../../assets/fonts/Inter-700.woff2") format("woff2")}
+@font-face{font-family:"JetBrains Mono";font-weight:400;font-style:normal;font-display:block;src:url("../../assets/fonts/JetBrainsMono-400.woff2") format("woff2")}
+@font-face{font-family:"JetBrains Mono";font-weight:500;font-style:normal;font-display:block;src:url("../../assets/fonts/JetBrainsMono-500.woff2") format("woff2")}
+
+*{margin:0;padding:0;box-sizing:border-box}
+
+:root{
+  --bg:#FFFFFF; --surface:#F5F5F7; --text:#1D1D1F; --muted:#86868B;
+  --hairline:#D2D2D7; --apple-blue:#0071E3;
+  --stage:#0A0A0C; --kro:#06B6D4; --kro-brand:#7C3AED;
+}
+
+.hf-root{position:relative;width:1920px;height:1080px;overflow:hidden;background:#FFFFFF;
+  font-family:"Inter","Helvetica Neue",Arial,sans-serif;-webkit-font-smoothing:antialiased;
+  text-rendering:geometricPrecision}
+.clip{position:absolute;inset:0}
+
+/* ── câmera ─────────────────────────────────────────────────────────────
+   .stage é o chão do frame; .cam é a câmera (escala/rotação); .track é o
+   trilho vertical da página. Nenhum dos três carrega transform em CSS —
+   todos são dirigidos exclusivamente pelo GSAP.                          */
+.stage{position:absolute;inset:0;overflow:hidden;background:#FFFFFF}
+.stage--dark{background:var(--stage)}
+.cam{position:absolute;left:0;top:0;width:1920px;height:1080px;transform-origin:960px 540px}
+.cam--3d{transform-style:preserve-3d}
+.track{position:absolute;left:0;top:0;width:1920px}
+
+/* ═══ REGISTRO A — a página ═════════════════════════════════════════════ */
+
+.ap{position:absolute;left:0;top:0;width:1920px;background:#FFFFFF;color:var(--text)}
+
+/* nav */
+.ap-nav{position:relative;height:60px;background:rgba(250,250,252,.96);
+  border-bottom:1px solid #E5E5E7;display:flex;align-items:center;justify-content:center;gap:44px}
+.ap-nav span{font-size:13px;font-weight:400;color:rgba(29,29,31,.84);letter-spacing:-.005em}
+.ap-nav svg{display:block;fill:rgba(29,29,31,.84)}
+.ap-nav .ap-mark{width:15px;height:18px}
+.ap-nav .ap-ico{width:15px;height:15px;fill:none;stroke:rgba(29,29,31,.84);stroke-width:1.6}
+.ap-t-h1 svg{display:inline-block;vertical-align:-2px;width:38px;height:46px;fill:currentColor;margin-right:2px}
+
+/* hero do evento */
+.ap-hero{position:relative;height:860px;overflow:hidden;
+  background:linear-gradient(180deg,#96B0D0 0%,#7E9AC0 34%,#5E7BA6 68%,#4B6690 100%)}
+.ap-hero-glow{position:absolute;left:0;top:0;width:1920px;height:426px;display:block;object-fit:cover;
+  -webkit-mask-image:linear-gradient(180deg,#000 0%,#000 58%,rgba(0,0,0,0) 100%);
+  mask-image:linear-gradient(180deg,#000 0%,#000 58%,rgba(0,0,0,0) 100%)}
+.ap-hero-copy{position:absolute;left:0;top:462px;width:1920px;text-align:center;color:#FFFFFF}
+.ap-hero-h1{font-size:64px;font-weight:600;letter-spacing:-.022em;line-height:1.05}
+.ap-hero-sub{margin-top:22px;font-size:30px;font-weight:400;letter-spacing:-.01em;line-height:1.34}
+.ap-pill-light{display:inline-block;margin-top:32px;padding:15px 34px;border-radius:100px;
+  background:#FFFFFF;color:#1D1D1F;font-size:23px;font-weight:400;letter-spacing:-.01em}
+
+/* seção de produto */
+.ap-sec{position:relative;height:940px;text-align:center;padding-top:74px;background:var(--surface)}
+.ap-sec--white{background:#FFFFFF}
+.ap-h1{font-size:82px;font-weight:600;letter-spacing:-.028em;line-height:1.02;color:var(--text)}
+.ap-sub{margin-top:22px;font-size:38px;font-weight:400;letter-spacing:-.014em;color:var(--text)}
+.ap-ter{margin-top:14px;font-size:24px;font-weight:400;letter-spacing:-.008em;color:var(--muted)}
+.ap-ctas{margin-top:34px;display:flex;justify-content:center;gap:22px}
+.ap-cta{padding:14px 34px;border-radius:100px;font-size:23px;font-weight:400;letter-spacing:-.01em;
+  border:1.5px solid var(--apple-blue);line-height:1.2}
+.ap-cta--fill{background:var(--apple-blue);color:#FFFFFF}
+.ap-cta--ghost{background:transparent;color:var(--apple-blue)}
+.ap-shot-w{position:absolute;left:0;right:0;margin:0 auto;display:block}
+.ap-shot{display:block;width:100%;height:100%;object-fit:contain}
+
+/* camadas anotáveis — o F05 as separa no eixo Z */
+.lay{position:relative}
+.ap-shot-w.lay{position:absolute}
+.lay-tag{position:absolute;left:100%;top:50%;margin-left:34px;display:flex;align-items:center;
+  gap:12px;opacity:0;white-space:nowrap;transform:translateY(-50%)}
+.lay-line{display:block;width:76px;height:1px;background:var(--kro)}
+.lay-tag .kro-label{position:static;color:#0A6E80}
+.lay-tag .lay-line{background:#0A6E80}
+.lay-grid{position:absolute;left:0;top:0;right:0;bottom:0;opacity:0;pointer-events:none}
+.lay-mesh{position:absolute;left:150px;right:150px;top:40px;bottom:40px;display:block;
+  background-image:linear-gradient(to right,rgba(6,182,212,.55) 1px,transparent 1px),
+                   linear-gradient(to bottom,rgba(6,182,212,.55) 1px,transparent 1px);
+  background-size:120px 96px;border:1px solid rgba(6,182,212,.55)}
+.lay-grid .lay-tag{left:auto;right:100%;margin-left:0;margin-right:26px;top:52px;flex-direction:row-reverse}
+.sel-h1{position:absolute;left:-24px;right:-24px;top:-12px;bottom:-8px;opacity:0}
+.ap-h1-t{display:inline-block}
+.ap-ctas-in{display:inline-flex;gap:22px;align-items:center}
+.ap-cta{display:inline-block}
+.d3{transform-style:preserve-3d}
+.stage--3d{perspective:1600px}
+
+/* grade de meios-tiles */
+.ap-row{position:relative;height:820px;display:flex;gap:14px;background:#FFFFFF}
+.ap-tile{position:relative;flex:1;overflow:hidden;text-align:center;padding-top:52px;background:var(--surface)}
+.ap-tile--sky{background:linear-gradient(180deg,#DCEAF6 0%,#EEF5FA 100%)}
+.ap-tile--ice{background:linear-gradient(180deg,#BFDFF2 0%,#DCEFF8 100%)}
+.ap-tile--white{background:#FFFFFF}
+.ap-t-h1{font-size:58px;font-weight:600;letter-spacing:-.026em;line-height:1.04}
+.ap-t-sub{margin-top:14px;font-size:27px;font-weight:400;letter-spacing:-.012em}
+.ap-t-ctas{margin-top:22px;display:flex;justify-content:center;gap:16px}
+.ap-t-cta{padding:10px 24px;border-radius:100px;font-size:19px;border:1.5px solid var(--apple-blue);line-height:1.2}
+
+/* variante compacta: só nav + a seção Mac mini — o objeto que o sistema testa */
+.ap--compact .ap-hero,
+.ap--compact .ap-sec--studio,
+.ap--compact .ap-row{display:none}
+
+/* ═══ page-card: a página como objeto manipulável pelo sistema ══════════ */
+.pcard{position:absolute;left:0;top:0;width:1200px;height:625px;overflow:hidden;
+  background:#FFFFFF;transform-origin:0 0}
+.pcard--open{overflow:visible;transform-style:preserve-3d}
+.pcard--open .ap,.pcard--open .ap-sec{transform-style:preserve-3d}
+.pcard .ap{transform:scale(.625);transform-origin:0 0}
+.pcard-edge{position:absolute;inset:0;border:1px solid rgba(0,0,0,.10);pointer-events:none}
+.pcard-ring{position:absolute;inset:-1px;border:2px solid var(--kro);opacity:0;pointer-events:none}
+
+/* ═══ REGISTRO B — o sistema KRO ════════════════════════════════════════ */
+
+.kro-mark{position:absolute;font-family:"Inter";font-size:20px;font-weight:400;
+  letter-spacing:.01em;color:var(--kro)}
+.kro-grid{position:absolute;inset:0;pointer-events:none;
+  background-image:linear-gradient(to right,rgba(6,182,212,.075) 1px,transparent 1px),
+                   linear-gradient(to bottom,rgba(6,182,212,.075) 1px,transparent 1px);
+  background-size:96px 96px}
+.kro-label{position:absolute;font-family:"JetBrains Mono";font-size:16px;font-weight:500;
+  letter-spacing:.1em;text-transform:uppercase;color:var(--kro);white-space:nowrap}
+.kro-metric{position:absolute;font-family:"Inter";font-weight:600;color:#FFFFFF;
+  font-variant-numeric:tabular-nums;font-feature-settings:"tnum" 1;letter-spacing:-.02em;white-space:nowrap}
+.kro-cap{position:absolute;font-family:"JetBrains Mono";font-size:11px;font-weight:400;
+  letter-spacing:.06em;color:var(--muted);white-space:nowrap}
+.kro-dot{position:absolute;left:0;top:0;width:7px;height:7px;border-radius:50%;background:var(--kro)}
+/* campo de sessões: padrão CSS, não DOM — escala infinitamente no recuo do F10 */
+.field{position:absolute;left:-13040px;top:-7460px;width:28000px;height:16000px;opacity:0;
+  background-image:radial-gradient(circle,rgba(6,182,212,.80) 11px,transparent 13px);
+  background-size:152px 152px}
+/* a troca de palavra do F13: o verbo tem linha propria, entao a substituicao
+   nao reflui nada e nao depende de medir largura de fonte em runtime */
+.swapline{display:block;position:relative;height:76px;overflow:hidden}
+.swapline > span{position:absolute;left:0;top:0;width:100%;display:block;text-align:center;white-space:nowrap}
+.msg > span{display:block}
+.chain{position:absolute;inset:0}
+.ar{position:absolute;display:block}
+.diag{position:absolute;inset:0}
+.ln{position:absolute;display:block}
+.branch{position:absolute;left:0;top:0}
+.wash{position:absolute;inset:0;background:#FFFFFF;opacity:0}
+.chain-item i{font-style:normal;font-weight:700}
+.kro-hair{position:absolute;background:var(--kro)}
+.kro-box{position:absolute;border:1px solid var(--kro);pointer-events:none}
+
+/* cursor do sistema — fino, ciano, sem sombra */
+.kro-cursor{position:absolute;width:22px;height:30px}
+
+/* ═══ tipografia cinematográfica (as mensagens) ═════════════════════════ */
+.msg{position:absolute;left:0;width:1920px;text-align:center;color:#FFFFFF;
+  letter-spacing:-.024em;line-height:1.12;font-weight:600}
+.msg--dark{color:var(--text)}
+.msg-xl{font-size:82px}
+.msg-lg{font-size:66px}
+.msg-md{font-size:54px}
+.msg-sm{font-size:40px}
+.msg-thin{font-weight:400}
+.dark{position:absolute;inset:0;background:var(--stage);opacity:0}
+.msg b{font-weight:700}
+.lb{position:absolute}
+.veil{position:absolute;inset:0;opacity:0;
+  background:linear-gradient(180deg,rgba(0,0,0,.60) 0%,rgba(0,0,0,.34) 22%,rgba(0,0,0,0) 40%)}
+.veil--full{background:#000}
+.veil--low{background:linear-gradient(0deg,rgba(0,0,0,.58) 0%,rgba(0,0,0,.32) 24%,rgba(0,0,0,0) 42%)}
+.msg-mask{overflow:hidden}
+.msg-mask > span{display:block}
+
+/* cadeia de escala (F11) */
+.chain-item{position:absolute;left:0;width:1920px;text-align:center;color:#FFFFFF;
+  font-size:44px;font-weight:500;letter-spacing:-.02em}
+.chain-item--kro{color:var(--kro);font-family:"JetBrains Mono";font-size:40px;font-weight:500}
+
+/* diagrama de disciplinas (F12) */
+.disc{position:absolute;font-family:"JetBrains Mono";font-size:15px;font-weight:500;
+  letter-spacing:.12em;text-transform:uppercase;color:var(--kro);white-space:nowrap}
+.hyp{position:absolute;padding:9px 18px;border:1px solid rgba(255,255,255,.34);
+  font-size:17px;font-weight:400;color:rgba(255,255,255,.9);white-space:nowrap;letter-spacing:-.01em}
+
+/* end card */
+.end-logo{position:absolute;display:block}

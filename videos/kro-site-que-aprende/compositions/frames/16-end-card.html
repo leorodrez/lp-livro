@@ -1,0 +1,348 @@
+<template>
+  <style>
+    /* ── Fontes self-hosted (copiadas de frame.md) ─────────────────────────── */
+    @font-face{font-family:"Manrope";font-weight:400;font-style:normal;font-display:block;src:url("assets/fonts/Manrope-400.woff2") format("woff2");}
+    @font-face{font-family:"Manrope";font-weight:500;font-style:normal;font-display:block;src:url("assets/fonts/Manrope-500.woff2") format("woff2");}
+    @font-face{font-family:"Manrope";font-weight:600;font-style:normal;font-display:block;src:url("assets/fonts/Manrope-600.woff2") format("woff2");}
+    @font-face{font-family:"Manrope";font-weight:700;font-style:normal;font-display:block;src:url("assets/fonts/Manrope-700.woff2") format("woff2");}
+    @font-face{font-family:"Manrope";font-weight:800;font-style:normal;font-display:block;src:url("assets/fonts/Manrope-800.woff2") format("woff2");}
+    @font-face{font-family:"Sora";font-weight:400;font-style:normal;font-display:block;src:url("assets/fonts/Sora-400.woff2") format("woff2");}
+    @font-face{font-family:"Sora";font-weight:600;font-style:normal;font-display:block;src:url("assets/fonts/Sora-600.woff2") format("woff2");}
+    @font-face{font-family:"Sora";font-weight:700;font-style:normal;font-display:block;src:url("assets/fonts/Sora-700.woff2") format("woff2");}
+    @font-face{font-family:"Sora";font-weight:800;font-style:normal;font-display:block;src:url("assets/fonts/Sora-800.woff2") format("woff2");}
+
+    /* ── Raiz (estilizada por #root, nunca por classe) ─────────────────────── */
+    #root {
+      position: absolute;
+      inset: 0;
+      width: 1080px;
+      height: 1920px;
+      overflow: hidden;
+      font-family: "Sora", sans-serif;
+      -webkit-font-smoothing: antialiased;
+      text-rendering: geometricPrecision;
+    }
+
+    /* ── Nível 1 — chão atmosférico charcoal + queda radial (luz cima-esq.) ── */
+    #f16-end-card-ground {
+      position: absolute;
+      inset: 0;
+      display: block;
+      background-color: #2b2b2b;
+      background-image:
+        radial-gradient(1180px 1020px at 16% 10%, rgba(255, 255, 255, 0.075) 0%, rgba(255, 255, 255, 0) 64%),
+        radial-gradient(900px 820px at 50% 78%, rgba(124, 58, 237, 0.07) 0%, rgba(124, 58, 237, 0) 70%),
+        radial-gradient(1500px 1500px at 50% 46%, #343434 0%, #2b2b2b 46%, #1e1e1e 100%);
+    }
+
+    /* ── Nível 1 — grain SVG fractalNoise estático (0.035) ─────────────────── */
+    #f16-end-card-grain {
+      position: absolute;
+      inset: 0;
+      display: block;
+      width: 1080px;
+      height: 1920px;
+      opacity: 0.035;
+      pointer-events: none;
+    }
+
+    /* ── Nível 2 — sistema / objeto narrativo dentro da perspectiva ───────── */
+    #f16-end-card-stage {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      perspective: 2400px;
+      transform-style: preserve-3d;
+    }
+    #f16-end-card-logo {
+      display: block;
+      width: 520px;
+      height: auto;
+      transform-style: preserve-3d;
+      will-change: transform, width;
+    }
+
+    /* ── Nível 3 — tipografia hero, plana no plano da câmera ──────────────── */
+    #f16-end-card-line1,
+    #f16-end-card-line2 {
+      position: absolute;
+      inset: 0;
+      display: block;
+    }
+    #f16-end-card-line1-block {
+      position: absolute;
+      left: 0;
+      top: 813px;
+      width: 1080px;
+    }
+    #f16-end-card-line2-block {
+      position: absolute;
+      left: 0;
+      top: 755px;
+      width: 1080px;
+    }
+    .f16-end-card-wipe {
+      /* a máscara: padding + margem negativa dão folga para ascendentes e
+         descendentes sem alterar o passo da linha */
+      display: block;
+      padding: 16px 0;
+      margin: -16px 0;
+      clip-path: inset(0% 0% 0% 0%);
+    }
+    .f16-end-card-row {
+      display: block;
+      width: 1080px;
+      text-align: center;
+      white-space: nowrap;
+      color: #ffffff;
+    }
+    #f16-end-card-line1-block .f16-end-card-row {
+      font-family: "Sora", sans-serif;
+      font-size: 56px;
+      font-weight: 600;
+      line-height: 67px;
+      letter-spacing: -0.018em;
+    }
+    #f16-end-card-line2-block .f16-end-card-row {
+      font-family: "Sora", sans-serif;
+      font-size: 76px;
+      font-weight: 700;
+      line-height: 83px;
+      letter-spacing: -0.025em;
+    }
+
+    /* ── Ênfase cromática: cópias empilhadas pixel-idênticas ──────────────── */
+    .f16-end-card-em {
+      display: inline-grid;
+      vertical-align: baseline;
+    }
+    .f16-end-card-em > span {
+      grid-area: 1 / 1;
+    }
+    .f16-end-card-em-white {
+      color: #ffffff;
+    }
+    .f16-end-card-em-grad {
+      background-image: linear-gradient(
+        100deg,
+        #7c3aed 0%,
+        #7c3aed 34%,
+        #a78bfa 50%,
+        #7c3aed 66%,
+        #7c3aed 100%
+      );
+      background-size: 300% 100%;
+      background-position: 100% 50%;
+      background-repeat: no-repeat;
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      opacity: 0;
+    }
+  </style>
+
+  <div id="root" data-composition-id="16-end-card" data-width="1080" data-height="1920">
+    <!-- Nível 1 — chão -->
+    <div
+      id="f16-end-card-ground"
+      class="clip"
+      data-start="0"
+      data-duration="9"
+      data-track-index="0"
+    ></div>
+
+    <!-- Nível 1 — grain estático -->
+    <svg
+      id="f16-end-card-grain"
+      class="clip"
+      data-start="0"
+      data-duration="9"
+      data-track-index="1"
+      viewBox="0 0 1080 1920"
+      preserveAspectRatio="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <filter id="f16-end-card-grain-filter" x="0" y="0" width="100%" height="100%">
+        <feTurbulence
+          type="fractalNoise"
+          baseFrequency="0.85"
+          numOctaves="3"
+          stitchTiles="stitch"
+          seed="11"
+        />
+        <feColorMatrix type="saturate" values="0" />
+      </filter>
+      <rect width="1080" height="1920" filter="url(#f16-end-card-grain-filter)" />
+    </svg>
+
+    <!-- Nível 2 — o lockup kro ai_ cede o palco e fica na posição secundária -->
+    <div
+      id="f16-end-card-stage"
+      class="clip"
+      data-start="0"
+      data-duration="9"
+      data-track-index="2"
+    >
+      <img id="f16-end-card-logo" src="assets/kro-logo-light.png" alt="kro ai_" />
+    </div>
+
+    <!-- Nível 3 — frase 1 -->
+    <div
+      id="f16-end-card-line1"
+      class="clip"
+      data-start="0"
+      data-duration="9"
+      data-track-index="3"
+    >
+      <div id="f16-end-card-line1-block">
+        <div class="f16-end-card-wipe">
+          <div class="f16-end-card-row">Não escolha o que seu</div>
+        </div>
+        <div class="f16-end-card-wipe">
+          <div class="f16-end-card-row">site deve dizer.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Nível 3 — frase 2 (a mensagem hero) -->
+    <div
+      id="f16-end-card-line2"
+      class="clip"
+      data-start="0"
+      data-duration="9"
+      data-track-index="4"
+    >
+      <div id="f16-end-card-line2-block">
+        <div class="f16-end-card-wipe">
+          <div class="f16-end-card-row">
+            Deixe
+            <span class="f16-end-card-em">
+              <span class="f16-end-card-em-white" data-layout-allow-occlusion>seus clientes</span>
+              <span
+                class="f16-end-card-em-grad"
+                id="f16-end-card-em-grad"
+                data-layout-allow-occlusion
+                >seus clientes</span
+              >
+            </span>
+          </div>
+        </div>
+        <div class="f16-end-card-wipe">
+          <div class="f16-end-card-row">fazerem isso</div>
+        </div>
+        <div class="f16-end-card-wipe">
+          <div class="f16-end-card-row">por você.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      var ID = "16-end-card";
+      var scope = document.querySelector('[data-composition-id="' + ID + '"]') || document;
+      var sel = function (s) {
+        return Array.prototype.slice.call(scope.querySelectorAll(s));
+      };
+      var one = function (s) {
+        return scope.querySelector(s);
+      };
+
+      var logo = one("#f16-end-card-logo");
+      var line1 = one("#f16-end-card-line1");
+      var line2 = one("#f16-end-card-line2");
+      var l1rows = sel("#f16-end-card-line1-block .f16-end-card-wipe");
+      var l2rows = sel("#f16-end-card-line2-block .f16-end-card-wipe");
+      var emWhite = one(".f16-end-card-em-white");
+      var emGrad = one("#f16-end-card-em-grad");
+
+      var HIDDEN = "inset(100% 0% 0% 0%)";
+      var SHOWN = "inset(0% 0% 0% 0%)";
+
+      window.__timelines = window.__timelines || {};
+      var tl = gsap.timeline({ paused: true });
+
+      /* ── Cena A (0.00–0.70s) — o logo cede o palco ──────────────────────────
+         handoff_in: x 0, y -60px, largura 520px, opacity 1, parado.
+         Desce para a posição secundária (y +520px, 300px) em 700ms e fica
+         visível, imóvel, até o último frame. Centragem é por flex (sem
+         transform em CSS), então o tween só toca y + width.                  */
+      tl.fromTo(
+        logo,
+        { y: -60, width: 520, opacity: 1 },
+        { y: 520, width: 300, opacity: 1, duration: 0.7, ease: "power2.inOut" },
+        0,
+      );
+
+      /* ── Cena B (0.50–3.95s) — "Não escolha o que seu site deve dizer." ─────
+         Revelação simples por máscara: wipe vertical de baixo, 560ms.
+         Depois da entrada (t≈1.12s) a composição fica absolutamente estável
+         por 2.83s de leitura — read_budget 2.7s + hold 0.8s.                 */
+      l1rows.forEach(function (el, i) {
+        tl.fromTo(
+          el,
+          { clipPath: HIDDEN },
+          { clipPath: SHOWN, duration: 0.56, ease: "power3.out" },
+          0.5 + i * 0.06,
+        );
+      });
+
+      /* ── Cena C (3.95–6.27s) — "Deixe seus clientes fazerem isso por você."
+         A primeira linha sai por fade de 300ms; a hero entra no mesmo bloco
+         com uma única entrada de 520ms (máscara + subida de 20px).           */
+      tl.fromTo(
+        line1,
+        { opacity: 1 },
+        { opacity: 0, duration: 0.3, ease: "power1.in" },
+        3.95,
+      );
+
+      tl.fromTo(line2, { y: 20 }, { y: 0, duration: 0.52, ease: "power3.out" }, 4.25);
+      l2rows.forEach(function (el, i) {
+        tl.fromTo(
+          el,
+          { clipPath: HIDDEN },
+          { clipPath: SHOWN, duration: 0.52, ease: "power3.out" },
+          4.25 + i * 0.05,
+        );
+      });
+
+      /* "seus clientes" — o fragmento central da mensagem. A cor assenta
+         240ms DEPOIS de a linha já estar legível em branco (t 4.87 → 5.11),
+         por cross-fade de cópias pixel-idênticas; nunca glow, nunca fundo. */
+      tl.fromTo(
+        emWhite,
+        { opacity: 1 },
+        { opacity: 0, duration: 0.26, ease: "power1.inOut" },
+        5.11,
+      );
+      tl.fromTo(
+        emGrad,
+        { opacity: 0 },
+        { opacity: 1, duration: 0.26, ease: "power1.inOut" },
+        5.11,
+      );
+
+      /* gradient-text-sweep — uma única passada de 900ms dentro das letras
+         (purple → purple claro → purple, pontas iguais = sem costura).
+         background-size 300% e ease "none" são obrigatórios; termina em
+         5.37+0.90 = 6.27s e nunca se repete.                                */
+      tl.fromTo(
+        emGrad,
+        { backgroundPosition: "100% 50%" },
+        { backgroundPosition: "0% 50%", duration: 0.9, ease: "none" },
+        5.37,
+      );
+
+      /* ── Cena D (6.27–9.00s) — o repouso ───────────────────────────────────
+         Zero tweens ativos daqui até o fim: a mensagem final, o lockup
+         secundário e o campo charcoal ficam completamente imóveis por 2.73s
+         (> os 2.6s exigidos) para leitura e retenção. Nenhum exit: este é o
+         último frame do filme e ele termina parado.                          */
+
+      window.__timelines[ID] = tl;
+    })();
+  </script>
+</template>

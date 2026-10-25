@@ -1,0 +1,642 @@
+<template>
+  <style>
+    /* ---- fonts: copied verbatim from frame.md (self-hosted, project-root relative) ---- */
+    @font-face{font-family:"Manrope";font-weight:400;font-style:normal;font-display:block;src:url("assets/fonts/Manrope-400.woff2") format("woff2");}
+    @font-face{font-family:"Manrope";font-weight:500;font-style:normal;font-display:block;src:url("assets/fonts/Manrope-500.woff2") format("woff2");}
+    @font-face{font-family:"Manrope";font-weight:600;font-style:normal;font-display:block;src:url("assets/fonts/Manrope-600.woff2") format("woff2");}
+    @font-face{font-family:"Manrope";font-weight:700;font-style:normal;font-display:block;src:url("assets/fonts/Manrope-700.woff2") format("woff2");}
+    @font-face{font-family:"Manrope";font-weight:800;font-style:normal;font-display:block;src:url("assets/fonts/Manrope-800.woff2") format("woff2");}
+    @font-face{font-family:"Sora";font-weight:400;font-style:normal;font-display:block;src:url("assets/fonts/Sora-400.woff2") format("woff2");}
+    @font-face{font-family:"Sora";font-weight:600;font-style:normal;font-display:block;src:url("assets/fonts/Sora-600.woff2") format("woff2");}
+    @font-face{font-family:"Sora";font-weight:700;font-style:normal;font-display:block;src:url("assets/fonts/Sora-700.woff2") format("woff2");}
+    @font-face{font-family:"Sora";font-weight:800;font-style:normal;font-display:block;src:url("assets/fonts/Sora-800.woff2") format("woff2");}
+
+    /* ---- frame root: styled by #root, NEVER by a class on the composition element ---- */
+    #root {
+      position: relative;
+      width: 1080px;
+      height: 1920px;
+      overflow: hidden;
+      /* no background here on purpose: the full-bleed ground rides on a .clip layer */
+      --f01-ground: #2B2B2B;
+      --f01-ground-deep: #1E1E1E;
+      --f01-ground-lift: #343434;
+      --f01-text: #FFFFFF;
+      --f01-text-light: rgba(255,255,255,0.38);
+      --f01-brand-soft: rgba(124,58,237,0.16);
+      --f01-primary: #06B6D4;
+      --f01-accent-medium: rgba(6,182,212,0.16);
+      --f01-card-bg: rgba(255,255,255,0.04);
+      --f01-card-border: rgba(255,255,255,0.10);
+      --f01-sand: #D8C0A7;
+      --f01-surface: #F4F2EE;
+      --f01-surface-ink: #2B2B2B;
+      --f01-surface-line: rgba(43,43,43,0.10);
+    }
+    #root * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    /* =========================================================
+       LEVEL 1 — atmosphere: charcoal ground, directional radial
+       falloff from the upper left, static fractalNoise grain.
+       ========================================================= */
+    .f01-ground {
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(1180px 1360px at 14% 9%, #3A3A3A 0%, var(--f01-ground-lift) 26%, var(--f01-ground) 54%, var(--f01-ground-deep) 100%);
+    }
+    .f01-ground-light {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(148deg, rgba(255,255,255,0.055) 0%, rgba(255,255,255,0.012) 34%, rgba(0,0,0,0.00) 62%, rgba(0,0,0,0.22) 100%);
+    }
+    .f01-grain {
+      position: absolute;
+      inset: 0;
+      width: 1080px;
+      height: 1920px;
+      opacity: 0.032;
+      mix-blend-mode: overlay;
+    }
+
+    /* =========================================================
+       LEVEL 2 — the system: UI objects inside a 3D perspective.
+       .f01-stage is the "scene" of viewport-change (overflow +
+       background rules live here, never on the world wrapper).
+       ========================================================= */
+    .f01-stage {
+      position: absolute;
+      inset: 0;
+      overflow: hidden;
+      perspective: 2400px;
+      perspective-origin: 42% 38%;
+    }
+    #f01-world {
+      position: absolute;
+      inset: 0;
+      transform-origin: 50% 50%;
+      transform-style: preserve-3d;
+      will-change: transform;
+    }
+    .f01-l2 { position: absolute; transform-style: preserve-3d; }
+    .f01-blur { position: absolute; inset: 0; filter: blur(6px); }
+
+    /* --- landing-mock: the static object. NOT ONE ANIMATED PROPERTY. --- */
+    .f01-mock {
+      left: 265px; top: 420px; width: 470px; height: 540px;
+      transform: rotateY(-2.5deg) rotateX(1.2deg) translateZ(30px);
+    }
+    .f01-mock-body {
+      position: absolute; inset: 0;
+      background: var(--f01-surface);
+      border-radius: 20px;
+      box-shadow: 0 30px 80px rgba(0,0,0,0.45);
+      overflow: hidden;
+    }
+    .f01-mock-reflect {
+      position: absolute; left: 0; right: 0; top: 0; height: 120px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.55), rgba(255,255,255,0));
+    }
+    .f01-mock-chrome {
+      position: absolute; left: 26px; top: 24px;
+      display: flex; gap: 9px;
+    }
+    .f01-mock-chrome i { display: block; width: 11px; height: 11px; border-radius: 50%; background: rgba(43,43,43,0.16); }
+    .f01-mock-rule { position: absolute; left: 0; right: 0; top: 62px; height: 1px; background: var(--f01-surface-line); }
+    .f01-mock-stack { position: absolute; left: 36px; right: 36px; top: 112px; }
+    /* headline / body are abstract typographic placeholders — never invented copy */
+    .f01-mock-h { height: 26px; border-radius: 6px; background: rgba(43,43,43,0.82); }
+    .f01-mock-h.two { margin-top: 16px; width: 58%; }
+    .f01-mock-b { height: 9px; border-radius: 6px; background: rgba(43,43,43,0.22); }
+    .f01-mock-b.one { margin-top: 34px; width: 88%; }
+    .f01-mock-b.two { margin-top: 14px; width: 66%; }
+    .f01-mock-hero {
+      margin-top: 32px; height: 148px; border-radius: 14px;
+      background: linear-gradient(140deg, rgba(43,43,43,0.09), rgba(43,43,43,0.03));
+      border: 1px solid var(--f01-surface-line);
+    }
+    .f01-mock-cta {
+      margin-top: 30px; width: 192px; height: 52px; border-radius: 100px;
+      background: var(--f01-surface-ink);
+      display: flex; align-items: center; justify-content: center;
+    }
+    .f01-mock-cta span { display: block; width: 92px; height: 8px; border-radius: 6px; background: rgba(244,242,238,0.86); }
+    /* one single version pip — this page has exactly one version, forever */
+    .f01-mock-pips { position: absolute; left: 36px; bottom: 26px; display: flex; gap: 8px; }
+    .f01-mock-pips i { display: block; width: 7px; height: 7px; border-radius: 50%; background: rgba(43,43,43,0.34); }
+
+    /* --- ad-card: the moving system. Swaps VERSION, not identity. --- */
+    .f01-ad { width: 300px; height: 160px; }
+    .f01-ad-body {
+      position: absolute; inset: 0;
+      background: var(--f01-ground-lift);
+      border: 1px solid var(--f01-card-border);
+      border-radius: 16px;
+      overflow: hidden;
+    }
+    .f01-ad-body::after {
+      content: ""; position: absolute; left: 0; right: 0; top: 0; height: 34px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.075), rgba(255,255,255,0));
+    }
+    .f01-ver { position: absolute; inset: 16px; opacity: 0; }
+    .f01-ver-img { height: 74px; border-radius: 12px; }
+    .f01-ver-bar { height: 8px; border-radius: 6px; background: rgba(255,255,255,0.22); }
+    .f01-ver-bar.one { margin-top: 15px; }
+    .f01-ver-bar.two { margin-top: 10px; background: rgba(255,255,255,0.13); }
+    .f01-ver-pips { position: absolute; right: 0; bottom: 0; display: flex; gap: 6px; }
+    .f01-ver-pips i { display: block; width: 6px; height: 6px; border-radius: 50%; background: rgba(255,255,255,0.16); }
+    .f01-ver-pips i.on { background: var(--f01-primary); }
+
+    /* --- metric-readout: CPC / LEADS. Demonstrative product-UI values. --- */
+    .f01-metric { width: 230px; height: 150px; }
+    .f01-metric-body {
+      position: absolute; inset: 0;
+      background: var(--f01-card-bg);
+      border: 1px solid var(--f01-card-border);
+      border-radius: 12px;
+      padding: 20px 22px;
+    }
+    .f01-metric-label {
+      font-family: "Manrope", sans-serif; font-weight: 600; font-size: 19px;
+      letter-spacing: 0.14em; text-transform: uppercase; color: var(--f01-text-light);
+    }
+    .f01-metric-value {
+      margin-top: 12px;
+      font-family: "Sora", sans-serif; font-weight: 700; font-size: 54px; line-height: 1;
+      color: var(--f01-primary);
+    }
+    .f01-metric-track {
+      position: absolute; left: 22px; right: 22px; bottom: 20px; height: 6px;
+      border-radius: 6px; background: rgba(6,182,212,0.08);
+      overflow: hidden;
+    }
+    .f01-metric-fill { display: block; height: 6px; border-radius: 6px; background: var(--f01-primary); }
+
+    /* --- ad-card-hero: the foreground card that delivers the cut --- */
+    #f01-hero-sweep { position: absolute; left: 390px; top: 880px; width: 300px; height: 160px; z-index: 30; transform-style: preserve-3d; }
+    .f01-hero-rot { position: absolute; inset: 0; transform: rotateY(-9deg) translateZ(70px); transform-style: preserve-3d; }
+    #f01-hero-trail {
+      position: absolute; left: 10px; top: 20px; width: 300px; height: 120px;
+      border-radius: 16px;
+      background: linear-gradient(90deg, rgba(216,192,167,0.30) 0%, rgba(124,58,237,0.12) 42%, rgba(52,52,52,0) 100%);
+      filter: blur(18px);
+      transform-origin: 0% 50%;
+      opacity: 0;
+    }
+
+    /* =========================================================
+       LEVEL 3 — hero typography. Flat in the camera plane:
+       outside #f01-world, no perspective, no blur, ever.
+       ========================================================= */
+    .f01-type {
+      position: absolute;
+      left: 88px; top: 980px; width: 832px;
+      z-index: 50;
+    }
+    .f01-mask { overflow: hidden; }
+    .f01-line {
+      display: block;
+      white-space: nowrap;
+      color: var(--f01-text);
+      font-family: "Sora", sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+    .f01-p1 .f01-line { font-size: 56px; font-weight: 600; line-height: 1.26; letter-spacing: -0.018em; }
+    .f01-p2 { margin-top: 30px; }
+    .f01-p3 { margin-top: 6px; }
+    .f01-p2 .f01-line,
+    .f01-p3 .f01-line { font-size: 72px; font-weight: 700; line-height: 1.2; letter-spacing: -0.028em; }
+    .f01-em { color: #FFFFFF; }
+  </style>
+
+  <div
+    id="root"
+    data-composition-id="01-site-estatico"
+    data-start="0"
+    data-duration="6"
+    data-width="1080"
+    data-height="1920"
+  >
+    <!-- ===== LEVEL 1 — atmosphere (full-bleed ground on a clip layer) ===== -->
+    <div class="f01-ground clip" data-start="0" data-duration="6" data-track-index="0">
+      <div class="f01-ground-light"></div>
+      <svg class="f01-grain" viewBox="0 0 1080 1920" preserveAspectRatio="none" aria-hidden="true">
+        <filter id="f01-grain-filter" x="0" y="0" width="100%" height="100%">
+          <feTurbulence type="fractalNoise" baseFrequency="0.86" numOctaves="4" seed="17" stitchTiles="stitch" />
+        </filter>
+        <rect x="0" y="0" width="1080" height="1920" filter="url(#f01-grain-filter)"></rect>
+      </svg>
+    </div>
+
+    <!-- ===== LEVEL 2 — the system, inside the virtual camera ===== -->
+    <div class="f01-stage clip" data-start="0" data-duration="6" data-track-index="1">
+      <div id="f01-world">
+
+        <!-- landing-mock — in focus, and completely immobile -->
+        <div class="f01-l2 f01-mock">
+          <div class="f01-mock-body">
+            <div class="f01-mock-reflect"></div>
+            <div class="f01-mock-chrome"><i></i><i></i><i></i></div>
+            <div class="f01-mock-rule"></div>
+            <div class="f01-mock-stack">
+              <div class="f01-mock-h"></div>
+              <div class="f01-mock-h two"></div>
+              <div class="f01-mock-b one"></div>
+              <div class="f01-mock-b two"></div>
+              <div class="f01-mock-hero"></div>
+              <div class="f01-mock-cta"><span></span></div>
+            </div>
+            <div class="f01-mock-pips"><i></i></div>
+          </div>
+        </div>
+
+        <!-- ad-card 1 — upper left -->
+        <div class="f01-l2 f01-ad" style="left:-35px; top:240px; transform: rotateY(17deg) translateZ(-60px);">
+          <div class="f01-blur">
+            <div class="f01-ad-body">
+              <div class="f01-ver" id="f01-ad1-v1">
+                <div class="f01-ver-img" style="background: rgba(255,255,255,0.09);"></div>
+                <div class="f01-ver-bar one" style="width:86%"></div>
+                <div class="f01-ver-bar two" style="width:54%"></div>
+                <div class="f01-ver-pips"><i class="on"></i><i></i><i></i></div>
+              </div>
+              <div class="f01-ver" id="f01-ad1-v2">
+                <div class="f01-ver-img" style="background: var(--f01-accent-medium);"></div>
+                <div class="f01-ver-bar one" style="width:64%"></div>
+                <div class="f01-ver-bar two" style="width:78%"></div>
+                <div class="f01-ver-pips"><i></i><i class="on"></i><i></i></div>
+              </div>
+              <div class="f01-ver" id="f01-ad1-v3">
+                <div class="f01-ver-img" style="background: var(--f01-brand-soft);"></div>
+                <div class="f01-ver-bar one" style="width:92%"></div>
+                <div class="f01-ver-bar two" style="width:41%"></div>
+                <div class="f01-ver-pips"><i></i><i></i><i class="on"></i></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ad-card 2 — upper right -->
+        <div class="f01-l2 f01-ad" style="left:805px; top:220px; transform: rotateY(-18deg) translateZ(-80px);">
+          <div class="f01-blur">
+            <div class="f01-ad-body">
+              <div class="f01-ver" id="f01-ad2-v1">
+                <div class="f01-ver-img" style="background: rgba(255,255,255,0.10);"></div>
+                <div class="f01-ver-bar one" style="width:72%"></div>
+                <div class="f01-ver-bar two" style="width:48%"></div>
+                <div class="f01-ver-pips"><i class="on"></i><i></i><i></i></div>
+              </div>
+              <div class="f01-ver" id="f01-ad2-v2">
+                <div class="f01-ver-img" style="background: var(--f01-brand-soft);"></div>
+                <div class="f01-ver-bar one" style="width:91%"></div>
+                <div class="f01-ver-bar two" style="width:63%"></div>
+                <div class="f01-ver-pips"><i></i><i class="on"></i><i></i></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ad-card 3 — mid left -->
+        <div class="f01-l2 f01-ad" style="left:-60px; top:620px; transform: rotateY(21deg) translateZ(-40px);">
+          <div class="f01-blur">
+            <div class="f01-ad-body">
+              <div class="f01-ver" id="f01-ad3-v1">
+                <div class="f01-ver-img" style="background: rgba(255,255,255,0.08);"></div>
+                <div class="f01-ver-bar one" style="width:58%"></div>
+                <div class="f01-ver-bar two" style="width:81%"></div>
+                <div class="f01-ver-pips"><i class="on"></i><i></i><i></i></div>
+              </div>
+              <div class="f01-ver" id="f01-ad3-v2">
+                <div class="f01-ver-img" style="background: var(--f01-accent-medium);"></div>
+                <div class="f01-ver-bar one" style="width:88%"></div>
+                <div class="f01-ver-bar two" style="width:44%"></div>
+                <div class="f01-ver-pips"><i></i><i class="on"></i><i></i></div>
+              </div>
+              <div class="f01-ver" id="f01-ad3-v3">
+                <div class="f01-ver-img" style="background: rgba(216,192,167,0.14);"></div>
+                <div class="f01-ver-bar one" style="width:69%"></div>
+                <div class="f01-ver-bar two" style="width:87%"></div>
+                <div class="f01-ver-pips"><i></i><i></i><i class="on"></i></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ad-card 4 — mid right -->
+        <div class="f01-l2 f01-ad" style="left:825px; top:580px; transform: rotateY(-22deg) translateZ(-50px);">
+          <div class="f01-blur">
+            <div class="f01-ad-body">
+              <div class="f01-ver" id="f01-ad4-v1">
+                <div class="f01-ver-img" style="background: rgba(255,255,255,0.11);"></div>
+                <div class="f01-ver-bar one" style="width:80%"></div>
+                <div class="f01-ver-bar two" style="width:57%"></div>
+                <div class="f01-ver-pips"><i class="on"></i><i></i><i></i></div>
+              </div>
+              <div class="f01-ver" id="f01-ad4-v2">
+                <div class="f01-ver-img" style="background: var(--f01-accent-medium);"></div>
+                <div class="f01-ver-bar one" style="width:52%"></div>
+                <div class="f01-ver-bar two" style="width:84%"></div>
+                <div class="f01-ver-pips"><i></i><i class="on"></i><i></i></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ad-card 5 — far left, smallest, deepest -->
+        <div class="f01-l2 f01-ad" style="left:-205px; top:1040px; transform: rotateY(24deg) translateZ(-90px) scale(0.82);">
+          <div class="f01-blur">
+            <div class="f01-ad-body">
+              <div class="f01-ver" id="f01-ad5-v1">
+                <div class="f01-ver-img" style="background: rgba(255,255,255,0.07);"></div>
+                <div class="f01-ver-bar one" style="width:76%"></div>
+                <div class="f01-ver-bar two" style="width:50%"></div>
+                <div class="f01-ver-pips"><i class="on"></i><i></i><i></i></div>
+              </div>
+              <div class="f01-ver" id="f01-ad5-v2">
+                <div class="f01-ver-img" style="background: var(--f01-brand-soft);"></div>
+                <div class="f01-ver-bar one" style="width:60%"></div>
+                <div class="f01-ver-bar two" style="width:82%"></div>
+                <div class="f01-ver-pips"><i></i><i class="on"></i><i></i></div>
+              </div>
+              <div class="f01-ver" id="f01-ad5-v3">
+                <div class="f01-ver-img" style="background: var(--f01-accent-medium);"></div>
+                <div class="f01-ver-bar one" style="width:85%"></div>
+                <div class="f01-ver-bar two" style="width:38%"></div>
+                <div class="f01-ver-pips"><i></i><i></i><i class="on"></i></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- metric-readout 1 -->
+        <div class="f01-l2 f01-metric" id="f01-m1" style="left:755px; top:840px; transform: rotateY(-14deg) translateZ(-30px);">
+          <div class="f01-blur">
+            <div class="f01-metric-body">
+              <div class="f01-metric-label">CPC</div>
+              <div class="f01-metric-value">1,84</div>
+              <div class="f01-metric-track"><span class="f01-metric-fill" style="width:62%"></span></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- metric-readout 2 -->
+        <div class="f01-l2 f01-metric" id="f01-m2" style="left:30px; top:420px; transform: rotateY(16deg) translateZ(-30px);">
+          <div class="f01-blur">
+            <div class="f01-metric-body">
+              <div class="f01-metric-label">Leads</div>
+              <div class="f01-metric-value">128</div>
+              <div class="f01-metric-track"><span class="f01-metric-fill" style="width:44%"></span></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ad-card-hero — carries handoff_out. Resting box is centred on the
+             canvas centre so the GSAP x/y values ARE the handoff numbers:
+             x +300 -> -640, y +520 (held), scale 1.0 -> 1.18, opacity 1. -->
+        <div id="f01-hero-sweep">
+          <div id="f01-hero-trail"></div>
+          <div class="f01-hero-rot">
+            <div class="f01-blur" id="f01-hero-blur">
+              <div class="f01-ad-body">
+                <div class="f01-ver" id="f01-hero-v1">
+                  <div class="f01-ver-img" style="background: rgba(255,255,255,0.10);"></div>
+                  <div class="f01-ver-bar one" style="width:83%"></div>
+                  <div class="f01-ver-bar two" style="width:51%"></div>
+                  <div class="f01-ver-pips"><i class="on"></i><i></i><i></i></div>
+                </div>
+                <div class="f01-ver" id="f01-hero-v2">
+                  <div class="f01-ver-img" style="background: rgba(216,192,167,0.16);"></div>
+                  <div class="f01-ver-bar one" style="width:67%"></div>
+                  <div class="f01-ver-bar two" style="width:89%"></div>
+                  <div class="f01-ver-pips"><i></i><i class="on"></i><i></i></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ===== LEVEL 3 — hero typography (onscreen_text, verbatim) ===== -->
+    <div class="f01-type clip" data-start="0" data-duration="6" data-track-index="2">
+      <div class="f01-p1">
+        <div class="f01-mask"><span class="f01-line" id="f01-l1">Se o seu site diz</span></div>
+        <div class="f01-mask"><span class="f01-line" id="f01-l2">exatamente a mesma coisa</span></div>
+      </div>
+      <div class="f01-p2">
+        <div class="f01-mask"><span class="f01-line" id="f01-l3">h&aacute; <span class="f01-em" id="f01-em1">seis meses</span>,</span></div>
+      </div>
+      <div class="f01-p3">
+        <div class="f01-mask"><span class="f01-line" id="f01-l4">existe um <span class="f01-em" id="f01-em2">problema</span>.</span></div>
+      </div>
+    </div>
+  </div>
+
+  <script src="assets/vendor/gsap.min.js"></script>
+  <script>
+    (function () {
+      function buildFrame01() {
+        var F = 1 / 60;
+
+        window.__timelines = window.__timelines || {};
+        var tl = gsap.timeline({ paused: true });
+
+        /* =====================================================
+           CENA A (0.0-0.8s) — push-in de abertura (viewport-change)
+           Single-wrapper composite transform: translate() scale()
+           written in ONE place from the cam object.
+           T = -offset * ANCHOR_W * S  (single-wrapper form).
+           The opening pose is weighted 34% toward where the
+           sentence will land (text-block centre, offset +202px),
+           and resolves to neutral BEFORE any text arrives.
+           ===================================================== */
+        var S0 = 1.14;
+        var TEXT_OFFSET_Y = 202;      // text block centre - viewport centre
+        var ANCHOR_W = 0.34;
+        var CAM_Y0 = -TEXT_OFFSET_Y * ANCHOR_W * S0;   // = -78.3px
+
+        var world = document.getElementById("f01-world");
+        var cam = { scale: S0, x: 0, y: CAM_Y0 };
+        function applyCamera() {
+          world.style.transform =
+            "translate(" + cam.x + "px, " + cam.y + "px) scale(" + cam.scale + ")";
+        }
+        applyCamera(); // seed frame 0
+
+        tl.fromTo(
+          cam,
+          { scale: S0, y: CAM_Y0 },
+          {
+            scale: 1,
+            y: 0,
+            duration: 0.8,
+            ease: "power3.out",
+            onUpdate: applyCamera
+          },
+          0
+        );
+        /* The camera is completely still from t = 0.8s onward and never
+           moves again. The landing-mock has NO animated property at all —
+           the absence of movement is the content of the frame. */
+
+        /* =====================================================
+           CENA B (0.32-1.52s) — o sistema se mexe, a pagina nao.
+           waterfall-entry: BINARY opacity via tl.set, whip from
+           below on power4.out, gaps SHRINK across the cascade,
+           travel/duration vary by weight.
+           ===================================================== */
+        // seed version 1 visible, every later version hidden (seek-safe)
+        tl.set(
+          ["#f01-ad1-v1", "#f01-ad2-v1", "#f01-ad3-v1", "#f01-ad4-v1", "#f01-ad5-v1", "#f01-hero-v1"],
+          { opacity: 1, y: 0 },
+          0
+        );
+        tl.set(
+          [
+            "#f01-ad1-v2", "#f01-ad2-v2", "#f01-ad3-v2", "#f01-ad4-v2", "#f01-ad5-v2", "#f01-hero-v2",
+            "#f01-ad1-v3", "#f01-ad3-v3", "#f01-ad5-v3"
+          ],
+          { opacity: 0, y: 0 },
+          0
+        );
+
+        // diagonal cascade: top-right -> right -> top-left -> left -> hero -> far-left
+        var swap = [
+          { out: "#f01-ad2-v1", into: "#f01-ad2-v2", t: 0.320, y: 46, d: 0.15 },
+          { out: "#f01-ad4-v1", into: "#f01-ad4-v2", t: 0.415, y: 44, d: 0.15 },
+          { out: "#f01-ad1-v1", into: "#f01-ad1-v2", t: 0.503, y: 48, d: 0.16 },
+          { out: "#f01-ad3-v1", into: "#f01-ad3-v2", t: 0.584, y: 42, d: 0.14 },
+          { out: "#f01-hero-v1", into: "#f01-hero-v2", t: 0.659, y: 70, d: 0.18 }, // anchor: heaviest
+          { out: "#f01-ad5-v1", into: "#f01-ad5-v2", t: 0.728, y: 34, d: 0.12 }    // lightest: snaps
+        ];
+        for (var i = 0; i < swap.length; i++) {
+          var s = swap[i];
+          tl.set(s.out, { opacity: 0 }, s.t);
+          tl.set(s.into, { opacity: 1, y: s.y }, s.t);
+          tl.to(s.into, { y: 0, duration: s.d, ease: "power4.out" }, s.t);
+        }
+
+        // metric-readouts pulse (explicit sequential tweens — no repeat/yoyo)
+        var pulses = [
+          { el: "#f01-m1", t: 0.38 },
+          { el: "#f01-m2", t: 0.54 },
+          { el: "#f01-m1", t: 0.92 },
+          { el: "#f01-m2", t: 1.06 }
+        ];
+        tl.set(["#f01-m1", "#f01-m2"], { opacity: 0.68 }, 0);
+        for (var p = 0; p < pulses.length; p++) {
+          tl.fromTo(
+            pulses[p].el,
+            { opacity: 0.68 },
+            { opacity: 1, duration: 0.2, ease: "sine.out" },
+            pulses[p].t
+          );
+          tl.to(pulses[p].el, { opacity: 0.68, duration: 0.26, ease: "sine.in" }, pulses[p].t + 0.2);
+        }
+
+        /* =====================================================
+           CENA C (1.0-4.5s) — a frase constroi em tres respiracoes.
+           Entrance for this frame: MASK-REVEAL FROM BELOW, 520ms.
+           The camera is already parked, so nothing drifts, blurs or
+           moves while the viewer is reading.
+           ===================================================== */
+        var REVEAL = 0.52;
+        function maskReveal(sel, at) {
+          tl.fromTo(
+            sel,
+            { yPercent: 118, opacity: 1 },
+            { yPercent: 0, duration: REVEAL, ease: "power3.out" },
+            at
+          );
+        }
+        // respiracao 1 — "Se o seu site diz exatamente a mesma coisa"
+        maskReveal("#f01-l1", 1.00);
+        maskReveal("#f01-l2", 1.14);
+        // respiracao 2 — "ha seis meses,"
+        maskReveal("#f01-l3", 2.30);
+        // respiracao 3 — "existe um problema."
+        maskReveal("#f01-l4", 3.40);
+
+        /* =====================================================
+           CENA D (3.02-4.44s) — destaque semantico.
+           Colour lands AFTER the fragment is already legible in
+           white (+200ms / +180ms), as a 340ms cross-fade settling
+           onto stable text. No glow, no filled background.
+           ===================================================== */
+        tl.fromTo(
+          "#f01-em1",
+          { color: "#FFFFFF" },
+          { color: "#D8C0A7", duration: 0.34, ease: "sine.inOut" },
+          3.02   // "seis meses" legible at 2.82 + 0.20
+        );
+        tl.fromTo(
+          "#f01-em2",
+          { color: "#FFFFFF" },
+          { color: "#D8C0A7", duration: 0.34, ease: "sine.inOut" },
+          4.10   // "problema" legible at 3.92 + 0.18 -> settles 4.44, before the hold
+        );
+
+        /* =====================================================
+           CENA E (4.5-6.0s) — o hold.
+           Typography and camera dead still. Only the peripheral,
+           out-of-focus ad-cards keep swapping, very slowly
+           (opacity only — no movement anywhere near the text).
+           ===================================================== */
+        var slow = [
+          { out: "#f01-ad1-v2", into: "#f01-ad1-v3", t: 4.62 },
+          { out: "#f01-ad3-v2", into: "#f01-ad3-v3", t: 4.84 },
+          { out: "#f01-ad5-v2", into: "#f01-ad5-v3", t: 5.06 }
+        ];
+        for (var k = 0; k < slow.length; k++) {
+          tl.to(slow[k].out, { opacity: 0, duration: 0.5, ease: "sine.inOut" }, slow[k].t);
+          tl.fromTo(
+            slow[k].into,
+            { opacity: 0 },
+            { opacity: 1, duration: 0.5, ease: "sine.inOut" },
+            slow[k].t
+          );
+        }
+
+        /* --- handoff_out: ad-card-hero breaks out of the cluster and
+               sweeps the foreground to the left, delivering the cut.
+               At t = 6.00 exactly: x -640, y +520, scale 1.18,
+               opacity 1, still travelling left, 18px motion-blur trail. --- */
+        tl.set("#f01-hero-sweep", { x: 300, y: 520, scale: 1, opacity: 1 }, 0);
+
+        // 5.52-5.70 — "se destaca do grupo": comes into focus
+        tl.fromTo(
+          "#f01-hero-blur",
+          { filter: "blur(6px)" },
+          { filter: "blur(0px)", duration: 0.18, ease: "power2.out" },
+          5.52
+        );
+
+        // 5.70-6.00 — constant-velocity leftward sweep (ease "none" so the
+        // seam is handed over at speed, with no deceleration at the cut)
+        tl.fromTo(
+          "#f01-hero-sweep",
+          { x: 300, y: 520, scale: 1, opacity: 1 },
+          { x: -640, y: 520, scale: 1.18, opacity: 1, duration: 0.3, ease: "none" },
+          5.70
+        );
+        tl.fromTo(
+          "#f01-hero-trail",
+          { opacity: 0, scaleX: 1 },
+          { opacity: 0.52, scaleX: 2.6, duration: 0.3, ease: "none" },
+          5.70
+        );
+
+        window.__timelines["01-site-estatico"] = tl;
+        tl.pause(0);
+      }
+
+      if (window.gsap) {
+        buildFrame01();
+      } else {
+        var loader = document.querySelector('script[src*="gsap"]');
+        if (loader) loader.addEventListener("load", buildFrame01);
+      }
+    })();
+  </script>
+</template>

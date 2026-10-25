@@ -1,0 +1,117 @@
+=== BRIEF DO USUÁRIO (verbatim) ===
+
+"Utilizando essa skill do hyperframes eu quero que você faça um vídeo mostrando
+uma landing page de algum produto de IA. Então essa landing page se duplica
+mudando a copy da headline, que se duplica de novo mostrando uma terceira
+headline diferente. A cada duplicação aparece um modal contando um número de
+visitantes que estão acessando essa página. Então aparece uma versão da página
+com uma copy diferente que é eleita a campeã em número de conversões. Tem um
+zoom out e aparece o letreiro dizendo que o KRO AI automatiza os testes a/b e
+acha a versão campeã da sua página. Termina com CTA escrito 'Teste agora a sua'"
+
+Formato confirmado: 1:1 quadrado (1080x1080). Duração: ~25s. Entrega direta,
+sem storyboard de revisão.
+
+
+=== KRO AI — O PRODUTO ===
+
+SaaS que roda teste A/B de copy de landing page com IA. Em uma frase: gera
+variações de copy, serve essas variações pros visitantes, mede qual converte
+mais e avisa quando a versão vencedora começa a cansar — sem precisar de
+programador, copywriter dedicado ou analista de dados.
+
+Frase-âncora: "Sua primeira variação no ar em 5 minutos."
+
+Diferencial central: simplicidade radical. Instala com um script no <head>, não
+exige hipótese prévia nem conhecimento estatístico. É o "Canva do CRO" — o
+oposto de Optimizely/VWO, que são pesados, caros e exigem time. O KRO não acha
+qual versão vence: ele escreve, testa e elege a campeã sozinho.
+
+POSICIONAMENTO
+O território: a inteligência que descobre qual copy converte — em vez de você
+adivinhar. O inimigo declarado é o achismo: rodar tráfego pago para uma landing
+page cuja headline ninguém testou. O KRO transforma "eu acho que essa headline
+é boa" em "eu sei qual headline converte mais, porque testei."
+
+Tensões que a marca explora:
+- Você testa criativo, público e lance — mas nunca testou a frase.
+- 97% dos visitantes não convertem — e raramente a culpa é do tráfego.
+- "Costuma funcionar" não paga boleto.
+
+TOM
+Provocador, inteligente, seco, com herança Olivetto (inteligência verbal, dupla
+camada). Confiante sem ser arrogante. Cutuca o leitor pra ele perceber um
+problema que não via — nunca grita oferta. Específico e concreto vence vago e
+adjetivado. Premium acessível: sofisticado na ideia, simples na execução.
+
+ICP
+Founders de SaaS e micro-SaaS com landing page. Infoprodutores com página de
+vendas. B2B de geração de leads que roda tráfego pago. Gestores de tráfego e
+performance. Fio condutor: roda tráfego pago + tem landing page + se importa
+com conversão.
+
+CTA E OFERTA
+Foco é marca, não conversão direta. CTA discreto e ao final: usekro.ai · 14 dias
+grátis. Domínio: usekro.ai. Handle: kroai_. Assinatura: Conversão inteligente.
+
+LIMITES (não inventar)
+- Não prometer "aumento de X% na conversão" como garantia — o KRO descobre o que
+  converte mais, não garante número.
+- Não dizer que substitui um time de CRO em casos complexos.
+- O produto testa copy (texto/headline) de landing page. Não é ferramenta de
+  design, de mídia paga, nem de tráfego.
+
+
+=== SISTEMA VISUAL ===
+
+Paleta: Purple #7C3AED (cor da marca), Cyan #06B6D4 (dado/número/palavra que
+carrega o peso), Charcoal #2B2B2B (fundo sério, default elegante), Branco
+#FFFFFF, Areia #D8C0A7 (respiro, com parcimônia).
+
+Regra de ouro da cor: cada peça tem UM fundo chapado e UMA cor de destaque.
+Nunca dois destaques competindo. O destaque vai na palavra que o leitor leva
+embora ("dobro", "97%", "campeã").
+
+Tipografia com semântica:
+- Neulis Alt (display pesada) — a voz forte do KRO: headlines de marca, frases
+  de impacto. Substituta documentada: grotesca geométrica pesada, ex. Sora ou
+  Poppins em ExtraBold/Black.
+- Manrope (regular/leve) — usada de propósito quando o criativo imita interface
+  de produto: as telas "versão a / versão b", legendas, textos de UI.
+A troca de fonte sinaliza "agora você vê o produto" vs "agora a marca fala".
+
+Logo: `kro ai_` — o `_` final é sempre parte do logo (cursor de prompt).
+Assinatura de rodapé: Conversão inteligente.
+
+
+=== PÁGINA MOCK USADA NO VÍDEO (inventada) ===
+
+Produto fictício: Nimbus AI — ferramenta de IA que transforma reunião em
+anotação automática. Serve só como objeto do teste A/B.
+
+Nav: Nimbus AI · Produto · Preços · Entrar · [Começar grátis]
+Subhead (igual em todas as variantes): "Conecte seu calendário. O resto é com a
+gente."
+Botão (igual em todas): "Começar grátis"
+
+Headlines testadas:
+A — Suas reuniões viram anotações. Sozinhas.
+B — Nunca mais escreva uma ata de reunião.
+C — Sua reunião acabou. O resumo já está no seu e-mail.
+D — Você fala. A gente escreve. Ninguém digita nada.   [CAMPEÃ]
+
+
+=== TEXTO QUE APARECE NO VÍDEO ===
+
+Modais de visitantes (estilo UI de produto):
+  "visitantes agora" + número subindo + rótulo da versão (versão A / B / C)
+
+Beat da campeã:
+  "CAMPEÃ" + taxa de conversão da versão D comparada às outras
+
+Letreiro (marca falando):
+  "O KRO AI automatiza seus testes A/B e acha a versão campeã da sua página."
+
+CTA final:
+  "Teste agora a sua"
+  usekro.ai · 14 dias grátis

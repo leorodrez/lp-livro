@@ -1,0 +1,34 @@
+{
+  "version": 1,
+  "preferences": {
+    "style_preset.product-launch-video": {
+      "value": "blue-professional",
+      "confirmed_in": [
+        "kro-learning-page"
+      ],
+      "updated_at": "2026-08-27T15:06:22.061Z"
+    },
+    "aspect": {
+      "value": "1920x1080",
+      "confirmed_in": [
+        "kro-learning-page"
+      ],
+      "updated_at": "2026-08-27T15:06:22.111Z"
+    },
+    "language": {
+      "value": "pt-BR",
+      "confirmed_in": [
+        "kro-learning-page"
+      ],
+      "updated_at": "2026-08-27T15:06:22.158Z"
+    },
+    "destination": {
+      "value": "youtube",
+      "confirmed_in": [
+        "kro-learning-page"
+      ],
+      "updated_at": "2026-08-27T15:06:22.206Z"
+    }
+  },
+  "sightings": {}
+}

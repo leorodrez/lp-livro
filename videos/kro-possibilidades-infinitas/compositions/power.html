@@ -1,0 +1,448 @@
+<template>
+  <style>
+    @font-face { font-family: "Sora"; font-weight: 600; font-style: normal; font-display: block; src: url("assets/fonts/Sora-600.woff2") format("woff2"); }
+    @font-face { font-family: "Sora"; font-weight: 700; font-style: normal; font-display: block; src: url("assets/fonts/Sora-700.woff2") format("woff2"); }
+    @font-face { font-family: "Manrope"; font-weight: 400; font-style: normal; font-display: block; src: url("assets/fonts/Manrope-400.woff2") format("woff2"); }
+    @font-face { font-family: "Manrope"; font-weight: 500; font-style: normal; font-display: block; src: url("assets/fonts/Manrope-500.woff2") format("woff2"); }
+    @font-face { font-family: "Manrope"; font-weight: 600; font-style: normal; font-display: block; src: url("assets/fonts/Manrope-600.woff2") format("woff2"); }
+
+    #root { position: absolute; inset: 0; overflow: hidden; }
+
+    #root .slot { position: absolute; width: 0; height: 0; }
+    #root .shrink { position: absolute; left: -400px; top: -300px; width: 800px; height: 600px; transform-origin: 400px 300px; }
+    #root .page { position: absolute; inset: 0; background: #f4f2ee; border-radius: 20px; box-shadow: 0 30px 80px rgba(0,0,0,0.45); overflow: hidden; }
+    #root .page::after { content: ""; position: absolute; left: 0; right: 0; top: 0; height: 2px; background: rgba(255,255,255,0.7); }
+    #root .page-chrome { position: absolute; left: 0; right: 0; top: 0; height: 52px; display: flex; align-items: center; gap: 10px; padding-left: 26px; background: rgba(43,43,43,0.045); border-bottom: 1px solid rgba(43,43,43,0.08); }
+    #root .page-chrome i { width: 11px; height: 11px; border-radius: 50%; background: rgba(43,43,43,0.16); }
+    #root .page-body { position: absolute; left: 46px; right: 46px; top: 98px; }
+    #root .page-eyebrow { font-family: "Manrope"; font-weight: 600; font-size: 16px; letter-spacing: 0.16em; text-transform: uppercase; color: rgba(43,43,43,0.68); margin-bottom: 20px; }
+    #root .page-head { position: relative; width: 640px; height: 96px; font-family: "Sora"; font-weight: 700; font-size: 40px; line-height: 1.16; letter-spacing: -0.02em; color: #2b2b2b; }
+    #root .page-head span { position: absolute; left: 0; top: 0; width: 640px; }
+    #root .page-underline { width: 520px; height: 4px; margin-top: 16px; border-radius: 2px; background: var(--signal); clip-path: inset(0 100% 0 0); }
+    #root .page-copy { margin-top: 30px; display: flex; flex-direction: column; gap: 14px; }
+    #root .page-copy i { height: 14px; border-radius: 7px; background: rgba(43,43,43,0.1); }
+    #root .page-copy i:nth-child(1) { width: 600px; }
+    #root .page-copy i:nth-child(2) { width: 462px; }
+    #root .page-btn { position: relative; margin-top: 42px; width: 230px; height: 60px; border-radius: 100px; background: var(--brand); }
+    #root .page-btn span { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-family: "Sora"; font-weight: 600; font-size: 19px; color: #ffffff; white-space: nowrap; }
+    #root .page-dot { position: absolute; left: 244px; top: 384px; width: 26px; height: 26px; border-radius: 50%; background: var(--signal); box-shadow: 0 0 14px rgba(6,182,212,0.55); }
+
+    #root .line { position: absolute; left: 90px; top: 215px; width: 900px; font-family: "Sora"; font-weight: 700; color: #ffffff; letter-spacing: -0.025em; line-height: 1.12; }
+    #root #s3-l4 { font-size: 68px; }
+    #root #s3-l4 .w { display: inline-block; opacity: 0; }
+    #root #s3-l5 { font-size: 64px; opacity: 0; }
+    #root #s3-l5 em { font-style: normal; }
+
+    /* os três rótulos, no plano da câmera, à direita da pilha */
+    #root .vlabel {
+      position: absolute; left: 470px; width: 540px;
+      font-family: "Sora"; font-weight: 600; font-size: 42px; line-height: 1.16;
+      letter-spacing: -0.02em; color: #ffffff; opacity: 0;
+      transform: translateY(-50%);
+    }
+    #root #s3-lab-0 { top: 540px; }
+    #root #s3-lab-1 { top: 810px; }
+    #root #s3-lab-2 { top: 1080px; }
+    #root .vlabel::before {
+      content: ""; position: absolute; left: -32px; top: 10px; width: 4px; height: 34px;
+      border-radius: 2px; background: var(--signal);
+    }
+
+    #root .shard { position: absolute; border-radius: 3px; opacity: 0; z-index: 40; }
+
+    /* o ponto roxo em que tudo converge — e de onde o logo nasce na Cena 4 */
+    #root #s3-point {
+      position: absolute; left: 529px; top: 639px; width: 22px; height: 22px;
+      border-radius: 50%; background: var(--brand); z-index: 45; opacity: 0;
+    }
+  </style>
+
+  <div id="root" data-composition-id="power" data-width="1080" data-height="1350">
+    <div class="slot" id="s3-slot-0" style="left: 280px; top: 530px">
+      <div class="shrink" style="transform: scale(0.3)">
+        <div class="page">
+          <div class="page-chrome"><i></i><i></i><i></i></div>
+          <div class="page-body" data-layout-ignore>
+            <div class="page-eyebrow">Sua empresa</div>
+            <div class="page-head">
+              <span class="pv pv-v1">Uma condição especial para começar.</span>
+            </div>
+            <div class="page-underline"></div>
+            <div class="page-copy"><i></i><i></i></div>
+            <div class="page-btn">
+              <span class="pv pv-v1">Aproveitar a oferta</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slot" id="s3-slot-1" style="left: 540px; top: 530px">
+      <div class="shrink" style="transform: scale(0.3)">
+        <div class="page">
+          <div class="page-chrome"><i></i><i></i><i></i></div>
+          <div class="page-body" data-layout-ignore>
+            <div class="page-eyebrow">Sua empresa</div>
+            <div class="page-head">
+              <span class="pv pv-v4">Comece hoje e cancele quando quiser.</span>
+            </div>
+            <div class="page-underline"></div>
+            <div class="page-copy"><i></i><i></i></div>
+            <div class="page-btn">
+              <span class="pv pv-v4">Criar minha conta</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slot" id="s3-slot-2" style="left: 800px; top: 530px">
+      <div class="shrink" style="transform: scale(0.3)">
+        <div class="page">
+          <div class="page-chrome"><i></i><i></i><i></i></div>
+          <div class="page-body" data-layout-ignore>
+            <div class="page-eyebrow">Sua empresa</div>
+            <div class="page-head">
+              <span class="pv pv-v5">A forma mais simples de começar.</span>
+            </div>
+            <div class="page-underline"></div>
+            <div class="page-copy"><i></i><i></i></div>
+            <div class="page-btn">
+              <span class="pv pv-v5">Experimentar grátis</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slot" id="s3-slot-3" style="left: 280px; top: 770px">
+      <div class="shrink" style="transform: scale(0.3)">
+        <div class="page">
+          <div class="page-chrome"><i></i><i></i><i></i></div>
+          <div class="page-body" data-layout-ignore>
+            <div class="page-eyebrow">Sua empresa</div>
+            <div class="page-head">
+              <span class="pv pv-v2">Feito para equipes que precisam de escala.</span>
+            </div>
+            <div class="page-underline"></div>
+            <div class="page-copy"><i></i><i></i></div>
+            <div class="page-btn">
+              <span class="pv pv-v2">Falar com vendas</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slot" id="s3-slot-4" style="left: 540px; top: 770px">
+      <div class="shrink" style="transform: scale(0.3)">
+        <div class="page">
+          <div class="page-chrome"><i></i><i></i><i></i></div>
+          <div class="page-body" data-layout-ignore>
+            <div class="page-eyebrow">Sua empresa</div>
+            <div class="page-head">
+              <span class="pv pv-v6">Seu time inteiro em uma só ferramenta.</span>
+            </div>
+            <div class="page-underline"></div>
+            <div class="page-copy"><i></i><i></i></div>
+            <div class="page-btn">
+              <span class="pv pv-v6">Começar agora</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slot" id="s3-slot-5" style="left: 800px; top: 770px">
+      <div class="shrink" style="transform: scale(0.3)">
+        <div class="page">
+          <div class="page-chrome"><i></i><i></i><i></i></div>
+          <div class="page-body" data-layout-ignore>
+            <div class="page-eyebrow">Sua empresa</div>
+            <div class="page-head">
+              <span class="pv pv-v7">Menos ferramentas. Mais resultado.</span>
+            </div>
+            <div class="page-underline"></div>
+            <div class="page-copy"><i></i><i></i></div>
+            <div class="page-btn">
+              <span class="pv pv-v7">Quero começar</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slot" id="s3-slot-6" style="left: 280px; top: 1010px">
+      <div class="shrink" style="transform: scale(0.3)">
+        <div class="page">
+          <div class="page-chrome"><i></i><i></i><i></i></div>
+          <div class="page-body" data-layout-ignore>
+            <div class="page-eyebrow">Sua empresa</div>
+            <div class="page-head">
+              <span class="pv pv-v3">Veja como funciona na prática.</span>
+            </div>
+            <div class="page-underline"></div>
+            <div class="page-copy"><i></i><i></i></div>
+            <div class="page-btn">
+              <span class="pv pv-v3">Ver demonstração</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slot" id="s3-slot-7" style="left: 540px; top: 1010px">
+      <div class="shrink" style="transform: scale(0.3)">
+        <div class="page">
+          <div class="page-chrome"><i></i><i></i><i></i></div>
+          <div class="page-body" data-layout-ignore>
+            <div class="page-eyebrow">Sua empresa</div>
+            <div class="page-head">
+              <span class="pv pv-v8">Tudo pronto para o seu primeiro cliente.</span>
+            </div>
+            <div class="page-underline"></div>
+            <div class="page-copy"><i></i><i></i></div>
+            <div class="page-btn">
+              <span class="pv pv-v8">Começar agora</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slot" id="s3-slot-8" style="left: 800px; top: 1010px">
+      <div class="shrink" style="transform: scale(0.3)">
+        <div class="page">
+          <div class="page-chrome"><i></i><i></i><i></i></div>
+          <div class="page-body" data-layout-ignore>
+            <div class="page-eyebrow">Sua empresa</div>
+            <div class="page-head">
+              <span class="pv pv-v9">Sua melhor versão começa aqui.</span>
+            </div>
+            <div class="page-underline"></div>
+            <div class="page-copy"><i></i><i></i></div>
+            <div class="page-btn">
+              <span class="pv pv-v9">Começar agora</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slot" id="s3-slot-9" style="left: 410px; top: 650px; opacity: 0; z-index: 6">
+      <div class="shrink" style="transform: scale(0.3)">
+        <div class="page">
+          <div class="page-chrome"><i></i><i></i><i></i></div>
+          <div class="page-body" data-layout-ignore>
+            <div class="page-eyebrow">Sua empresa</div>
+            <div class="page-head">
+              <span class="pv pv-v5">A forma mais simples de começar.</span>
+            </div>
+            <div class="page-underline"></div>
+            <div class="page-copy"><i></i><i></i></div>
+            <div class="page-btn">
+              <span class="pv pv-v5">Experimentar grátis</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slot" id="s3-slot-10" style="left: 670px; top: 650px; opacity: 0; z-index: 6">
+      <div class="shrink" style="transform: scale(0.3)">
+        <div class="page">
+          <div class="page-chrome"><i></i><i></i><i></i></div>
+          <div class="page-body" data-layout-ignore>
+            <div class="page-eyebrow">Sua empresa</div>
+            <div class="page-head">
+              <span class="pv pv-v8">Tudo pronto para o seu primeiro cliente.</span>
+            </div>
+            <div class="page-underline"></div>
+            <div class="page-copy"><i></i><i></i></div>
+            <div class="page-btn">
+              <span class="pv pv-v8">Começar agora</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slot" id="s3-slot-11" style="left: 540px; top: 890px; opacity: 0; z-index: 6">
+      <div class="shrink" style="transform: scale(0.3)">
+        <div class="page">
+          <div class="page-chrome"><i></i><i></i><i></i></div>
+          <div class="page-body" data-layout-ignore>
+            <div class="page-eyebrow">Sua empresa</div>
+            <div class="page-head">
+              <span class="pv pv-v9">Sua melhor versão começa aqui.</span>
+            </div>
+            <div class="page-underline"></div>
+            <div class="page-copy"><i></i><i></i></div>
+            <div class="page-btn">
+              <span class="pv pv-v9">Começar agora</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="shard" id="s3-shard-0" style="left: 170px; top: 360px; width: 14px; height: 5px; background: var(--brand)"></div>
+    <div class="shard" id="s3-shard-1" style="left: 910px; top: 430px; width: 12px; height: 5px; background: var(--signal)"></div>
+    <div class="shard" id="s3-shard-2" style="left: 300px; top: 250px; width: 10px; height: 4px; background: var(--signal)"></div>
+    <div class="shard" id="s3-shard-3" style="left: 820px; top: 250px; width: 16px; height: 5px; background: var(--brand)"></div>
+    <div class="shard" id="s3-shard-4" style="left: 120px; top: 760px; width: 13px; height: 4px; background: var(--signal)"></div>
+    <div class="shard" id="s3-shard-5" style="left: 960px; top: 790px; width: 11px; height: 4px; background: var(--brand)"></div>
+    <div class="shard" id="s3-shard-6" style="left: 230px; top: 1130px; width: 15px; height: 5px; background: var(--brand)"></div>
+    <div class="shard" id="s3-shard-7" style="left: 860px; top: 1120px; width: 12px; height: 4px; background: var(--signal)"></div>
+    <div class="shard" id="s3-shard-8" style="left: 430px; top: 1240px; width: 10px; height: 4px; background: var(--brand)"></div>
+    <div class="shard" id="s3-shard-9" style="left: 660px; top: 1230px; width: 14px; height: 5px; background: var(--signal)"></div>
+    <div class="shard" id="s3-shard-10" style="left: 520px; top: 200px; width: 12px; height: 4px; background: var(--brand)"></div>
+    <div class="shard" id="s3-shard-11" style="left: 700px; top: 980px; width: 11px; height: 4px; background: var(--signal)"></div>
+
+    <div id="s3-point" data-layout-ignore></div>
+
+    <div class="vlabel" id="s3-lab-0" data-layout-allow-overlap>Uma oferta diferente.</div>
+    <div class="vlabel" id="s3-lab-1" data-layout-allow-overlap>Um público diferente.</div>
+    <div class="vlabel" id="s3-lab-2" data-layout-allow-overlap>Uma nova forma de vender.</div>
+
+    <h2 class="line" id="s3-l4" data-layout-allow-overlap>
+      <span class="w">Uma</span> <span class="w">página.</span> <span class="w em">Possibilidades</span> <span class="w em">infinitas.</span>
+    </h2>
+
+    <h2 class="line" id="s3-l5" data-layout-allow-overlap>Descubra qual <em>funciona melhor</em>.</h2>
+  </div>
+
+  <script>
+    (() => {
+      const tl = gsap.timeline({ paused: true });
+
+      /* 0,05 — as seis versões não escolhidas recuam; três vêm à frente */
+      tl.fromTo(["#s3-slot-1", "#s3-slot-2", "#s3-slot-4", "#s3-slot-5", "#s3-slot-7", "#s3-slot-8"],
+        { opacity: 1, scale: 1, filter: "blur(0px)" },
+        { opacity: 0.055, scale: 0.82, filter: "blur(14px)", duration: 0.5, ease: "power2.inOut" }, 0.05);
+      tl.fromTo("#s3-slot-0", { scale: 1, x: 0, y: 0 },
+        { scale: 1.3333, x: -30, y: 10, duration: 0.62, ease: "power3.out" }, 0.05);
+      tl.fromTo("#s3-slot-3", { scale: 1, x: 0, y: 0 },
+        { scale: 1.3333, x: -30, y: 40, duration: 0.62, ease: "power3.out" }, 0.05);
+      tl.fromTo("#s3-slot-6", { scale: 1, x: 0, y: 0 },
+        { scale: 1.3333, x: -30, y: 70, duration: 0.62, ease: "power3.out" }, 0.05);
+
+      /* 0,55 — "Uma página. Possibilidades infinitas." */
+      tl.fromTo("#s3-l4 .w", { opacity: 0, filter: "blur(7px)" },
+        { opacity: 1, filter: "blur(0px)", duration: 0.13, stagger: 0.06, ease: "expo.out" }, 0.55);
+      tl.fromTo("#s3-l4 .w.em", { color: "#ffffff" },
+        { color: "#a78bfa", duration: 0.3, ease: "power2.out" }, 1.1);
+      tl.fromTo("#s3-l4 .w", { opacity: 1, filter: "blur(0px)" },
+        { opacity: 0, filter: "blur(7px)", duration: 0.18, stagger: 0.03, ease: "power2.in", immediateRender: false }, 2.6);
+
+      /* 2,60 / 4,20 / 5,60 — as três versões ganham destaque alternadamente.
+         A câmera não se move: quem destaca é o brilho, não um zoom. */
+      tl.fromTo("#s3-slot-0", { opacity: 1, scale: 1.3333 },
+        { opacity: 1, scale: 1.3867, duration: 0.32, ease: "power2.out", immediateRender: false }, 2.6);
+      tl.fromTo(["#s3-slot-3", "#s3-slot-6"], { opacity: 1 },
+        { opacity: 0.38, duration: 0.32, ease: "power2.out", immediateRender: false }, 2.6);
+      tl.fromTo("#s3-lab-0", { opacity: 0, filter: "blur(8px)" },
+        { opacity: 1, filter: "blur(0px)", duration: 0.22, ease: "expo.out" }, 2.8);
+
+      tl.fromTo("#s3-slot-0", { scale: 1.3867, opacity: 1 },
+        { scale: 1.3333, opacity: 0.38, duration: 0.32, ease: "power2.out", immediateRender: false }, 4.2);
+      tl.fromTo("#s3-slot-3", { opacity: 0.38, scale: 1.3333 },
+        { opacity: 1, scale: 1.3867, duration: 0.32, ease: "power2.out", immediateRender: false }, 4.2);
+      tl.fromTo("#s3-lab-1", { opacity: 0, filter: "blur(8px)" },
+        { opacity: 1, filter: "blur(0px)", duration: 0.22, ease: "expo.out" }, 4.4);
+
+      tl.fromTo("#s3-slot-3", { scale: 1.3867, opacity: 1 },
+        { scale: 1.3333, opacity: 0.38, duration: 0.32, ease: "power2.out", immediateRender: false }, 5.74);
+      tl.fromTo("#s3-slot-6", { opacity: 0.38, scale: 1.3333 },
+        { opacity: 1, scale: 1.3867, duration: 0.32, ease: "power2.out", immediateRender: false }, 5.74);
+      tl.fromTo("#s3-lab-2", { opacity: 0, filter: "blur(8px)" },
+        { opacity: 1, filter: "blur(0px)", duration: 0.22, ease: "expo.out" }, 5.94);
+
+      /* 6,55 — as três voltam a brilho pleno, com seus rótulos */
+      tl.fromTo(["#s3-slot-0", "#s3-slot-3"], { opacity: 0.38 },
+        { opacity: 1, duration: 0.35, ease: "power2.inOut", immediateRender: false }, 6.3);
+      tl.fromTo("#s3-slot-6", { scale: 1.3867 },
+        { scale: 1.3333, duration: 0.35, ease: "power2.inOut", immediateRender: false }, 6.3);
+
+      /* 6,53 — "Descubra qual funciona melhor." */
+      tl.fromTo("#s3-l5", { opacity: 0, filter: "blur(9px)" },
+        { opacity: 1, filter: "blur(0px)", duration: 0.22, ease: "expo.out" }, 6.43);
+      tl.fromTo("#s3-l5 em", { color: "#ffffff" },
+        { color: "#06b6d4", duration: 0.3, ease: "power2.out" }, 6.85);
+
+      /* 8,25 — os rótulos saem; a frase sai logo atrás */
+      tl.fromTo(".vlabel", { opacity: 1 },
+        { opacity: 0, duration: 0.22, stagger: 0.04, ease: "power2.in", immediateRender: false }, 8.25);
+      tl.fromTo("#s3-l5", { opacity: 1, filter: "blur(0px)" },
+        { opacity: 0, filter: "blur(8px)", duration: 0.22, ease: "power2.in", immediateRender: false }, 8.5);
+
+      /* 8,35 — as páginas se multiplicam mais uma vez */
+      tl.fromTo("#s3-slot-0", { scale: 1.3333, x: -30, y: 10 },
+        { scale: 1, x: 0, y: 0, duration: 0.3, ease: "power2.inOut", immediateRender: false }, 8.35);
+      tl.fromTo("#s3-slot-3", { scale: 1.3333, x: -30, y: 40 },
+        { scale: 1, x: 0, y: 0, duration: 0.3, ease: "power2.inOut", immediateRender: false }, 8.35);
+      tl.fromTo("#s3-slot-6", { scale: 1.3333, x: -30, y: 70 },
+        { scale: 1, x: 0, y: 0, duration: 0.3, ease: "power2.inOut", immediateRender: false }, 8.35);
+      tl.fromTo(["#s3-slot-1", "#s3-slot-2", "#s3-slot-4", "#s3-slot-5", "#s3-slot-7", "#s3-slot-8"],
+        { opacity: 0.055, scale: 0.82, filter: "blur(14px)" },
+        { opacity: 1, scale: 1, filter: "blur(0px)", duration: 0.32, stagger: 0.025, ease: "power2.out", immediateRender: false }, 8.35);
+      tl.fromTo(["#s3-slot-9", "#s3-slot-10", "#s3-slot-11"],
+        { opacity: 0, scale: 0.7 },
+        { opacity: 1, scale: 1, duration: 0.3, stagger: 0.04, ease: "power3.out" }, 8.42);
+
+      /* 8,78 — e convergem para um único ponto roxo */
+      tl.fromTo("#s3-slot-0", { x: 0, y: 0, scale: 1, opacity: 1 },
+        { x: 260, y: 120, scale: 0.02, opacity: 0.1, duration: 0.62, ease: "power3.in", immediateRender: false }, 8.78);
+      tl.fromTo("#s3-slot-1", { x: 0, y: 0, scale: 1, opacity: 1 },
+        { x: 0, y: 120, scale: 0.02, opacity: 0.1, duration: 0.62, ease: "power3.in", immediateRender: false }, 8.78);
+      tl.fromTo("#s3-slot-2", { x: 0, y: 0, scale: 1, opacity: 1 },
+        { x: -260, y: 120, scale: 0.02, opacity: 0.1, duration: 0.62, ease: "power3.in", immediateRender: false }, 8.78);
+      tl.fromTo("#s3-slot-3", { x: 0, y: 0, scale: 1, opacity: 1 },
+        { x: 260, y: -120, scale: 0.02, opacity: 0.1, duration: 0.62, ease: "power3.in", immediateRender: false }, 8.78);
+      tl.fromTo("#s3-slot-4", { x: 0, y: 0, scale: 1, opacity: 1 },
+        { x: 0, y: -120, scale: 0.02, opacity: 0.1, duration: 0.62, ease: "power3.in", immediateRender: false }, 8.78);
+      tl.fromTo("#s3-slot-5", { x: 0, y: 0, scale: 1, opacity: 1 },
+        { x: -260, y: -120, scale: 0.02, opacity: 0.1, duration: 0.62, ease: "power3.in", immediateRender: false }, 8.78);
+      tl.fromTo("#s3-slot-6", { x: 0, y: 0, scale: 1, opacity: 1 },
+        { x: 260, y: -360, scale: 0.02, opacity: 0.1, duration: 0.62, ease: "power3.in", immediateRender: false }, 8.78);
+      tl.fromTo("#s3-slot-7", { x: 0, y: 0, scale: 1, opacity: 1 },
+        { x: 0, y: -360, scale: 0.02, opacity: 0.1, duration: 0.62, ease: "power3.in", immediateRender: false }, 8.78);
+      tl.fromTo("#s3-slot-8", { x: 0, y: 0, scale: 1, opacity: 1 },
+        { x: -260, y: -360, scale: 0.02, opacity: 0.1, duration: 0.62, ease: "power3.in", immediateRender: false }, 8.78);
+      tl.fromTo("#s3-slot-9", { x: 0, y: 0, scale: 1, opacity: 1 },
+        { x: 130, y: 0, scale: 0.02, opacity: 0.1, duration: 0.62, ease: "power3.in", immediateRender: false }, 8.78);
+      tl.fromTo("#s3-slot-10", { x: 0, y: 0, scale: 1, opacity: 1 },
+        { x: -130, y: 0, scale: 0.02, opacity: 0.1, duration: 0.62, ease: "power3.in", immediateRender: false }, 8.78);
+      tl.fromTo("#s3-slot-11", { x: 0, y: 0, scale: 1, opacity: 1 },
+        { x: 0, y: -240, scale: 0.02, opacity: 0.1, duration: 0.62, ease: "power3.in", immediateRender: false }, 8.78);
+      tl.fromTo("#s3-shard-0", { opacity: 0, x: 0, y: 0 },
+        { opacity: 0.9, x: 370, y: 290, duration: 0.56, ease: "power3.in" }, 8.84);
+      tl.fromTo("#s3-shard-1", { opacity: 0, x: 0, y: 0 },
+        { opacity: 0.9, x: -370, y: 220, duration: 0.56, ease: "power3.in" }, 8.86);
+      tl.fromTo("#s3-shard-2", { opacity: 0, x: 0, y: 0 },
+        { opacity: 0.9, x: 240, y: 400, duration: 0.56, ease: "power3.in" }, 8.88);
+      tl.fromTo("#s3-shard-3", { opacity: 0, x: 0, y: 0 },
+        { opacity: 0.9, x: -280, y: 400, duration: 0.56, ease: "power3.in" }, 8.90);
+      tl.fromTo("#s3-shard-4", { opacity: 0, x: 0, y: 0 },
+        { opacity: 0.9, x: 420, y: -110, duration: 0.56, ease: "power3.in" }, 8.84);
+      tl.fromTo("#s3-shard-5", { opacity: 0, x: 0, y: 0 },
+        { opacity: 0.9, x: -420, y: -140, duration: 0.56, ease: "power3.in" }, 8.86);
+      tl.fromTo("#s3-shard-6", { opacity: 0, x: 0, y: 0 },
+        { opacity: 0.9, x: 310, y: -480, duration: 0.56, ease: "power3.in" }, 8.88);
+      tl.fromTo("#s3-shard-7", { opacity: 0, x: 0, y: 0 },
+        { opacity: 0.9, x: -320, y: -470, duration: 0.56, ease: "power3.in" }, 8.90);
+      tl.fromTo("#s3-shard-8", { opacity: 0, x: 0, y: 0 },
+        { opacity: 0.9, x: 110, y: -590, duration: 0.56, ease: "power3.in" }, 8.84);
+      tl.fromTo("#s3-shard-9", { opacity: 0, x: 0, y: 0 },
+        { opacity: 0.9, x: -120, y: -580, duration: 0.56, ease: "power3.in" }, 8.86);
+      tl.fromTo("#s3-shard-10", { opacity: 0, x: 0, y: 0 },
+        { opacity: 0.9, x: 20, y: 450, duration: 0.56, ease: "power3.in" }, 8.88);
+      tl.fromTo("#s3-shard-11", { opacity: 0, x: 0, y: 0 },
+        { opacity: 0.9, x: -160, y: -330, duration: 0.56, ease: "power3.in" }, 8.90);
+      tl.fromTo("#s3-point", { opacity: 0, scale: 0.2 },
+        { opacity: 1, scale: 1, duration: 0.2, ease: "power2.out" }, 9.2);
+
+      window.__timelines["power"] = tl;
+    })();
+  </script>
+</template>

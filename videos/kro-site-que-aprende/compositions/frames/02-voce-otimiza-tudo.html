@@ -1,0 +1,539 @@
+<template>
+  <style>
+    @font-face{font-family:"Manrope";font-weight:400;font-style:normal;font-display:block;src:url("assets/fonts/Manrope-400.woff2") format("woff2");}
+    @font-face{font-family:"Manrope";font-weight:500;font-style:normal;font-display:block;src:url("assets/fonts/Manrope-500.woff2") format("woff2");}
+    @font-face{font-family:"Manrope";font-weight:600;font-style:normal;font-display:block;src:url("assets/fonts/Manrope-600.woff2") format("woff2");}
+    @font-face{font-family:"Manrope";font-weight:700;font-style:normal;font-display:block;src:url("assets/fonts/Manrope-700.woff2") format("woff2");}
+    @font-face{font-family:"Sora";font-weight:400;font-style:normal;font-display:block;src:url("assets/fonts/Sora-400.woff2") format("woff2");}
+    @font-face{font-family:"Sora";font-weight:600;font-style:normal;font-display:block;src:url("assets/fonts/Sora-600.woff2") format("woff2");}
+    @font-face{font-family:"Sora";font-weight:700;font-style:normal;font-display:block;src:url("assets/fonts/Sora-700.woff2") format("woff2");}
+
+    /* ── root: sized, never styled by class, never carries the full-bleed ground ── */
+    #root{
+      position:relative;
+      width:1080px;
+      height:1920px;
+      overflow:hidden;
+    }
+    #root *{box-sizing:border-box;}
+
+    /* ═══ LEVEL 1 — atmospheric ground ═══ */
+    .f02-ground{position:absolute;inset:0;background:#2B2B2B;}
+    .f02-ground-move{position:absolute;inset:-60px;}
+    .f02-falloff{
+      position:absolute;inset:0;
+      background:
+        radial-gradient(120% 94% at 13% 6%, #3B3B3B 0%, #333333 30%, #2A2A2A 58%, #222222 80%, #1C1C1C 100%);
+    }
+    .f02-grain{
+      position:absolute;inset:0;opacity:0.035;
+      background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='320' height='320'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.86' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='320' height='320' filter='url(%23n)'/%3E%3C/svg%3E");
+      background-repeat:repeat;
+    }
+
+    /* ═══ LEVEL 2 — the system, inside the 3D camera ═══ */
+    .f02-stagelayer{position:absolute;inset:0;}
+    .f02-camera{position:absolute;inset:0;perspective:2400px;}
+    .f02-stage{position:absolute;inset:0;transform-style:preserve-3d;}
+
+    /* blueprint scaffold — the stage is inhabited from frame one */
+    .f02-ghost{
+      position:absolute;
+      border:1px solid rgba(255,255,255,0.065);
+      border-radius:12px;
+    }
+    .f02-rail{position:absolute;width:1px;background:rgba(255,255,255,0.07);}
+
+    /* ── the pinned anchor: ad-card-hero ── */
+    .f02-card{
+      position:absolute;left:164px;top:320px;width:680px;height:352px;
+      background:#343434;
+      border:1px solid rgba(255,255,255,0.10);
+      border-radius:16px;
+      box-shadow:0 30px 80px rgba(0,0,0,0.45);
+      padding:24px;
+      transform-origin:50% 50%;
+    }
+    .f02-card::after{
+      content:"";position:absolute;left:0;right:0;top:0;height:46px;
+      border-radius:16px 16px 0 0;
+      background:linear-gradient(180deg,rgba(255,255,255,0.07),rgba(255,255,255,0));
+      pointer-events:none;
+    }
+    .f02-swapwrap{position:absolute;left:24px;top:24px;width:632px;height:218px;}
+    .f02-ver{position:absolute;inset:0;transform-origin:50% 50%;}
+    .f02-ver-a{z-index:1;}
+    .f02-ver-b{z-index:2;opacity:0;}
+    .f02-img{
+      position:absolute;left:0;top:0;width:632px;height:148px;
+      border-radius:12px;overflow:hidden;
+      background:rgba(255,255,255,0.05);
+    }
+    .f02-bar{position:absolute;height:14px;border-radius:6px;background:rgba(255,255,255,0.16);transform-origin:50% 50%;}
+    .f02-bar-2{background:rgba(255,255,255,0.10);}
+    .f02-chip{
+      position:absolute;right:14px;top:14px;height:28px;padding:0 14px;
+      display:flex;align-items:center;
+      border-radius:100px;
+      background:rgba(0,0,0,0.34);
+      font-family:"Manrope",sans-serif;font-weight:600;font-size:15px;
+      letter-spacing:0.12em;color:rgba(255,255,255,0.62);
+    }
+    /* abstract creative geometry — no copy, no claim */
+    .f02-sh{position:absolute;}
+    .f02-budget{position:absolute;left:24px;top:290px;width:632px;height:12px;border-radius:6px;background:rgba(6,182,212,0.08);}
+    .f02-budget-fill{position:absolute;left:0;top:0;width:632px;height:12px;border-radius:6px;background:#06B6D4;transform-origin:0% 50%;}
+    .f02-budget-head{position:absolute;top:-4px;left:0;width:20px;height:20px;border-radius:50%;background:#06B6D4;box-shadow:0 0 18px rgba(6,182,212,0.45);}
+
+    /* ── variant thumbs ── */
+    .f02-var{
+      position:absolute;top:702px;width:212px;height:112px;
+      background:#343434;
+      border:1px solid rgba(255,255,255,0.10);
+      border-radius:12px;
+      padding:12px;
+      transform-origin:50% 50%;
+    }
+    .f02-var-img{position:absolute;left:12px;top:12px;width:188px;height:52px;border-radius:8px;overflow:hidden;background:rgba(255,255,255,0.05);}
+    .f02-vbar{position:absolute;height:8px;border-radius:4px;background:rgba(255,255,255,0.14);transform-origin:50% 50%;}
+    .f02-glow{
+      position:absolute;inset:-1px;border-radius:12px;
+      border:1px solid rgba(6,182,212,0.42);
+      box-shadow:0 0 26px rgba(6,182,212,0.22);
+      opacity:0;
+    }
+
+    /* ── campaign controls ── */
+    .f02-panel{
+      position:absolute;top:844px;height:114px;
+      background:rgba(255,255,255,0.04);
+      border:1px solid rgba(255,255,255,0.10);
+      border-radius:12px;
+      opacity:0;
+    }
+    .f02-slider{left:164px;width:424px;}
+    .f02-stepper{left:612px;width:232px;}
+    .f02-track{position:absolute;left:24px;top:53px;width:376px;height:8px;border-radius:6px;background:rgba(6,182,212,0.08);}
+    .f02-track-fill{position:absolute;left:24px;top:53px;width:376px;height:8px;border-radius:6px;background:rgba(6,182,212,0.55);transform-origin:0% 50%;}
+    .f02-handle{position:absolute;left:24px;top:43px;width:28px;height:28px;border-radius:50%;background:#06B6D4;box-shadow:0 0 20px rgba(6,182,212,0.40);}
+    .f02-tick{position:absolute;top:79px;width:4px;height:4px;border-radius:50%;background:rgba(255,255,255,0.16);}
+    .f02-step-row{position:absolute;left:20px;top:35px;width:192px;height:44px;}
+    .f02-step-btn{
+      position:absolute;top:0;width:44px;height:44px;border-radius:50%;
+      background:rgba(255,255,255,0.06);
+      display:flex;align-items:center;justify-content:center;
+      font-family:"Manrope",sans-serif;font-weight:600;font-size:24px;color:rgba(255,255,255,0.62);
+      transform-origin:50% 50%;
+    }
+    .f02-step-val{
+      position:absolute;left:44px;top:0;width:104px;height:44px;
+      display:flex;align-items:center;justify-content:center;
+      font-family:"Sora",sans-serif;font-weight:600;font-size:34px;color:#FFFFFF;
+      font-variant-numeric:tabular-nums;
+    }
+    .f02-step-val-b{opacity:0;}
+    .f02-link{position:absolute;left:375px;top:672px;width:2px;height:172px;background:#06B6D4;opacity:0;}
+
+    /* ── metric readouts ── */
+    .f02-metric{
+      position:absolute;top:988px;width:212px;height:124px;
+      background:rgba(255,255,255,0.04);
+      border:1px solid rgba(255,255,255,0.10);
+      border-radius:12px;
+      opacity:0;
+    }
+    .f02-mlabel{
+      position:absolute;left:0;right:0;top:18px;text-align:center;
+      font-family:"Manrope",sans-serif;font-weight:600;font-size:19px;
+      letter-spacing:0.14em;text-transform:uppercase;color:rgba(255,255,255,0.38);
+    }
+    .f02-mrow{
+      position:absolute;left:18px;top:50px;width:176px;height:56px;
+      display:flex;align-items:baseline;justify-content:center;
+      transform-origin:50% 50%;
+    }
+    .f02-mpre{
+      font-family:"Manrope",sans-serif;font-weight:600;font-size:22px;
+      color:rgba(255,255,255,0.38);margin-right:7px;
+    }
+    .f02-mval{
+      font-family:"Sora",sans-serif;font-weight:700;font-size:54px;line-height:1;
+      letter-spacing:-0.02em;color:#06B6D4;
+      font-variant-numeric:tabular-nums;
+      display:inline-block;
+    }
+    .f02-pulse{position:absolute;right:16px;top:16px;width:10px;height:10px;border-radius:50%;background:#06B6D4;transform-origin:50% 50%;}
+
+    /* ── liquefaction flows (handoff_out) ── */
+    .f02-flows{position:absolute;inset:0;opacity:0;}
+    .f02-flow{
+      position:absolute;left:100px;width:880px;height:2px;border-radius:2px;
+      background:linear-gradient(90deg,rgba(6,182,212,0) 0%,rgba(6,182,212,0.55) 22%,rgba(6,182,212,0.70) 52%,rgba(6,182,212,0.20) 82%,rgba(6,182,212,0) 100%);
+    }
+
+    /* ═══ LEVEL 3 — hero typography, flat, never blurred, never perspectived ═══ */
+    .f02-textlayer{position:absolute;inset:0;}
+    .f02-phrase{
+      position:absolute;left:88px;top:1180px;width:832px;
+      font-family:"Sora",sans-serif;font-weight:600;font-size:66px;line-height:1.16;
+      letter-spacing:-0.02em;color:#FFFFFF;
+    }
+    .f02-p2,.f02-p3,.f02-p4{opacity:0;}
+  </style>
+
+  <div
+    id="root"
+    data-composition-id="02-voce-otimiza-tudo"
+    data-start="0"
+    data-duration="9.5"
+    data-width="1080"
+    data-height="1920"
+  >
+    <!-- ══ L1 · atmospheric ground (full-bleed on a clip layer, never on #root) ══ -->
+    <div class="clip f02-ground" data-start="0" data-duration="9.5" data-track-index="0">
+      <div class="f02-ground-move">
+        <div class="f02-falloff"></div>
+        <div class="f02-grain"></div>
+      </div>
+    </div>
+
+    <!-- ══ L2 · the system ══ -->
+    <div class="clip f02-stagelayer" data-start="0" data-duration="9.5" data-track-index="1">
+      <div class="f02-camera">
+        <div class="f02-stage">
+          <!-- blueprint scaffold: the slots the world will grow into -->
+          <div class="f02-ghost" style="left:164px;top:702px;width:212px;height:112px;"></div>
+          <div class="f02-ghost" style="left:398px;top:702px;width:212px;height:112px;"></div>
+          <div class="f02-ghost" style="left:632px;top:702px;width:212px;height:112px;"></div>
+          <div class="f02-ghost" style="left:164px;top:844px;width:424px;height:114px;"></div>
+          <div class="f02-ghost" style="left:612px;top:844px;width:232px;height:114px;"></div>
+          <div class="f02-ghost" style="left:164px;top:988px;width:212px;height:124px;"></div>
+          <div class="f02-ghost" style="left:398px;top:988px;width:212px;height:124px;"></div>
+          <div class="f02-ghost" style="left:632px;top:988px;width:212px;height:124px;"></div>
+          <div class="f02-rail" style="left:269px;top:672px;height:30px;"></div>
+          <div class="f02-rail" style="left:503px;top:672px;height:30px;"></div>
+          <div class="f02-rail" style="left:737px;top:672px;height:30px;"></div>
+          <div class="f02-rail" style="left:269px;top:814px;height:30px;"></div>
+          <div class="f02-rail" style="left:737px;top:814px;height:30px;"></div>
+          <div class="f02-rail" style="left:269px;top:958px;height:30px;"></div>
+          <div class="f02-rail" style="left:503px;top:958px;height:30px;"></div>
+          <div class="f02-rail" style="left:737px;top:958px;height:30px;"></div>
+
+          <!-- the control-to-target coupling line -->
+          <div class="f02-link" id="f02-link"></div>
+
+          <!-- ── the pinned anchor ── -->
+          <div class="f02-card" id="f02-card">
+            <div class="f02-swapwrap">
+              <!-- version 01 -->
+              <div class="f02-ver f02-ver-a" id="f02-ver-a">
+                <div class="f02-img">
+                  <div class="f02-sh" style="left:0;top:0;width:214px;height:148px;background:rgba(216,192,167,0.14);"></div>
+                  <div class="f02-sh" style="left:386px;top:42px;width:64px;height:64px;border-radius:50%;background:rgba(255,255,255,0.10);"></div>
+                  <div class="f02-sh" style="left:482px;top:62px;width:112px;height:24px;border-radius:6px;background:rgba(255,255,255,0.07);"></div>
+                  <div class="f02-chip">01</div>
+                </div>
+                <div class="f02-bar" style="left:0;top:164px;width:430px;"></div>
+                <div class="f02-bar f02-bar-2" style="left:0;top:190px;width:278px;"></div>
+              </div>
+              <!-- version 02 -->
+              <div class="f02-ver f02-ver-b" id="f02-ver-b">
+                <div class="f02-img">
+                  <div class="f02-sh" style="left:0;bottom:0;width:632px;height:58px;background:rgba(6,182,212,0.16);"></div>
+                  <div class="f02-sh" style="left:28px;top:20px;width:96px;height:66px;border-radius:10px;background:rgba(255,255,255,0.12);"></div>
+                  <div class="f02-sh" style="left:148px;top:32px;width:196px;height:20px;border-radius:6px;background:rgba(255,255,255,0.08);"></div>
+                  <div class="f02-sh" style="left:148px;top:62px;width:132px;height:20px;border-radius:6px;background:rgba(255,255,255,0.06);"></div>
+                  <div class="f02-chip">02</div>
+                </div>
+                <div class="f02-bar" style="left:0;top:164px;width:324px;"></div>
+                <div class="f02-bar f02-bar-2" style="left:0;top:190px;width:396px;"></div>
+              </div>
+            </div>
+            <!-- budget bar: the card's response to the controls -->
+            <div class="f02-budget">
+              <div class="f02-budget-fill" id="f02-budget-fill"></div>
+              <div class="f02-budget-head" id="f02-budget-head"></div>
+            </div>
+          </div>
+
+          <!-- ── three variant thumbs ── -->
+          <div class="f02-var" id="f02-var-1" style="left:164px;">
+            <div class="f02-var-img">
+              <div class="f02-sh" style="left:0;top:0;width:64px;height:52px;background:rgba(216,192,167,0.14);"></div>
+              <div class="f02-sh" style="left:120px;top:14px;width:24px;height:24px;border-radius:50%;background:rgba(255,255,255,0.10);"></div>
+            </div>
+            <div class="f02-vbar" style="left:12px;top:74px;width:140px;"></div>
+            <div class="f02-vbar" style="left:12px;top:90px;width:84px;background:rgba(255,255,255,0.09);"></div>
+          </div>
+          <div class="f02-var" id="f02-var-2" style="left:398px;">
+            <div class="f02-var-img">
+              <div class="f02-sh" style="left:0;bottom:0;width:188px;height:20px;background:rgba(6,182,212,0.16);"></div>
+              <div class="f02-sh" style="left:14px;top:8px;width:40px;height:24px;border-radius:6px;background:rgba(255,255,255,0.12);"></div>
+            </div>
+            <div class="f02-vbar" style="left:12px;top:74px;width:110px;"></div>
+            <div class="f02-vbar" style="left:12px;top:90px;width:150px;background:rgba(255,255,255,0.09);"></div>
+            <div class="f02-glow" id="f02-glow"></div>
+          </div>
+          <div class="f02-var" id="f02-var-3" style="left:632px;">
+            <div class="f02-var-img">
+              <div class="f02-sh" style="left:112px;top:0;width:76px;height:52px;background:rgba(255,255,255,0.09);"></div>
+              <div class="f02-sh" style="left:14px;top:16px;width:72px;height:20px;border-radius:6px;background:rgba(216,192,167,0.14);"></div>
+            </div>
+            <div class="f02-vbar" style="left:12px;top:74px;width:164px;"></div>
+            <div class="f02-vbar" style="left:12px;top:90px;width:62px;background:rgba(255,255,255,0.09);"></div>
+          </div>
+
+          <!-- ── campaign controls ── -->
+          <div class="f02-panel f02-slider" id="f02-panel-slider">
+            <div class="f02-track"></div>
+            <div class="f02-track-fill" id="f02-track-fill"></div>
+            <div class="f02-tick" style="left:36px;"></div>
+            <div class="f02-tick" style="left:160px;"></div>
+            <div class="f02-tick" style="left:284px;"></div>
+            <div class="f02-tick" style="left:386px;"></div>
+            <div class="f02-handle" id="f02-handle"></div>
+          </div>
+          <div class="f02-panel f02-stepper" id="f02-panel-stepper">
+            <div class="f02-step-row">
+              <div class="f02-step-btn" id="f02-step-minus" style="left:0;">&#8722;</div>
+              <div class="f02-step-val" id="f02-step-a">3</div>
+              <div class="f02-step-val f02-step-val-b" id="f02-step-b">4</div>
+              <div class="f02-step-btn" id="f02-step-plus" style="left:148px;">+</div>
+            </div>
+          </div>
+
+          <!-- ── metric readouts ── -->
+          <div class="f02-metric" id="f02-metric-1" style="left:164px;">
+            <div class="f02-mlabel">CPC</div>
+            <div class="f02-mrow" id="f02-mrow-1">
+              <span class="f02-mpre">R$</span><span class="f02-mval" id="f02-val-1">0,00</span>
+            </div>
+            <div class="f02-pulse" id="f02-pulse-1"></div>
+          </div>
+          <div class="f02-metric" id="f02-metric-2" style="left:398px;">
+            <div class="f02-mlabel">Leads</div>
+            <div class="f02-mrow" id="f02-mrow-2">
+              <span class="f02-mval" id="f02-val-2">0</span>
+            </div>
+            <div class="f02-pulse" id="f02-pulse-2"></div>
+          </div>
+          <div class="f02-metric" id="f02-metric-3" style="left:632px;">
+            <div class="f02-mlabel">Vendas</div>
+            <div class="f02-mrow" id="f02-mrow-3">
+              <span class="f02-mval" id="f02-val-3">0</span>
+            </div>
+            <div class="f02-pulse" id="f02-pulse-3"></div>
+          </div>
+
+          <!-- ── liquefaction flows: the handoff out ── -->
+          <div class="f02-flows" id="f02-flows">
+            <div class="f02-flow" style="top:388px;"></div>
+            <div class="f02-flow" style="top:498px;"></div>
+            <div class="f02-flow" style="top:628px;"></div>
+            <div class="f02-flow" style="top:756px;"></div>
+            <div class="f02-flow" style="top:898px;"></div>
+            <div class="f02-flow" style="top:1026px;"></div>
+            <div class="f02-flow" style="top:1118px;"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ L3 · hero typography (verbatim onscreen_text, flat in the camera plane) ══ -->
+    <div class="clip f02-textlayer" data-start="0" data-duration="9.5" data-track-index="2">
+      <div class="f02-phrase f02-p1" id="f02-p1">Você muda<br />seus anúncios.</div>
+      <div class="f02-phrase f02-p2" id="f02-p2">Testa novos<br />criativos.</div>
+      <div class="f02-phrase f02-p3" id="f02-p3">Ajusta campanhas.</div>
+      <div class="f02-phrase f02-p4" id="f02-p4">Analisa CPC, leads<br />e vendas.</div>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      window.__timelines = window.__timelines || {};
+      var tl = gsap.timeline({ paused: true });
+
+      var R = document.querySelector('[data-composition-id="02-voce-otimiza-tudo"]');
+
+      if (R) {
+        var q = function (s) { return R.querySelector(s); };
+
+        /* ── nodes ── */
+        var groundMove = q(".f02-ground-move");
+        var stage      = q(".f02-stage");
+        var card       = q("#f02-card");
+        var verA       = q("#f02-ver-a");
+        var verB       = q("#f02-ver-b");
+        var budgetFill = q("#f02-budget-fill");
+        var budgetHead = q("#f02-budget-head");
+        var vars       = [q("#f02-var-1"), q("#f02-var-2"), q("#f02-var-3")];
+        var glow       = q("#f02-glow");
+        var pSlider    = q("#f02-panel-slider");
+        var pStepper   = q("#f02-panel-stepper");
+        var handle     = q("#f02-handle");
+        var trackFill  = q("#f02-track-fill");
+        var stepPlus   = q("#f02-step-plus");
+        var stepA      = q("#f02-step-a");
+        var stepB      = q("#f02-step-b");
+        var link       = q("#f02-link");
+        var metrics    = [q("#f02-metric-1"), q("#f02-metric-2"), q("#f02-metric-3")];
+        var mrows      = [q("#f02-mrow-1"), q("#f02-mrow-2"), q("#f02-mrow-3")];
+        var pulses     = [q("#f02-pulse-1"), q("#f02-pulse-2"), q("#f02-pulse-3")];
+        var valCpc     = q("#f02-val-1");
+        var valLeads   = q("#f02-val-2");
+        var valVendas  = q("#f02-val-3");
+        var flows      = q("#f02-flows");
+        var phrases    = [q("#f02-p1"), q("#f02-p2"), q("#f02-p3"), q("#f02-p4")];
+        var softBars   = Array.prototype.slice.call(R.querySelectorAll(".f02-bar, .f02-vbar"));
+        var surfaces   = [card].concat(vars, [pSlider, pStepper], metrics);
+
+        /* ════════════════════════════════════════════════════════════════
+           CAMERA — two short moves, both finished long before any hold.
+           L2 at 0.6x nominal, L1 at 0.25x. L3 typography never moves.
+           ════════════════════════════════════════════════════════════════ */
+        tl.fromTo(stage,      { x: 60 }, { x: 0, duration: 0.52, ease: "power2.inOut" }, 0);
+        tl.fromTo(groundMove, { x: 15 }, { x: 0, duration: 0.52, ease: "power2.inOut" }, 0);
+        tl.fromTo(stage,      { y: 0 }, { y: -48, duration: 0.56, ease: "power2.inOut", immediateRender: false }, 4.0);
+        tl.fromTo(groundMove, { y: 0 }, { y: -12, duration: 0.56, ease: "power2.inOut", immediateRender: false }, 4.0);
+
+        /* ════════════════════════════════════════════════════════════════
+           TEXT — the four phrases of onscreen_text, verbatim and in order.
+           Seams are cut-the-curve (whole-line variant), rightward on both
+           sides, matching the anchor's own rightward arrival.
+           ════════════════════════════════════════════════════════════════ */
+        var CUT_D = 230;
+        function phraseIn(el, at, dur, fromOp) {
+          tl.fromTo(
+            el,
+            { x: -CUT_D, opacity: fromOp },
+            { x: 0, opacity: 1, duration: dur, ease: "power4.out", immediateRender: at === 0.16 },
+            at
+          );
+        }
+        function phraseOut(el, at) {
+          tl.fromTo(el, { x: 0 }, { x: CUT_D, duration: 0.26, ease: "power4.in", immediateRender: false }, at);
+          tl.fromTo(el, { opacity: 1 }, { opacity: 0, duration: 0.22, ease: "power1.in", immediateRender: false }, at);
+        }
+
+        /* ╔══ SCENE A (0.0–2.0) — "Você muda seus anúncios." ══╗ */
+        /* handoff_in: ad-card-hero, exact boundary state */
+        tl.fromTo(
+          card,
+          { x: -640, y: 520, scale: 1.18, opacity: 1 },
+          { x: 0, y: 0, scale: 1, opacity: 1, duration: 0.52, ease: "power3.out" },
+          0
+        );
+        phraseIn(phrases[0], 0.16, 0.46, 0);
+
+        /* scale-swap-transition — the creative changes version, not identity */
+        tl.fromTo(verA, { scale: 1, opacity: 1 },
+          { scale: 0.72, opacity: 0, duration: 0.30, ease: "power2.in", immediateRender: false }, 0.46);
+        tl.fromTo(verB, { scale: 0.72, opacity: 0 },
+          { scale: 1, opacity: 1, duration: 0.48, ease: "back.out(1.5)", immediateRender: false }, 0.62);
+        /* still 1.10 → 1.74 (hold 0.6s) */
+        phraseOut(phrases[0], 1.74);
+
+        /* ╔══ SCENE B (2.0–4.0) — "Testa novos criativos." ══╗ */
+        phraseIn(phrases[1], 2.0, 0.32, 0.35);
+        /* organised multiplication, cascade stagger 0.08s */
+        var varAt = [2.22, 2.30, 2.38];
+        for (var i = 0; i < 3; i++) {
+          tl.fromTo(
+            vars[i],
+            { opacity: 0, y: 30, scale: 0.90 },
+            { opacity: 1, y: 0, scale: 1, duration: 0.40, ease: "power3.out" },
+            varAt[i]
+          );
+        }
+        /* collapse into one dominant composition — losers lose priority */
+        tl.fromTo(vars[0], { scale: 1, opacity: 1, x: 0 },
+          { scale: 0.90, opacity: 0.34, x: 16, duration: 0.28, ease: "power2.inOut", immediateRender: false }, 2.86);
+        tl.fromTo(vars[2], { scale: 1, opacity: 1, x: 0 },
+          { scale: 0.90, opacity: 0.34, x: -16, duration: 0.28, ease: "power2.inOut", immediateRender: false }, 2.86);
+        tl.fromTo(vars[1], { scale: 1 },
+          { scale: 1.06, duration: 0.28, ease: "power2.inOut", immediateRender: false }, 2.86);
+        tl.fromTo(glow, { opacity: 0 },
+          { opacity: 1, duration: 0.28, ease: "power2.out", immediateRender: false }, 2.86);
+        /* still 3.14 → 3.74 (hold 0.6s) */
+        phraseOut(phrases[1], 3.74);
+
+        /* ╔══ SCENE C (4.0–6.0) — "Ajusta campanhas." ══╗ */
+        phraseIn(phrases[2], 4.0, 0.32, 0.35);
+        tl.fromTo(pSlider,  { opacity: 0, y: 22 }, { opacity: 1, y: 0, duration: 0.38, ease: "power3.out" }, 4.20);
+        tl.fromTo(pStepper, { opacity: 0, y: 22 }, { opacity: 1, y: 0, duration: 0.38, ease: "power3.out" }, 4.32);
+        /* the handle slides and settles; the control is coupled to its target */
+        tl.fromTo(handle,    { x: 20 }, { x: 212, duration: 0.34, ease: "power3.out", immediateRender: false }, 4.70);
+        tl.fromTo(trackFill, { scaleX: 0.144 }, { scaleX: 0.654, duration: 0.34, ease: "power3.out", immediateRender: false }, 4.70);
+        tl.fromTo(link,      { opacity: 0 }, { opacity: 0.45, duration: 0.26, ease: "power2.out", immediateRender: false }, 4.74);
+        /* the stepper steps */
+        tl.fromTo(stepPlus, { scale: 1 }, { scale: 0.90, duration: 0.08, ease: "power2.in", immediateRender: false }, 4.82);
+        tl.fromTo(stepPlus, { scale: 0.90 }, { scale: 1, duration: 0.16, ease: "power2.out", immediateRender: false }, 4.90);
+        tl.fromTo(stepA, { opacity: 1 }, { opacity: 0, duration: 0.06, ease: "none", immediateRender: false }, 4.90);
+        tl.fromTo(stepB, { opacity: 0 }, { opacity: 1, duration: 0.06, ease: "none", immediateRender: false }, 4.90);
+        /* and the card responds — the budget bar follows */
+        tl.fromTo(budgetFill, { scaleX: 0.34 }, { scaleX: 0.68, duration: 0.28, ease: "power3.out" }, 4.86);
+        tl.fromTo(budgetHead, { x: 205 }, { x: 420, duration: 0.28, ease: "power3.out" }, 4.86);
+        /* still 5.14 → 5.74 (hold 0.6s) */
+        phraseOut(phrases[2], 5.74);
+
+        /* ╔══ SCENE D (6.0–9.0) — "Analisa CPC, leads e vendas." ══╗ */
+        phraseIn(phrases[3], 6.0, 0.34, 0.35);
+        var mAt = [6.02, 6.14, 6.26];
+        for (var j = 0; j < 3; j++) {
+          tl.fromTo(metrics[j], { opacity: 0, y: 26 },
+            { opacity: 1, y: 0, duration: 0.32, ease: "power3.out" }, mAt[j]);
+        }
+
+        /* counting-dynamic-scale — 900ms run, parallel chord, stops for reading */
+        var COUNT_AT = 6.30, COUNT_DUR = 0.90, COUNT_EASE = "power3.out";
+        var START_SCALE = 30 / 54;
+
+        var sCpc = { v: 0 }, sLeads = { v: 0 }, sVendas = { v: 0 };
+        tl.fromTo(sCpc, { v: 0 }, {
+          v: 1.84, duration: COUNT_DUR, ease: COUNT_EASE,
+          onUpdate: function () { valCpc.textContent = sCpc.v.toFixed(2).replace(".", ","); }
+        }, COUNT_AT);
+        tl.fromTo(sLeads, { v: 0 }, {
+          v: 248, duration: COUNT_DUR, ease: COUNT_EASE,
+          onUpdate: function () { valLeads.textContent = String(Math.round(sLeads.v)); }
+        }, COUNT_AT);
+        tl.fromTo(sVendas, { v: 0 }, {
+          v: 37, duration: COUNT_DUR, ease: COUNT_EASE,
+          onUpdate: function () { valVendas.textContent = String(Math.round(sVendas.v)); }
+        }, COUNT_AT);
+        for (var k = 0; k < 3; k++) {
+          tl.fromTo(mrows[k], { scale: START_SCALE },
+            { scale: 1, duration: COUNT_DUR, ease: COUNT_EASE }, COUNT_AT);
+        }
+        /* one discrete pulse per indicator */
+        var pAt = [6.40, 6.70, 7.00];
+        for (var m = 0; m < 3; m++) {
+          tl.fromTo(pulses[m], { scale: 0.40, opacity: 0.25 },
+            { scale: 1, opacity: 1, duration: 0.20, ease: "power2.out" }, pAt[m]);
+        }
+
+        /* ── absolute stillness 7.20 → 8.40 (hold 1.2s) ── */
+
+        /* handoff_out — at 8.40 the whole set keeps x 0 / y 0 / scale 1 / opacity 1
+           and begins to liquefy into flows. Nothing exits; the next frame finishes it. */
+        tl.fromTo(flows, { opacity: 0 },
+          { opacity: 1, duration: 0.40, ease: "power2.out", immediateRender: false }, 8.40);
+        tl.fromTo(flows, { x: -34 },
+          { x: 34, duration: 0.60, ease: "power1.inOut", immediateRender: false }, 8.40);
+        tl.fromTo(card, { borderRadius: 16, borderColor: "rgba(255,255,255,0.10)" },
+          { borderRadius: 56, borderColor: "rgba(6,182,212,0.30)", duration: 0.60, ease: "power2.in", immediateRender: false }, 8.40);
+        for (var s = 1; s < surfaces.length; s++) {
+          tl.fromTo(surfaces[s], { borderRadius: 12, borderColor: "rgba(255,255,255,0.10)" },
+            { borderRadius: 44, borderColor: "rgba(6,182,212,0.26)", duration: 0.60, ease: "power2.in", immediateRender: false }, 8.40);
+        }
+        for (var b = 0; b < softBars.length; b++) {
+          tl.fromTo(softBars[b], { scaleY: 1, scaleX: 1 },
+            { scaleY: 0.42, scaleX: 1.05, duration: 0.60, ease: "power2.in", immediateRender: false }, 8.40);
+        }
+      }
+
+      window.__timelines["02-voce-otimiza-tudo"] = tl;
+      tl.seek(0);
+    })();
+  </script>
+</template>

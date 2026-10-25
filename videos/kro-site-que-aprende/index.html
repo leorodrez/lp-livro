@@ -1,0 +1,464 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1920" />
+    <script src="assets/vendor/gsap.min.js"></script>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        width: 1080px;
+        height: 1920px;
+        overflow: hidden;
+        background: #000;
+      }
+      #root {
+        position: relative;
+        width: 1080px;
+        height: 1920px;
+        overflow: hidden;
+        background: #2B2B2B;
+      }
+      .scene {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+      }
+    </style>
+  </head>
+  <body>
+    <div
+      id="root"
+      data-composition-id="main"
+      data-start="0"
+      data-duration="83"
+      data-width="1080"
+      data-height="1920"
+    >
+      <div
+        id="el-01-site-estatico"
+        class="scene"
+        data-composition-id="01-site-estatico"
+        data-composition-src="compositions/frames/01-site-estatico.html"
+        data-start="0"
+        data-duration="6"
+        data-track-index="0"
+      ></div>
+
+      <div
+        id="el-02-voce-otimiza-tudo"
+        class="scene"
+        data-composition-id="02-voce-otimiza-tudo"
+        data-composition-src="compositions/frames/02-voce-otimiza-tudo.html"
+        data-start="6"
+        data-duration="9.5"
+        data-track-index="1"
+      ></div>
+
+      <div
+        id="el-03-trafego-congela"
+        class="scene"
+        data-composition-id="03-trafego-congela"
+        data-composition-src="compositions/frames/03-trafego-congela.html"
+        data-start="15"
+        data-duration="7.5"
+        data-track-index="0"
+      ></div>
+
+      <div
+        id="el-04-mensagens-fantasma"
+        class="scene"
+        data-composition-id="04-mensagens-fantasma"
+        data-composition-src="compositions/frames/04-mensagens-fantasma.html"
+        data-start="22"
+        data-duration="6"
+        data-track-index="1"
+      ></div>
+
+      <div
+        id="el-05-kro-ai-laboratorio"
+        class="scene"
+        data-composition-id="05-kro-ai-laboratorio"
+        data-composition-src="compositions/frames/05-kro-ai-laboratorio.html"
+        data-start="27.5"
+        data-duration="5.5"
+        data-track-index="0"
+      ></div>
+
+      <div
+        id="el-06-variantes"
+        class="scene"
+        data-composition-id="06-variantes"
+        data-composition-src="compositions/frames/06-variantes.html"
+        data-start="32.5"
+        data-duration="4"
+        data-track-index="1"
+      ></div>
+
+      <div
+        id="el-07-visitantes-avaliam"
+        class="scene"
+        data-composition-id="07-visitantes-avaliam"
+        data-composition-src="compositions/frames/07-visitantes-avaliam.html"
+        data-start="36"
+        data-duration="4.5"
+        data-track-index="0"
+      ></div>
+
+      <div
+        id="el-08-fazem-agir"
+        class="scene"
+        data-composition-id="08-fazem-agir"
+        data-composition-src="compositions/frames/08-fazem-agir.html"
+        data-start="40"
+        data-duration="4"
+        data-track-index="1"
+      ></div>
+
+      <div
+        id="el-09-potencial-resultado"
+        class="scene"
+        data-composition-id="09-potencial-resultado"
+        data-composition-src="compositions/frames/09-potencial-resultado.html"
+        data-start="43.5"
+        data-duration="4.5"
+        data-track-index="0"
+      ></div>
+
+      <div
+        id="el-10-opiniao-achismo"
+        class="scene"
+        data-composition-id="10-opiniao-achismo"
+        data-composition-src="compositions/frames/10-opiniao-achismo.html"
+        data-start="48"
+        data-duration="4.5"
+        data-track-index="1"
+      ></div>
+
+      <div
+        id="el-11-deixa-de-ser-estatica"
+        class="scene"
+        data-composition-id="11-deixa-de-ser-estatica"
+        data-composition-src="compositions/frames/11-deixa-de-ser-estatica.html"
+        data-start="52"
+        data-duration="8"
+        data-track-index="0"
+      ></div>
+
+      <div
+        id="el-12-seus-clientes"
+        class="scene"
+        data-composition-id="12-seus-clientes"
+        data-composition-src="compositions/frames/12-seus-clientes.html"
+        data-start="60"
+        data-duration="2.5"
+        data-track-index="1"
+      ></div>
+
+      <div
+        id="el-13-mais-pessoas"
+        class="scene"
+        data-composition-id="13-mais-pessoas"
+        data-composition-src="compositions/frames/13-mais-pessoas.html"
+        data-start="62"
+        data-duration="6.5"
+        data-track-index="0"
+      ></div>
+
+      <div
+        id="el-14-cada-visita"
+        class="scene"
+        data-composition-id="14-cada-visita"
+        data-composition-src="compositions/frames/14-cada-visita.html"
+        data-start="68"
+        data-duration="4.5"
+        data-track-index="1"
+      ></div>
+
+      <div
+        id="el-15-kro-ai-marca"
+        class="scene"
+        data-composition-id="15-kro-ai-marca"
+        data-composition-src="compositions/frames/15-kro-ai-marca.html"
+        data-start="72"
+        data-duration="2.5"
+        data-track-index="0"
+      ></div>
+
+      <div
+        id="el-16-end-card"
+        class="scene"
+        data-composition-id="16-end-card"
+        data-composition-src="compositions/frames/16-end-card.html"
+        data-start="74"
+        data-duration="9"
+        data-track-index="1"
+      ></div>
+
+      <!-- SFX -->
+      <audio
+        id="el-sfx-0"
+        src="assets/sfx/impact-bass-1.mp3"
+        data-start="0"
+        data-duration="2.116"
+        data-track-index="20"
+        data-volume="0.34"
+      ></audio>
+      <audio
+        id="el-sfx-1"
+        src="assets/sfx/whoosh-short.mp3"
+        data-start="5.7"
+        data-duration="0.575"
+        data-track-index="21"
+        data-volume="0.26"
+      ></audio>
+      <audio
+        id="el-sfx-2"
+        src="assets/sfx/click.mp3"
+        data-start="8"
+        data-duration="0.366"
+        data-track-index="22"
+        data-volume="0.24"
+      ></audio>
+      <audio
+        id="el-sfx-3"
+        src="assets/sfx/click-soft.mp3"
+        data-start="10.2"
+        data-duration="0.366"
+        data-track-index="23"
+        data-volume="0.2"
+      ></audio>
+      <audio
+        id="el-sfx-4"
+        src="assets/sfx/click-soft.mp3"
+        data-start="10.5"
+        data-duration="0.366"
+        data-track-index="24"
+        data-volume="0.2"
+      ></audio>
+      <audio
+        id="el-sfx-5"
+        src="assets/sfx/click-soft.mp3"
+        data-start="10.8"
+        data-duration="0.366"
+        data-track-index="25"
+        data-volume="0.2"
+      ></audio>
+      <audio
+        id="el-sfx-6"
+        src="assets/sfx/ping.mp3"
+        data-start="12.3"
+        data-duration="1.32"
+        data-track-index="26"
+        data-volume="0.22"
+      ></audio>
+      <audio
+        id="el-sfx-7"
+        src="assets/sfx/ping.mp3"
+        data-start="12.9"
+        data-duration="1.32"
+        data-track-index="27"
+        data-volume="0.22"
+      ></audio>
+      <audio
+        id="el-sfx-8"
+        src="assets/sfx/ping.mp3"
+        data-start="13.5"
+        data-duration="1.32"
+        data-track-index="28"
+        data-volume="0.22"
+      ></audio>
+      <audio
+        id="el-sfx-9"
+        src="assets/sfx/whoosh-cinematic.mp3"
+        data-start="15.4"
+        data-duration="5.544"
+        data-track-index="29"
+        data-volume="0.26"
+      ></audio>
+      <audio
+        id="el-sfx-10"
+        src="assets/sfx/riser.mp3"
+        data-start="23.8"
+        data-duration="10.032"
+        data-track-index="30"
+        data-volume="0.14"
+      ></audio>
+      <audio
+        id="el-sfx-11"
+        src="assets/sfx/impact-bass-2.mp3"
+        data-start="27.5"
+        data-duration="2.592"
+        data-track-index="31"
+        data-volume="0.38"
+      ></audio>
+      <audio
+        id="el-sfx-12"
+        src="assets/sfx/click-soft.mp3"
+        data-start="33"
+        data-duration="0.366"
+        data-track-index="32"
+        data-volume="0.18"
+      ></audio>
+      <audio
+        id="el-sfx-13"
+        src="assets/sfx/click-soft.mp3"
+        data-start="33.22"
+        data-duration="0.366"
+        data-track-index="33"
+        data-volume="0.18"
+      ></audio>
+      <audio
+        id="el-sfx-14"
+        src="assets/sfx/click-soft.mp3"
+        data-start="33.44"
+        data-duration="0.366"
+        data-track-index="34"
+        data-volume="0.18"
+      ></audio>
+      <audio
+        id="el-sfx-15"
+        src="assets/sfx/click-soft.mp3"
+        data-start="33.66"
+        data-duration="0.366"
+        data-track-index="35"
+        data-volume="0.18"
+      ></audio>
+      <audio
+        id="el-sfx-16"
+        src="assets/sfx/pop.mp3"
+        data-start="36.5"
+        data-duration="0.72"
+        data-track-index="36"
+        data-volume="0.16"
+      ></audio>
+      <audio
+        id="el-sfx-17"
+        src="assets/sfx/pop.mp3"
+        data-start="37.2"
+        data-duration="0.72"
+        data-track-index="37"
+        data-volume="0.16"
+      ></audio>
+      <audio
+        id="el-sfx-18"
+        src="assets/sfx/pop.mp3"
+        data-start="37.9"
+        data-duration="0.72"
+        data-track-index="38"
+        data-volume="0.16"
+      ></audio>
+      <audio
+        id="el-sfx-19"
+        src="assets/sfx/pop.mp3"
+        data-start="38.6"
+        data-duration="0.72"
+        data-track-index="39"
+        data-volume="0.16"
+      ></audio>
+      <audio
+        id="el-sfx-20"
+        src="assets/sfx/pop.mp3"
+        data-start="39.3"
+        data-duration="0.72"
+        data-track-index="40"
+        data-volume="0.16"
+      ></audio>
+      <audio
+        id="el-sfx-21"
+        src="assets/sfx/ping.mp3"
+        data-start="42.2"
+        data-duration="1.32"
+        data-track-index="41"
+        data-volume="0.24"
+      ></audio>
+      <audio
+        id="el-sfx-22"
+        src="assets/sfx/whoosh-short.mp3"
+        data-start="43.7"
+        data-duration="0.575"
+        data-track-index="42"
+        data-volume="0.22"
+      ></audio>
+      <audio
+        id="el-sfx-23"
+        src="assets/sfx/impact-bass-1.mp3"
+        data-start="48.35"
+        data-duration="2.116"
+        data-track-index="43"
+        data-volume="0.32"
+      ></audio>
+      <audio
+        id="el-sfx-24"
+        src="assets/sfx/impact-bass-1.mp3"
+        data-start="50.35"
+        data-duration="2.116"
+        data-track-index="44"
+        data-volume="0.32"
+      ></audio>
+      <audio
+        id="el-sfx-25"
+        src="assets/sfx/impact-bass-2.mp3"
+        data-start="60"
+        data-duration="2.592"
+        data-track-index="45"
+        data-volume="0.3"
+      ></audio>
+      <audio
+        id="el-sfx-26"
+        src="assets/sfx/ping.mp3"
+        data-start="70.6"
+        data-duration="1.32"
+        data-track-index="46"
+        data-volume="0.26"
+      ></audio>
+      <audio
+        id="el-sfx-27"
+        src="assets/sfx/impact-bass-1.mp3"
+        data-start="72"
+        data-duration="2.116"
+        data-track-index="47"
+        data-volume="0.26"
+      ></audio>
+    </div>
+
+    <script>
+      window.__timelines = window.__timelines || {};
+      window.__timelines["main"] = gsap.timeline({ paused: true });
+      // ── frame transitions (injected by transitions.mjs) ──
+      (function () { var tl = window.__timelines["main"];
+        tl.to("#el-02-voce-otimiza-tudo", { opacity: 0, duration: 0.5, ease: "power2.inOut" }, 15);
+        tl.fromTo("#el-03-trafego-congela", { opacity: 0 }, { opacity: 1, duration: 0.5, ease: "power2.inOut" }, 15);
+        tl.to("#el-03-trafego-congela", { opacity: 0, duration: 0.5, ease: "power2.inOut" }, 22);
+        tl.fromTo("#el-04-mensagens-fantasma", { opacity: 0 }, { opacity: 1, duration: 0.5, ease: "power2.inOut" }, 22);
+        tl.to("#el-04-mensagens-fantasma", { opacity: 0, duration: 0.5, ease: "power2.inOut" }, 27.5);
+        tl.fromTo("#el-05-kro-ai-laboratorio", { opacity: 0 }, { opacity: 1, duration: 0.5, ease: "power2.inOut" }, 27.5);
+        tl.to("#el-05-kro-ai-laboratorio", { opacity: 0, duration: 0.5, ease: "power2.inOut" }, 32.5);
+        tl.fromTo("#el-06-variantes", { opacity: 0 }, { opacity: 1, duration: 0.5, ease: "power2.inOut" }, 32.5);
+        tl.to("#el-06-variantes", { opacity: 0, duration: 0.5, ease: "power2.inOut" }, 36);
+        tl.fromTo("#el-07-visitantes-avaliam", { opacity: 0 }, { opacity: 1, duration: 0.5, ease: "power2.inOut" }, 36);
+        tl.to("#el-07-visitantes-avaliam", { opacity: 0, duration: 0.5, ease: "power2.inOut" }, 40);
+        tl.fromTo("#el-08-fazem-agir", { opacity: 0 }, { opacity: 1, duration: 0.5, ease: "power2.inOut" }, 40);
+        tl.to("#el-08-fazem-agir", { opacity: 0, duration: 0.5, ease: "power2.inOut" }, 43.5);
+        tl.fromTo("#el-09-potencial-resultado", { opacity: 0 }, { opacity: 1, duration: 0.5, ease: "power2.inOut" }, 43.5);
+        tl.to("#el-10-opiniao-achismo", { opacity: 0, duration: 0.5, ease: "power2.inOut" }, 52);
+        tl.fromTo("#el-11-deixa-de-ser-estatica", { opacity: 0 }, { opacity: 1, duration: 0.5, ease: "power2.inOut" }, 52);
+        tl.to("#el-12-seus-clientes", { opacity: 0, duration: 0.5, ease: "power2.inOut" }, 62);
+        tl.fromTo("#el-13-mais-pessoas", { opacity: 0 }, { opacity: 1, duration: 0.5, ease: "power2.inOut" }, 62);
+        tl.to("#el-13-mais-pessoas", { opacity: 0, duration: 0.5, ease: "power2.inOut" }, 68);
+        tl.fromTo("#el-14-cada-visita", { opacity: 0 }, { opacity: 1, duration: 0.5, ease: "power2.inOut" }, 68);
+        tl.to("#el-14-cada-visita", { opacity: 0, duration: 0.5, ease: "power2.inOut" }, 72);
+        tl.fromTo("#el-15-kro-ai-marca", { opacity: 0 }, { opacity: 1, duration: 0.5, ease: "power2.inOut" }, 72);
+        tl.to("#el-15-kro-ai-marca", { opacity: 0, duration: 0.5, ease: "power2.inOut" }, 74);
+        tl.fromTo("#el-16-end-card", { opacity: 0 }, { opacity: 1, duration: 0.5, ease: "power2.inOut" }, 74);
+        tl.to({}, { duration: 83 }, 0); // full-span anchor — main.duration() == composition total (Studio master duration)
+      })();
+    </script>
+  </body>
+</html>

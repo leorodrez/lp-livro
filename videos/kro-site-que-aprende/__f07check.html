@@ -1,0 +1,24 @@
+<!doctype html><html><head><meta charset="utf-8">
+<script src="assets/vendor/gsap.min.js"></script>
+<style>*{margin:0;padding:0;box-sizing:border-box}html,body{width:1080px;height:1920px;overflow:hidden;background:#2B2B2B}
+#host{position:relative;width:1080px;height:1920px;overflow:hidden}
+.clip{position:absolute;left:0;top:0;width:100%;height:100%}</style></head>
+<body><div id="host"></div>
+<script>
+window.__timelines={};
+fetch('compositions/frames/07-visitantes-avaliam.html').then(r=>r.text()).then(t=>{
+  var d=document.createElement('div'); d.innerHTML=t;
+  var tpl=d.querySelector('template');
+  var frag=tpl.content.cloneNode(true);
+  // re-create scripts so they execute
+  var host=document.getElementById('host');
+  var scripts=[].slice.call(frag.querySelectorAll('script'));
+  scripts.forEach(s=>s.parentNode.removeChild(s));
+  host.appendChild(frag);
+  scripts.forEach(function(s){
+    if(s.src) return; // gsap already loaded
+    var n=document.createElement('script'); n.textContent=s.textContent; document.body.appendChild(n);
+  });
+  window.__ready=true;
+});
+</script></body></html>

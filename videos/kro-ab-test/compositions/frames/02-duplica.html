@@ -1,0 +1,203 @@
+<template>
+  <style>
+@font-face{font-family:'Manrope';font-style:normal;font-weight:400;font-display:block;src:url(assets/fonts/manrope-400-ext.woff2) format('woff2');unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;}
+@font-face{font-family:'Manrope';font-style:normal;font-weight:400;font-display:block;src:url(assets/fonts/manrope-400-lat.woff2) format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;}
+@font-face{font-family:'Manrope';font-style:normal;font-weight:500;font-display:block;src:url(assets/fonts/manrope-500-ext.woff2) format('woff2');unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;}
+@font-face{font-family:'Manrope';font-style:normal;font-weight:500;font-display:block;src:url(assets/fonts/manrope-500-lat.woff2) format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;}
+@font-face{font-family:'Manrope';font-style:normal;font-weight:600;font-display:block;src:url(assets/fonts/manrope-600-ext.woff2) format('woff2');unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;}
+@font-face{font-family:'Manrope';font-style:normal;font-weight:600;font-display:block;src:url(assets/fonts/manrope-600-lat.woff2) format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;}
+@font-face{font-family:'Manrope';font-style:normal;font-weight:700;font-display:block;src:url(assets/fonts/manrope-700-ext.woff2) format('woff2');unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;}
+@font-face{font-family:'Manrope';font-style:normal;font-weight:700;font-display:block;src:url(assets/fonts/manrope-700-lat.woff2) format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;}
+@font-face{font-family:'Manrope';font-style:normal;font-weight:800;font-display:block;src:url(assets/fonts/manrope-800-ext.woff2) format('woff2');unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;}
+@font-face{font-family:'Manrope';font-style:normal;font-weight:800;font-display:block;src:url(assets/fonts/manrope-800-lat.woff2) format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;}
+@font-face{font-family:'Sora';font-style:normal;font-weight:400;font-display:block;src:url(assets/fonts/sora-400-ext.woff2) format('woff2');unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;}
+@font-face{font-family:'Sora';font-style:normal;font-weight:400;font-display:block;src:url(assets/fonts/sora-400-lat.woff2) format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;}
+@font-face{font-family:'Sora';font-style:normal;font-weight:600;font-display:block;src:url(assets/fonts/sora-600-ext.woff2) format('woff2');unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;}
+@font-face{font-family:'Sora';font-style:normal;font-weight:600;font-display:block;src:url(assets/fonts/sora-600-lat.woff2) format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;}
+@font-face{font-family:'Sora';font-style:normal;font-weight:700;font-display:block;src:url(assets/fonts/sora-700-ext.woff2) format('woff2');unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;}
+@font-face{font-family:'Sora';font-style:normal;font-weight:700;font-display:block;src:url(assets/fonts/sora-700-lat.woff2) format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;}
+@font-face{font-family:'Sora';font-style:normal;font-weight:800;font-display:block;src:url(assets/fonts/sora-800-ext.woff2) format('woff2');unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;}
+@font-face{font-family:'Sora';font-style:normal;font-weight:800;font-display:block;src:url(assets/fonts/sora-800-lat.woff2) format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;}
+#root { width:1080px; height:1080px; position:relative; overflow:hidden; }
+#root * { box-sizing:border-box; margin:0; padding:0; }
+#f02-duplica-ground { position:absolute; inset:0; background:#2B2B2B; }
+
+/* the mock page — product UI, so Manrope throughout (brand type semantics) */
+.f02-duplica-card {
+  position:absolute; left:150px; top:260px;
+  width:780px; height:560px;
+  background:#FFFFFF; border-radius:14px; padding:40px;
+  font-family:'Manrope',sans-serif; color:#2B2B2B;
+  display:flex; flex-direction:column;
+}
+.f02-duplica-nav { height:38px; display:flex; align-items:center; justify-content:space-between; flex:none; }
+.f02-duplica-nav-brand { font-size:25px; font-weight:800; letter-spacing:-0.02em; }
+.f02-duplica-nav-right { display:flex; align-items:center; gap:20px; }
+.f02-duplica-nav-link { font-size:17px; font-weight:500; color:#6B6B6B; }
+.f02-duplica-nav-btn { font-size:15px; font-weight:600; color:#FFFFFF; background:#3F4A52; border-radius:100px; padding:9px 18px; }
+.f02-duplica-headline {
+  margin-top:26px; height:184px; width:700px; flex:none;
+  font-size:54px; font-weight:800; line-height:1.13; letter-spacing:-0.025em;
+}
+.f02-duplica-sub { margin-top:10px; font-size:22px; font-weight:400; color:#6B6B6B; flex:none; }
+.f02-duplica-btn {
+  margin-top:20px; height:52px; width:214px; border-radius:100px; flex:none;
+  background:#3F4A52; color:#FFFFFF; font-size:19px; font-weight:600;
+  display:flex; align-items:center; justify-content:center;
+}
+.f02-duplica-panel {
+  margin-top:20px; height:94px; border-radius:12px; flex:none;
+  background:#F1F4F5; border:1px solid #E3E8EA;
+  padding:19px 22px; display:flex; flex-direction:column; gap:11px;
+}
+.f02-duplica-panel-line { height:12px; border-radius:6px; background:#E3E8EA; }
+
+/* KRO's overlay layer — cyan is the single accent, and it never scales with the
+   page: the product's own UI does not shrink when it shows you more variants */
+.f02-duplica-pill {
+  position:absolute; height:34px; border-radius:100px;
+  background:rgba(6,182,212,0.14); border:1px solid rgba(6,182,212,0.4);
+  color:#06B6D4; font-family:'Manrope',sans-serif; font-size:15px; font-weight:600;
+  display:flex; align-items:center; padding:0 16px; white-space:nowrap;
+}
+.f02-duplica-modal {
+  position:absolute; width:236px; height:58px;
+  background:#1F1F1F; border:1px solid rgba(6,182,212,0.32); border-radius:12px;
+  font-family:'Manrope',sans-serif; display:flex; align-items:center; gap:11px; padding:0 15px;
+}
+.f02-duplica-dot { width:9px; height:9px; border-radius:50%; background:#06B6D4; flex:none; }
+.f02-duplica-mtxt { display:flex; flex-direction:column; gap:1px; }
+.f02-duplica-mlabel { font-size:12px; font-weight:600; color:#9A9A9A; letter-spacing:0.06em; text-transform:uppercase; }
+.f02-duplica-mnum { font-size:21px; font-weight:700; color:#FFFFFF; font-variant-numeric:tabular-nums; line-height:1.1; }
+#f02-duplica-colophon {
+  position:absolute; left:60px; top:1000px;
+  font-family:'Manrope',sans-serif; font-size:17px; font-weight:500; color:#929292;
+}
+.f02-duplica-crown {
+  position:absolute; height:34px; width:152px; border-radius:100px;
+  background:#06B6D4; color:#07323A;
+  font-family:'Manrope',sans-serif; font-size:15px; font-weight:800; letter-spacing:0.14em;
+  display:flex; align-items:center; justify-content:center;
+}
+.f02-duplica-ring { position:absolute; border:3px solid #06B6D4; border-radius:18px; }
+#f02-duplica-pill-A { left:59.8px; top:262.6px; }
+#f02-duplica-modal-A { left:168px; top:620.4px; }
+#f02-duplica-pill-B { left:567.8px; top:262.6px; }
+#f02-duplica-modal-B { left:676px; top:620.4px; }
+  </style>
+  <div id="root" data-composition-id="02-duplica" data-start="0" data-duration="4" data-width="1080" data-height="1080">
+    <div class="clip" data-start="0" data-duration="4" data-track-index="0" id="f02-duplica-ground"></div>
+    <div class="clip" data-start="0" data-duration="4" data-track-index="1" id="f02-duplica-stage" style="position:absolute;inset:0;">
+      <div class="f02-duplica-card" id="f02-duplica-card-A">
+        <div class="f02-duplica-nav" id="f02-duplica-nav-A">
+          <div class="f02-duplica-nav-brand">Nimbus AI</div>
+          <div class="f02-duplica-nav-right">
+            <span class="f02-duplica-nav-link">Produto</span>
+            <span class="f02-duplica-nav-link">Preços</span>
+            <span class="f02-duplica-nav-link">Entrar</span>
+            <span class="f02-duplica-nav-btn">Começar grátis</span>
+          </div>
+        </div>
+        <div class="f02-duplica-headline" id="f02-duplica-head-A">Suas reuniões viram anotações. Sozinhas.</div>
+        <div class="f02-duplica-sub" id="f02-duplica-sub-A">Conecte seu calendário. O resto é com a gente.</div>
+        <div class="f02-duplica-btn" id="f02-duplica-btn-A">Começar grátis</div>
+        <div class="f02-duplica-panel" id="f02-duplica-panel-A">
+          <div class="f02-duplica-panel-line" style="width:64%"></div>
+          <div class="f02-duplica-panel-line" style="width:88%"></div>
+          <div class="f02-duplica-panel-line" style="width:46%"></div>
+        </div>
+      </div>
+      <div class="f02-duplica-card" id="f02-duplica-card-B">
+        <div class="f02-duplica-nav" id="f02-duplica-nav-B">
+          <div class="f02-duplica-nav-brand">Nimbus AI</div>
+          <div class="f02-duplica-nav-right">
+            <span class="f02-duplica-nav-link">Produto</span>
+            <span class="f02-duplica-nav-link">Preços</span>
+            <span class="f02-duplica-nav-link">Entrar</span>
+            <span class="f02-duplica-nav-btn">Começar grátis</span>
+          </div>
+        </div>
+        <div class="f02-duplica-headline" id="f02-duplica-head-B">Nunca mais escreva uma ata de reunião.</div>
+        <div class="f02-duplica-sub" id="f02-duplica-sub-B">Conecte seu calendário. O resto é com a gente.</div>
+        <div class="f02-duplica-btn" id="f02-duplica-btn-B">Começar grátis</div>
+        <div class="f02-duplica-panel" id="f02-duplica-panel-B">
+          <div class="f02-duplica-panel-line" style="width:64%"></div>
+          <div class="f02-duplica-panel-line" style="width:88%"></div>
+          <div class="f02-duplica-panel-line" style="width:46%"></div>
+        </div>
+      </div>
+      <div class="f02-duplica-pill" id="f02-duplica-pill-A">versão A</div>
+      <div class="f02-duplica-pill" id="f02-duplica-pill-B">versão B</div>
+      <div class="f02-duplica-modal" id="f02-duplica-modal-A">
+        <div class="f02-duplica-dot" id="f02-duplica-dot-A"></div>
+        <div class="f02-duplica-mtxt">
+          <div class="f02-duplica-mlabel" id="f02-duplica-mlabel-A">visitantes agora</div>
+          <div class="f02-duplica-mnum" id="f02-duplica-num-A">0</div>
+        </div>
+      </div>
+      <div class="f02-duplica-modal" id="f02-duplica-modal-B">
+        <div class="f02-duplica-dot" id="f02-duplica-dot-B"></div>
+        <div class="f02-duplica-mtxt">
+          <div class="f02-duplica-mlabel" id="f02-duplica-mlabel-B">visitantes agora</div>
+          <div class="f02-duplica-mnum" id="f02-duplica-num-B">0</div>
+        </div>
+      </div>
+    </div>
+    <div class="clip" data-start="0" data-duration="4" data-track-index="2" id="f02-duplica-colophon">Conversão inteligente</div>
+  </div>
+  <script src="assets/vendor/gsap.min.js"></script>
+  <script>
+    window.__timelines = window.__timelines || {};
+    var tl = gsap.timeline({ paused: true });
+    function f02_duplica_int(n) {
+      var s = String(Math.round(n));
+      return s.length > 3 ? s.slice(0, s.length - 3) + "." + s.slice(s.length - 3) : s;
+    }
+    function f02_duplica_pct(n) { return n.toFixed(1).replace(".", ",") + "%"; }
+
+    gsap.set(["#f02-duplica-card-A", "#f02-duplica-card-B"], { transformOrigin: "50% 50%" });
+    // handoff_in: card A dead-centre, scale 1, opacity 1 — exactly as frame 1 left it.
+    gsap.set("#f02-duplica-card-A", { x: 0, y: 0, scale: 1, opacity: 1 });
+    gsap.set("#f02-duplica-card-B", { x: 0, y: 0, scale: 1, opacity: 0 });
+    gsap.set(["#f02-duplica-pill-A", "#f02-duplica-pill-B", "#f02-duplica-modal-A", "#f02-duplica-modal-B"], { opacity: 0 });
+    // B splits off carrying A's copy — a duplication is only a duplication if the
+    // clone starts identical and the headline swaps afterwards.
+    document.getElementById("f02-duplica-head-B").textContent = "Suas reuniões viram anotações. Sozinhas.";
+
+    // Scene 1 (0.0-1.0): A shrinks and slides left; its silhouette detaches right.
+    tl.to("#f02-duplica-card-A", { x: -254, y: -70, scale: 0.58, duration: 1.0, ease: "power3.inOut" }, 0);
+    tl.to("#f02-duplica-card-B", { x: 254, y: -70, scale: 0.58, duration: 1.0, ease: "power3.inOut" }, 0);
+    tl.to("#f02-duplica-card-B", { opacity: 1, duration: 0.34, ease: "power2.out" }, 0.16);
+    tl.fromTo("#f02-duplica-pill-A", { opacity: 0, y: 10 }, { opacity: 1, y: 0, duration: 0.34, ease: "power3.out" }, 0.78);
+
+    // Scene 2 (1.0-1.8): the headline swaps IN PLACE on the right card while
+    // nothing else moves — the stillness of the rest is what proves the point.
+    tl.to("#f02-duplica-head-B", { opacity: 0, y: -14, duration: 0.26, ease: "power2.in" }, 1.02);
+    tl.add(function () {
+      document.getElementById("f02-duplica-head-B").textContent = "Nunca mais escreva uma ata de reunião.";
+    }, 1.28);
+    tl.fromTo("#f02-duplica-head-B", { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: 0.34, ease: "power3.out" }, 1.3);
+    tl.fromTo("#f02-duplica-pill-B", { scale: 0.78, opacity: 0, transformOrigin: "0% 50%" },
+      { scale: 1, opacity: 1, duration: 0.36, ease: "back.out(2)" }, 1.5);
+
+    // Scene 3 (1.8-3.0): a visitor modal rises under each card and starts counting.
+    var cA = { v: 0 }, cB = { v: 0 };
+    tl.fromTo("#f02-duplica-modal-A", { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.4, ease: "power3.out" }, 1.84);
+    tl.fromTo("#f02-duplica-modal-B", { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.4, ease: "power3.out" }, 2.04);
+    tl.to(cA, { v: 1284, duration: 1.95, ease: "power2.out",
+      onUpdate: function () { document.getElementById("f02-duplica-num-A").textContent = f02_duplica_int(cA.v); } }, 1.9);
+    tl.to(cB, { v: 1301, duration: 1.9, ease: "power2.out",
+      onUpdate: function () { document.getElementById("f02-duplica-num-B").textContent = f02_duplica_int(cB.v); } }, 2.05);
+    tl.to("#f02-duplica-dot-A", { scale: 1.5, opacity: 0.5, duration: 0.4, ease: "power2.out" }, 2);
+    tl.to("#f02-duplica-dot-A", { scale: 1, opacity: 1, duration: 0.4, ease: "power2.in" }, 2.42);
+    tl.to("#f02-duplica-dot-B", { scale: 1.5, opacity: 0.5, duration: 0.4, ease: "power2.out" }, 2.25);
+    tl.to("#f02-duplica-dot-B", { scale: 1, opacity: 1, duration: 0.4, ease: "power2.in" }, 2.67);
+    tl.to("#f02-duplica-dot-A", { scale: 1.5, opacity: 0.5, duration: 0.4, ease: "power2.out" }, 3.1);
+    tl.to("#f02-duplica-dot-A", { scale: 1, opacity: 1, duration: 0.4, ease: "power2.in" }, 3.52);
+    tl.to("#f02-duplica-dot-B", { scale: 1.5, opacity: 0.5, duration: 0.4, ease: "power2.out" }, 3.35);
+    tl.to("#f02-duplica-dot-B", { scale: 1, opacity: 1, duration: 0.4, ease: "power2.in" }, 3.77);
+
+    // Scene 4 (3.0-4.0): the counters ease out and the frame holds.
+    window.__timelines["02-duplica"] = tl;
+  </script>
+</template>

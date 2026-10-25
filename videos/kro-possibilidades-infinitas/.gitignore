@@ -1,0 +1,4 @@
+# estado e artefatos do CLI — cache reproduzível, pesado
+.hyperframes/
+renders/work-*/
+renders/.*hf-transaction*/

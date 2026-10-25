@@ -1,0 +1,518 @@
+<template>
+  <style>
+    /* ── fonts (self-hosted, declarations copied from frame.md) ───────────── */
+    @font-face{font-family:"Sora";font-weight:600;font-style:normal;font-display:block;src:url("assets/fonts/Sora-600.woff2") format("woff2");}
+    @font-face{font-family:"Sora";font-weight:700;font-style:normal;font-display:block;src:url("assets/fonts/Sora-700.woff2") format("woff2");}
+    @font-face{font-family:"Manrope";font-weight:400;font-style:normal;font-display:block;src:url("assets/fonts/Manrope-400.woff2") format("woff2");}
+    @font-face{font-family:"Manrope";font-weight:600;font-style:normal;font-display:block;src:url("assets/fonts/Manrope-600.woff2") format("woff2");}
+
+    /* ── root ─────────────────────────────────────────────────────────────── */
+    #root{
+      position:absolute; inset:0; width:1080px; height:1920px;
+      overflow:hidden;
+      --tc-ground:#2B2B2B;
+      --tc-ground-deep:#1E1E1E;
+      --tc-ground-lift:#343434;
+      --tc-text:#FFFFFF;
+      --tc-text-light:rgba(255,255,255,0.38);
+      --tc-brand:#7C3AED;
+      --tc-primary:#06B6D4;
+      --tc-sand:#D8C0A7;
+      --tc-card-bg:rgba(255,255,255,0.04);
+      --tc-card-border:rgba(255,255,255,0.10);
+      --tc-surface:#F4F2EE;
+      --tc-surface-ink:#2B2B2B;
+      --tc-surface-line:rgba(43,43,43,0.10);
+    }
+
+    .f03-trafego-layer{position:absolute;inset:0;width:1080px;height:1920px;}
+
+    /* ── level 1 — atmospheric ground ─────────────────────────────────────── */
+    .f03-trafego-ground-base{
+      position:absolute; inset:0;
+      background:
+        radial-gradient(1500px 1280px at 12% 8%, #3A3A3A 0%, rgba(58,58,58,0) 62%),
+        radial-gradient(1180px 1180px at 50% 72%, #313131 0%, rgba(49,49,49,0) 70%),
+        linear-gradient(168deg, #2F2F2F 0%, #2B2B2B 46%, #232323 100%);
+    }
+    .f03-trafego-ground-fall{
+      position:absolute; inset:0;
+      background:radial-gradient(1460px 1460px at 8% 2%, rgba(255,255,255,0.055) 0%, rgba(255,255,255,0) 58%);
+    }
+    .f03-trafego-ground-sink{
+      position:absolute; inset:0;
+      background:radial-gradient(1320px 1060px at 86% 104%, rgba(30,30,30,0.86) 0%, rgba(30,30,30,0) 66%);
+    }
+    .f03-trafego-grain{
+      position:absolute; inset:0; width:1080px; height:1920px;
+      opacity:0.032; mix-blend-mode:overlay; pointer-events:none;
+    }
+
+    /* ── level 2 — the system, inside the 3D camera ───────────────────────── */
+    .f03-trafego-blur{position:absolute;inset:0;}
+    .f03-trafego-stage{
+      position:absolute; inset:0;
+      perspective:2400px;
+      perspective-origin:50% 50%;
+    }
+    .f03-trafego-world{
+      position:absolute; inset:0;
+      transform-style:preserve-3d;
+      transform-origin:540px 960px;
+      transform:translate3d(0px,0px,0px) rotateX(0deg);
+    }
+
+    /* the frame-2 assembly, inherited at x0 y0 scale1 opacity1 */
+    .f03-trafego-cluster{
+      position:absolute; inset:0;
+      transform-origin:540px 1300px;
+    }
+    .f03-trafego-card{position:absolute;}
+    .f03-trafego-ad{
+      left:280px; top:480px; width:520px; height:294px;
+      background:var(--tc-ground-lift);
+      border:1px solid var(--tc-card-border);
+      border-radius:16px;
+      padding:22px;
+      box-sizing:border-box;
+    }
+    .f03-trafego-ad-media{
+      width:476px; height:132px; border-radius:12px;
+      background:linear-gradient(142deg, rgba(255,255,255,0.14) 0%, rgba(255,255,255,0.05) 58%, rgba(6,182,212,0.10) 100%);
+      border:1px solid rgba(255,255,255,0.08);
+      box-sizing:border-box;
+    }
+    .f03-trafego-ad-bar{height:12px;border-radius:6px;background:rgba(255,255,255,0.20);margin-top:14px;}
+    .f03-trafego-ad-bar.f03-trafego-short{width:318px;background:rgba(255,255,255,0.12);}
+    .f03-trafego-ad-ctrl{display:flex;align-items:center;gap:18px;margin-top:18px;}
+    .f03-trafego-track{
+      position:relative; width:330px; height:6px; border-radius:6px;
+      background:rgba(6,182,212,0.16);
+    }
+    .f03-trafego-track-fill{position:absolute;left:0;top:0;height:6px;width:62%;border-radius:6px;background:var(--tc-primary);}
+    .f03-trafego-handle{
+      position:absolute; left:62%; top:-5px; width:16px; height:16px; margin-left:-8px;
+      border-radius:50%; background:var(--tc-primary);
+    }
+    .f03-trafego-stepper{
+      width:110px; height:26px; border-radius:100px;
+      border:1px solid var(--tc-card-border);
+      background:rgba(255,255,255,0.04);
+    }
+
+    .f03-trafego-variant{
+      top:826px; width:160px; height:112px;
+      background:var(--tc-surface);
+      border:1px solid var(--tc-surface-line);
+      border-radius:16px;
+      padding:16px; box-sizing:border-box;
+    }
+    .f03-trafego-variant-bar{height:9px;border-radius:5px;background:rgba(43,43,43,0.42);}
+    .f03-trafego-variant-bar.f03-trafego-v2{width:72%;margin-top:9px;background:rgba(43,43,43,0.28);}
+    .f03-trafego-variant-line{height:5px;border-radius:4px;background:rgba(43,43,43,0.13);margin-top:16px;}
+    .f03-trafego-variant-line.f03-trafego-v4{width:58%;margin-top:8px;}
+
+    .f03-trafego-metric{
+      top:986px; width:164px; height:104px;
+      background:var(--tc-card-bg);
+      border:1px solid var(--tc-card-border);
+      border-radius:12px;
+      padding:16px 14px; box-sizing:border-box;
+    }
+    .f03-trafego-metric-value{
+      font-family:"Sora",sans-serif; font-weight:700; font-size:30px; line-height:1;
+      letter-spacing:-0.02em; color:var(--tc-primary);
+    }
+    .f03-trafego-metric-label{
+      margin-top:14px;
+      font-family:"Manrope",sans-serif; font-weight:600; font-size:12px;
+      letter-spacing:0.14em; text-transform:uppercase; color:var(--tc-text-light);
+    }
+
+    /* the traffic flows */
+    .f03-trafego-flows{position:absolute;inset:0;width:1080px;height:1920px;}
+    .f03-trafego-flows path{fill:none;stroke-linecap:round;stroke-linejoin:round;}
+    .f03-trafego-flows .f03-trafego-flow-line{stroke:rgba(6,182,212,0.52);stroke-width:3;}
+    .f03-trafego-flows .f03-trafego-flow-head{stroke:#06B6D4;stroke-width:4.5;}
+
+    /* the landing page — the cinematographic object */
+    .f03-trafego-mock{
+      position:absolute; left:190px; top:471.67px; width:700px; height:640px;
+    }
+    .f03-trafego-rig{position:absolute;inset:0;}
+    .f03-trafego-rig-purple{
+      position:absolute; left:-220px; top:-180px; width:620px; height:620px;
+      background:radial-gradient(circle at 50% 50%, rgba(124,58,237,0.46) 0%, rgba(124,58,237,0) 68%);
+    }
+    .f03-trafego-rig-cyan{
+      position:absolute; right:-200px; bottom:-200px; width:560px; height:560px;
+      background:radial-gradient(circle at 50% 50%, rgba(6,182,212,0.34) 0%, rgba(6,182,212,0) 70%);
+    }
+    .f03-trafego-surface{
+      position:absolute; inset:0;
+      background:var(--tc-surface);
+      border-radius:20px;
+      box-shadow:0 30px 80px rgba(0,0,0,0.45);
+      overflow:hidden;
+    }
+    .f03-trafego-sheen{
+      position:absolute; left:0; right:0; top:0; height:92px;
+      background:linear-gradient(180deg, rgba(255,255,255,0.09) 0%, rgba(255,255,255,0) 100%);
+    }
+    .f03-trafego-chrome{
+      position:absolute; left:34px; top:30px; display:flex; gap:11px;
+    }
+    .f03-trafego-chrome i{width:13px;height:13px;border-radius:50%;background:rgba(43,43,43,0.16);display:block;}
+    .f03-trafego-body{position:absolute;left:62px;right:62px;top:140px;}
+    .f03-trafego-head-bar{
+      height:38px; border-radius:7px; background:rgba(43,43,43,0.80); display:block;
+    }
+    .f03-trafego-head-row{display:flex;align-items:center;margin-top:16px;}
+    .f03-trafego-head-bar.f03-trafego-h2{width:342px;}
+    .f03-trafego-caret{
+      display:block; width:4px; height:46px; margin-left:12px;
+      background:rgba(43,43,43,0.78);
+    }
+    .f03-trafego-copy{margin-top:46px;}
+    .f03-trafego-copy span{display:block;height:9px;border-radius:5px;background:rgba(43,43,43,0.16);}
+    .f03-trafego-copy span + span{margin-top:16px;width:74%;}
+    .f03-trafego-cta{
+      margin-top:56px; width:234px; height:62px; border-radius:100px;
+      background:var(--tc-surface-ink);
+      display:flex; align-items:center; justify-content:center;
+    }
+    .f03-trafego-cta i{display:block;width:104px;height:11px;border-radius:6px;background:rgba(244,242,238,0.72);}
+
+    /* ── level 3 — hero typography, flat in the camera plane ──────────────── */
+    .f03-trafego-type{position:absolute;inset:0;}
+    .f03-trafego-phrase{
+      position:absolute; left:88px; top:1160px; width:832px;
+      font-family:"Sora",sans-serif; font-weight:600; font-size:66px;
+      line-height:1.16; letter-spacing:-0.02em; color:var(--tc-text);
+      text-align:left;
+      will-change:clip-path;
+    }
+    .f03-trafego-phrase em{font-style:normal;font-weight:600;color:var(--tc-text);}
+  </style>
+
+  <div id="root" data-composition-id="03-trafego-congela" data-width="1080" data-height="1920" data-duration="7.5">
+
+    <!-- ── level 1 : ground (full-bleed, on a clip layer — never on #root) ── -->
+    <div class="clip f03-trafego-layer" data-start="0" data-duration="7.5" data-track-index="0">
+      <div class="f03-trafego-ground-base"></div>
+      <div class="f03-trafego-ground-fall"></div>
+      <div class="f03-trafego-ground-sink"></div>
+      <svg class="f03-trafego-grain" viewBox="0 0 1080 1920" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <filter id="f03-trafego-grain-f" x="0" y="0" width="100%" height="100%">
+          <feTurbulence type="fractalNoise" baseFrequency="0.86" numOctaves="2" stitchTiles="stitch" seed="7"></feTurbulence>
+          <feColorMatrix type="saturate" values="0"></feColorMatrix>
+        </filter>
+        <rect width="1080" height="1920" filter="url(#f03-trafego-grain-f)"></rect>
+      </svg>
+    </div>
+
+    <!-- ── level 2 : the system inside the 3D camera ──────────────────────── -->
+    <div class="clip f03-trafego-layer" data-start="0" data-duration="7.5" data-track-index="1">
+      <div class="f03-trafego-blur" id="f03-trafego-blur" data-layout-allow-overflow>
+        <div class="f03-trafego-stage">
+          <div class="f03-trafego-world" id="f03-trafego-world" data-layout-allow-overflow>
+
+            <!-- the frame-2 assembly, handed over motionless at x0 y0 scale1 -->
+            <div class="f03-trafego-cluster" id="f03-trafego-cluster" data-layout-allow-overflow>
+              <div class="f03-trafego-card f03-trafego-ad f03-trafego-shell">
+                <div class="f03-trafego-ink f03-trafego-ad-media"></div>
+                <div class="f03-trafego-ink f03-trafego-ad-bar"></div>
+                <div class="f03-trafego-ink f03-trafego-ad-bar f03-trafego-short"></div>
+                <div class="f03-trafego-ink f03-trafego-ad-ctrl">
+                  <div class="f03-trafego-track">
+                    <div class="f03-trafego-track-fill"></div>
+                    <div class="f03-trafego-handle"></div>
+                  </div>
+                  <div class="f03-trafego-stepper"></div>
+                </div>
+              </div>
+
+              <div class="f03-trafego-card f03-trafego-variant f03-trafego-shell" style="left:280px">
+                <div class="f03-trafego-ink f03-trafego-variant-bar"></div>
+                <div class="f03-trafego-ink f03-trafego-variant-bar f03-trafego-v2"></div>
+                <div class="f03-trafego-ink f03-trafego-variant-line"></div>
+                <div class="f03-trafego-ink f03-trafego-variant-line f03-trafego-v4"></div>
+              </div>
+              <div class="f03-trafego-card f03-trafego-variant f03-trafego-shell" style="left:460px">
+                <div class="f03-trafego-ink f03-trafego-variant-bar"></div>
+                <div class="f03-trafego-ink f03-trafego-variant-bar f03-trafego-v2"></div>
+                <div class="f03-trafego-ink f03-trafego-variant-line"></div>
+                <div class="f03-trafego-ink f03-trafego-variant-line f03-trafego-v4"></div>
+              </div>
+              <div class="f03-trafego-card f03-trafego-variant f03-trafego-shell" style="left:640px">
+                <div class="f03-trafego-ink f03-trafego-variant-bar"></div>
+                <div class="f03-trafego-ink f03-trafego-variant-bar f03-trafego-v2"></div>
+                <div class="f03-trafego-ink f03-trafego-variant-line"></div>
+                <div class="f03-trafego-ink f03-trafego-variant-line f03-trafego-v4"></div>
+              </div>
+
+              <div class="f03-trafego-card f03-trafego-metric f03-trafego-shell" style="left:280px">
+                <div class="f03-trafego-ink f03-trafego-metric-value">1,84</div>
+                <div class="f03-trafego-ink f03-trafego-metric-label">CPC</div>
+              </div>
+              <div class="f03-trafego-card f03-trafego-metric f03-trafego-shell" style="left:458px">
+                <div class="f03-trafego-ink f03-trafego-metric-value">312</div>
+                <div class="f03-trafego-ink f03-trafego-metric-label">Leads</div>
+              </div>
+              <div class="f03-trafego-card f03-trafego-metric f03-trafego-shell" style="left:636px">
+                <div class="f03-trafego-ink f03-trafego-metric-value">47</div>
+                <div class="f03-trafego-ink f03-trafego-metric-label">Vendas</div>
+              </div>
+            </div>
+
+            <!-- seven traffic flows converging on a low vanishing point -->
+            <svg class="f03-trafego-flows" id="f03-trafego-flows" viewBox="0 0 1080 1920" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <g>
+                <path class="f03-trafego-flow-line" d="M 540 627 C 466 800 490 1090 540 1300"></path>
+                <path class="f03-trafego-flow-line" d="M 360 882 C 370 1004 452 1180 540 1300"></path>
+                <path class="f03-trafego-flow-line" d="M 540 882 C 588 1010 572 1186 540 1300"></path>
+                <path class="f03-trafego-flow-line" d="M 720 882 C 710 1004 628 1180 540 1300"></path>
+                <path class="f03-trafego-flow-line" d="M 362 1038 C 394 1120 462 1226 540 1300"></path>
+                <path class="f03-trafego-flow-line" d="M 540 1038 C 510 1122 516 1228 540 1300"></path>
+                <path class="f03-trafego-flow-line" d="M 718 1038 C 686 1120 618 1226 540 1300"></path>
+              </g>
+              <g>
+                <path class="f03-trafego-flow-head" d="M 540 627 C 466 800 490 1090 540 1300"></path>
+                <path class="f03-trafego-flow-head" d="M 360 882 C 370 1004 452 1180 540 1300"></path>
+                <path class="f03-trafego-flow-head" d="M 540 882 C 588 1010 572 1186 540 1300"></path>
+                <path class="f03-trafego-flow-head" d="M 720 882 C 710 1004 628 1180 540 1300"></path>
+                <path class="f03-trafego-flow-head" d="M 362 1038 C 394 1120 462 1226 540 1300"></path>
+                <path class="f03-trafego-flow-head" d="M 540 1038 C 510 1122 516 1228 540 1300"></path>
+                <path class="f03-trafego-flow-head" d="M 718 1038 C 686 1120 618 1226 540 1300"></path>
+              </g>
+            </svg>
+
+            <!-- the page the traffic lands on -->
+            <div class="f03-trafego-mock" id="f03-trafego-mock">
+              <div class="f03-trafego-rig" id="f03-trafego-rig">
+                <div class="f03-trafego-rig-purple"></div>
+                <div class="f03-trafego-rig-cyan"></div>
+              </div>
+              <div class="f03-trafego-surface">
+                <div class="f03-trafego-sheen"></div>
+                <div class="f03-trafego-chrome"><i></i><i></i><i></i></div>
+                <div class="f03-trafego-body">
+                  <span class="f03-trafego-head-bar"></span>
+                  <div class="f03-trafego-head-row">
+                    <span class="f03-trafego-head-bar f03-trafego-h2"></span>
+                    <span class="f03-trafego-caret" id="f03-trafego-caret"></span>
+                  </div>
+                  <div class="f03-trafego-copy"><span></span><span></span></div>
+                  <div class="f03-trafego-cta"><i></i></div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── level 3 : hero typography ──────────────────────────────────────── -->
+    <div class="clip f03-trafego-layer f03-trafego-type" data-start="0" data-duration="7.5" data-track-index="2">
+      <div class="f03-trafego-phrase" id="f03-trafego-p1">Mas o lugar<br>para onde todo esse<br>tráfego vai...</div>
+      <div class="f03-trafego-phrase" id="f03-trafego-p2">continua dizendo<br>exatamente<br>a <em id="f03-trafego-emph">mesma coisa</em>.</div>
+    </div>
+
+  </div>
+
+  <script>
+    (function () {
+      var root = document.querySelector('[data-composition-id="03-trafego-congela"]');
+      if (!root) { return; }
+
+      var q = function (sel) { return root.querySelector(sel); };
+      var qa = function (sel) { return Array.prototype.slice.call(root.querySelectorAll(sel)); };
+
+      /* ── the single camera state + its one writer ────────────────────────── */
+      var PERSP = 2400;
+      var CAM_LAND_Z = 380;                              /* the landed pose */
+      var MAG = PERSP / (PERSP - CAM_LAND_Z);            /* 1.188119 */
+
+      var world = q("#f03-trafego-world");
+      var cam = { z: 0, rotX: 0, y: 0 };
+      function applyCamera() {
+        world.style.transform =
+          "translate3d(0px," + cam.y.toFixed(3) + "px," + cam.z.toFixed(3) + "px) rotateX(" + cam.rotX.toFixed(3) + "deg)";
+      }
+      applyCamera();
+
+      /* camera-travel motion blur — rides the wrapper OUTSIDE the perspective
+         container so it never flattens preserve-3d, and never touches level 3 */
+      var blurBox = q("#f03-trafego-blur");
+      var fx = { blur: 0 };
+      function applyBlur() {
+        blurBox.style.filter = fx.blur < 0.05 ? "none" : "blur(" + fx.blur.toFixed(2) + "px)";
+      }
+      applyBlur();
+
+      /* ── level-2 geometry handed to frame 04 ────────────────────────────── */
+      /* handoff_out asks for an APPARENT x 0 / y +40px / scale 0.88 on the
+         landing-mock. The landed camera magnifies the world by MAG, so the
+         element-space values are the apparent ones divided by MAG. */
+      var mock = q("#f03-trafego-mock");
+      var MOCK_REST_SCALE = 0.88 / MAG;                  /* 0.74067 */
+      var MOCK_REST_Y = 40 / MAG;                        /* 33.667 */
+
+      /* ── svg-path-draw setup: measured geometry, never guessed ──────────── */
+      var lines = qa(".f03-trafego-flow-line");
+      var heads = qa(".f03-trafego-flow-head");
+      var lineLen = [];
+      var headLen = [];
+      var HEAD_DASH = 64;
+
+      lines.forEach(function (p) {
+        var len = p.getTotalLength() * 1.02;
+        lineLen.push(len);
+        p.style.strokeDasharray = len.toFixed(2);
+        p.style.strokeDashoffset = len.toFixed(2);
+      });
+      heads.forEach(function (p) {
+        var len = p.getTotalLength();
+        headLen.push(len);
+        /* pattern period = HEAD_DASH + 2*len, so exactly one travelling dash */
+        p.style.strokeDasharray = HEAD_DASH + " " + (2 * len).toFixed(2);
+        p.style.strokeDashoffset = (HEAD_DASH + 2 * len).toFixed(2);
+        p.style.opacity = "0";
+      });
+
+      /* ── the hero typography wipes (mask-wipe, this frame's own entrance) ── */
+      function wipeState(el, st) {
+        el.style.clipPath = "inset(" + st.insA.toFixed(3) + "% -7% " + st.insB.toFixed(3) + "% -7%)";
+      }
+      var p1 = q("#f03-trafego-p1");
+      var p2 = q("#f03-trafego-p2");
+      var w1 = { insA: 0, insB: 100 };
+      var w2 = { insA: 0, insB: 100 };
+      wipeState(p1, w1);
+      wipeState(p2, w2);
+      /* opacity gates the phrase boxes too: the clip-path wipe hides pixels but
+         leaves the box in the layout, which reads as two overlapping text blocks. */
+      /* Each phrase is parked far off-canvas (transform only, no layout) while it is
+         not the active line, so the two text boxes never share coordinates — the
+         clip-path wipe alone hides pixels but leaves both boxes stacked. */
+      var PARK = -4000;
+      gsap.set([p1, p2], { opacity: 0, y: PARK });
+
+      /* ── one paused timeline ────────────────────────────────────────────── */
+      var tl = gsap.timeline({ paused: true });
+
+      /* ================= Cena A (0.0–0.8s) — a liquefação ================= */
+      /* the frame-2 assembly arrives motionless at x0 y0 scale1 opacity1 and
+         loses its card edges, then its ink, then itself — 600ms exactly. */
+      tl.to(".f03-trafego-shell", {
+        borderColor: "rgba(255,255,255,0)",
+        backgroundColor: "rgba(255,255,255,0)",
+        duration: 0.30, ease: "power2.in"
+      }, 0.00);
+      tl.to(".f03-trafego-ink", {
+        opacity: 0, duration: 0.32, ease: "power2.in", stagger: 0.022
+      }, 0.04);
+      tl.to("#f03-trafego-cluster", {
+        scale: 0.93, y: 38, duration: 0.60, ease: "power2.in"
+      }, 0.00);
+      tl.to("#f03-trafego-cluster", {
+        opacity: 0, duration: 0.30, ease: "power1.in"
+      }, 0.30);
+
+      /* seven flows draw toward the low vanishing point (540,1300) */
+      lines.forEach(function (p, i) {
+        tl.to(p, { strokeDashoffset: 0, duration: 0.40, ease: "power2.out" }, 0.05 + i * 0.055);
+      });
+      /* a short travelling dash per flow — the visitor signal riding the line */
+      heads.forEach(function (p, i) {
+        var at = 0.26 + i * 0.055;
+        tl.set(p, { opacity: 0.9 }, at);
+        tl.to(p, {
+          strokeDashoffset: HEAD_DASH + headLen[i],
+          duration: 1.10, ease: "power2.in"
+        }, at);
+        tl.to(p, { opacity: 0, duration: 0.26, ease: "none" }, at + 0.94);
+      });
+
+      /* ================= Cena B (0.4–2.8s) — o voo ======================== */
+      /* LEG 1 — energetic departure: translateZ +300 / rotateX -8°, power2.in */
+      tl.to(cam, {
+        z: 300, rotX: -8, y: 70,
+        duration: 1.30, ease: "power2.in", onUpdate: applyCamera
+      }, 0.40);
+      /* motion-blur envelope peaks at peak velocity */
+      tl.to(fx, { blur: 9, duration: 1.00, ease: "power2.in", onUpdate: applyBlur }, 0.55);
+      tl.to(fx, { blur: 0, duration: 1.05, ease: "power3.out", onUpdate: applyBlur }, 1.55);
+
+      /* the landing page grows out of the vanishing point, far at the back */
+      tl.fromTo(mock,
+        { opacity: 0, scale: MOCK_REST_SCALE * 0.20, y: 430, z: -820 },
+        { opacity: 1, scale: MOCK_REST_SCALE * 0.50, y: 250, z: -420, duration: 1.30, ease: "power2.in" },
+        0.40);
+
+      /* the flows are absorbed by the page */
+      tl.to("#f03-trafego-flows", { opacity: 0, duration: 0.80, ease: "power2.in" }, 1.80);
+
+      /* ========== Cena C (1.6–4.0s) — a primeira frase, a câmera para ===== */
+      /* LEG 2 — deceleration that lands flat ON the page and stops at 3.0s */
+      tl.to(cam, {
+        z: CAM_LAND_Z, rotX: 0, y: 0,
+        duration: 1.30, ease: "power3.out", onUpdate: applyCamera
+      }, 1.70);
+      tl.to(mock, {
+        scale: MOCK_REST_SCALE, y: MOCK_REST_Y, z: 0,
+        duration: 1.30, ease: "power3.out"
+      }, 1.70);
+
+      /* phrase 1 — mask-wipe downward, flat in the camera plane */
+      tl.set(p1, { opacity: 1, y: 0 }, 1.55);
+      tl.to(w1, {
+        insB: 0, duration: 0.70, ease: "power3.out",
+        onUpdate: function () { wipeState(p1, w1); }
+      }, 1.55);
+
+      /* purple/cyan rig lights come up as the camera settles */
+      tl.fromTo("#f03-trafego-rig",
+        { opacity: 0 },
+        { opacity: 1, duration: 1.10, ease: "power2.out" },
+        1.80);
+
+      /* ---- HOLD 1 : 3.00s → 4.00s, nothing in this frame moves ---------- */
+
+      /* ============ Cena D (4.0–7.0s) — o congelamento ==================== */
+      /* phrase 1 is erased downward, phrase 2 settles in the same place */
+      tl.to(w1, {
+        insA: 100, duration: 0.38, ease: "power2.in",
+        onUpdate: function () { wipeState(p1, w1); }
+      }, 4.00);
+      tl.set(p1, { opacity: 0, y: PARK }, 4.38);
+      tl.set(p2, { opacity: 1, y: 0 }, 4.30);
+      tl.to(w2, {
+        insB: 0, duration: 0.65, ease: "power3.out",
+        onUpdate: function () { wipeState(p2, w2); }
+      }, 4.30);
+
+      /* the headline inside the page is visibly stuck: a caret that never blinks */
+      tl.fromTo("#f03-trafego-caret",
+        { opacity: 0 },
+        { opacity: 1, duration: 0.40, ease: "power1.out" },
+        4.00);
+
+      /* the purple/cyan light falls to 55% — handoff_out */
+      tl.to("#f03-trafego-rig", { opacity: 0.55, duration: 0.90, ease: "power2.inOut" }, 4.00);
+
+      /* colour settles onto already-legible white text: "mesma coisa" → sand */
+      tl.fromTo("#f03-trafego-emph",
+        { color: "#FFFFFF" },
+        { color: "#D8C0A7", duration: 0.42, ease: "power1.inOut" },
+        5.20);
+
+      /* ---- HOLD 2 : 5.62s → 7.00s, absolute stillness. No exit tween:
+              the root transition is this frame's exit. -------------------- */
+
+      window.__timelines = window.__timelines || {};
+      window.__timelines["03-trafego-congela"] = tl;
+    })();
+  </script>
+</template>

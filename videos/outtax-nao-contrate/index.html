@@ -1,0 +1,296 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1080" />
+    <script src="assets/vendor/gsap.min.js"></script>
+    <style>
+      @font-face{font-family:'Poppins';font-style:normal;font-weight:600;font-display:block;src:url(assets/fonts/poppins-600.woff2) format('woff2');}
+      @font-face{font-family:'Poppins';font-style:normal;font-weight:700;font-display:block;src:url(assets/fonts/poppins-700.woff2) format('woff2');}
+      @font-face{font-family:'Poppins';font-style:normal;font-weight:800;font-display:block;src:url(assets/fonts/poppins-800.woff2) format('woff2');}
+      @font-face{font-family:'Poppins';font-style:normal;font-weight:900;font-display:block;src:url(assets/fonts/poppins-900.woff2) format('woff2');}
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body { width: 1080px; height: 1080px; overflow: hidden; background: #0A1B4D; }
+      body { font-family: 'Poppins', sans-serif; }
+
+      /* palette: navy ground, orange accent, white card — one accent, never two */
+      :root {
+        --navy: #0A1B4D;
+        --navy-ink: #12275C;
+        --orange: #F5872E;
+        --white: #FFFFFF;
+      }
+
+      /* every top-level layer is styled by #id — a class on a direct child of
+         #root does not get scoped correctly by the runtime and renders unstyled */
+      #root { position: relative; width: 1080px; height: 1080px; overflow: hidden; background: var(--navy); }
+      #bg-glow {
+        position: absolute; inset: 0;
+        background: radial-gradient(ellipse 900px 700px at 78% 8%, rgba(255,255,255,0.06), transparent 60%),
+                    linear-gradient(160deg, #0A1B4D 0%, #0C2058 55%, #0A1B4D 100%);
+      }
+
+      #header-card {
+        position: absolute; left: 62px; top: 62px; width: 956px; height: 296px;
+        background: var(--white); border-radius: 32px;
+      }
+      #arrow { position: absolute; left: 96px; top: 96px; width: 56px; height: 56px; }
+      #logo { position: absolute; right: 96px; top: 108px; display: flex; align-items: center; gap: 12px; }
+      #logo-ring { width: 34px; height: 34px; border-radius: 50%; border: 6px solid var(--navy-ink); }
+      #logo-word { font-weight: 800; font-size: 34px; letter-spacing: 0.06em; color: var(--navy-ink); }
+
+      #headline {
+        position: absolute; left: 96px; top: 150px; width: 860px;
+        font-weight: 900; color: var(--navy-ink); line-height: 1.02; letter-spacing: -0.01em;
+      }
+      /* both lines must stay on one row each — the header card has no
+         overflow:hidden, so a wrapped word spills straight onto the dark
+         background below and bleeds into the panel's header text */
+      #h-line1 { font-size: 92px; position: relative; white-space: nowrap; }
+      #h-line2 { font-size: 58px; margin-top: 8px; white-space: nowrap; }
+      /* the prohibition ring overlays the O in NÃO; ::before/::after keep the
+         circle and its diagonal bar centred on #ban's own box regardless of
+         where that box ends up, so the left/top guess only has to be close */
+      #ban { position: absolute; left: 164px; top: 8px; width: 74px; height: 74px; }
+      #ban::before {
+        content: ""; position: absolute; inset: 0; border-radius: 50%; border: 11px solid var(--orange);
+      }
+      #ban::after {
+        content: ""; position: absolute; left: 50%; top: 50%; width: 11px; height: 82px;
+        background: var(--orange); transform: translate(-50%, -50%) rotate(45deg);
+      }
+
+      #panel {
+        position: absolute; left: 62px; top: 420px; width: 956px; height: 440px;
+        border-radius: 28px; border: 3px solid var(--orange); overflow: hidden;
+      }
+      /* panel's own border is 3px each side under box-sizing:border-box, so an
+         absolutely-positioned child sized to the OUTER 956x440 box overshoots
+         the interior by that much — size the halves to the interior instead */
+      #panel-left, #panel-right { position: absolute; top: 0; width: 475px; height: 434px; }
+      #panel-left { left: 0; background: var(--navy-ink); }
+      #panel-right { left: 475px; background: var(--orange); }
+
+      /* head/rule/row/tick are visual children of the panel but DOM siblings of
+         it (each a direct #root child, per the class-on-root-child bug above),
+         so every coordinate here must fold in #panel's own left:62/top:420 plus
+         its 3px border — the panel's real interior spans x[65,1015], split at
+         x=540 (each half 475px, half-centers at 302.5 / 777.5). */
+      #head-left, #head-right {
+        position: absolute; top: 463px; width: 475px; text-align: center; font-weight: 800; font-size: 34px;
+      }
+      #head-left { left: 65px; color: var(--white); }
+      #head-right { left: 540px; color: var(--navy-ink); }
+      #rule-left, #rule-right { position: absolute; top: 515px; width: 200px; height: 5px; border-radius: 3px; }
+      #rule-left { left: 302.5px; background: var(--orange); transform: translateX(-50%); }
+      #rule-right { left: 777.5px; background: var(--navy-ink); transform: translateX(-50%); }
+
+      /* .row-txt is nested INSIDE each row (not a direct #root child) so the class
+         selector is safe there; every row/tick/avatar itself is a direct child of
+         #root and gets its own #id rule below instead of a shared class. */
+      .row-txt { font-weight: 700; font-size: 27px; line-height: 1.32; color: var(--white); }
+      /* white on the orange half measures ~2.5:1 — too low; navy-ink on orange
+         (already used for the column header) clears 3:1 and stays on-brand */
+      #row-r1 .row-txt, #row-r2 .row-txt, #row-r3 .row-txt, #row-r4 .row-txt { color: var(--navy-ink); }
+      #obj-sub { font-weight: 500; color: var(--navy-ink); opacity: 0.78; }
+
+      #row-l1, #row-l2, #row-l3, #row-l4, #row-r1, #row-r2, #row-r3, #row-r4 {
+        position: absolute; width: 440px; text-align: center;
+      }
+      #row-l1, #row-l2, #row-l3, #row-l4 { left: 82.5px; }
+      #row-r1, #row-r2, #row-r3, #row-r4 { left: 557.5px; }
+
+      #tick-l1, #tick-l2, #tick-l3, #tick-l4, #tick-r1, #tick-r2, #tick-r3, #tick-r4 {
+        position: absolute; width: 34px; height: 4px; border-radius: 2px; transform: translateX(-50%);
+      }
+      #tick-l1, #tick-l2, #tick-l3, #tick-l4 { background: var(--orange); left: 302.5px; }
+      #tick-r1, #tick-r2, #tick-r3, #tick-r4 { background: var(--navy-ink); left: 777.5px; }
+
+      #cta-bar {
+        position: absolute; left: 62px; top: 920px; width: 956px; height: 96px;
+        border-radius: 100px; border: 3px solid var(--orange);
+      }
+      /* same fold-in as above: cta-bar's own left:62/top:920 + 3px border,
+         interior spans x[65,1015] y[923,1013] */
+      #av-1, #av-2 {
+        position: absolute; top: 941px; width: 60px; height: 60px; border-radius: 50%;
+        border: 4px solid var(--navy); display: flex; align-items: center; justify-content: center;
+        font-weight: 700; font-size: 22px; color: var(--white);
+      }
+      #av-1 { left: 87px; background: #3D5AA8; z-index: 2; }
+      #av-2 { left: 123px; background: #E8A24A; z-index: 1; }
+      #cta-pill {
+        position: absolute; left: 193px; top: 941px; height: 60px; padding: 0 30px; border-radius: 100px;
+        background: var(--orange); color: var(--navy-ink); font-weight: 700; font-size: 25px;
+        display: flex; align-items: center; justify-content: center; white-space: nowrap;
+      }
+      #cta-url { position: absolute; right: 105px; top: 957px; font-weight: 600; font-size: 27px; color: var(--white); }
+    </style>
+  </head>
+  <body>
+    <div
+      id="root"
+      data-composition-id="main"
+      data-start="0"
+      data-duration="10"
+      data-width="1080"
+      data-height="1080"
+    >
+      <div id="bg-glow" class="clip" data-start="0" data-duration="10" data-track-index="0"></div>
+
+      <div id="header-card" class="clip" data-start="0" data-duration="10" data-track-index="1"></div>
+      <svg id="arrow" class="clip" data-start="0" data-duration="10" data-track-index="2" viewBox="0 0 56 56" fill="none">
+        <path d="M6 6 L50 50 M50 50 L50 22 M50 50 L22 50" stroke="#F5872E" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <div id="logo" class="clip" data-start="0" data-duration="10" data-track-index="3">
+        <div id="logo-ring"></div>
+        <div id="logo-word">OUTTAX</div>
+      </div>
+
+      <div id="headline" class="clip" data-start="0" data-duration="10" data-track-index="4">
+        <div id="h-line1">
+          <span id="h-word1">NÃO</span> <span id="h-word2">CONTRATE</span>
+          <div id="ban"></div>
+        </div>
+        <div id="h-line2">UMA CONTABILIDADE</div>
+      </div>
+
+      <div id="panel" class="clip" data-start="0" data-duration="10" data-track-index="5">
+        <div id="panel-left"></div>
+        <div id="panel-right"></div>
+      </div>
+      <div id="head-left" class="clip" data-start="0" data-duration="10" data-track-index="6">Contabilidade</div>
+      <div id="head-right" class="clip" data-start="0" data-duration="10" data-track-index="7">Assessoria Contábil</div>
+      <div id="rule-left" class="clip" data-start="0" data-duration="10" data-track-index="8"></div>
+      <div id="rule-right" class="clip" data-start="0" data-duration="10" data-track-index="9"></div>
+
+      <div id="row-l1" class="clip" data-start="0" data-duration="10" data-track-index="10" style="top:548px;">
+        <div class="row-txt">Só emite guias<br/>e nada mais?</div>
+      </div>
+      <div id="tick-l1" class="clip" data-start="0" data-duration="10" data-track-index="11" style="top:534px;"></div>
+
+      <div id="row-l2" class="clip" data-start="0" data-duration="10" data-track-index="12" style="top:626px;">
+        <div class="row-txt">Some e só aparece no<br/>imposto de renda?</div>
+      </div>
+      <div id="tick-l2" class="clip" data-start="0" data-duration="10" data-track-index="13" style="top:612px;"></div>
+
+      <div id="row-l3" class="clip" data-start="0" data-duration="10" data-track-index="14" style="top:704px;">
+        <div class="row-txt">Muita burocracia e nenhuma<br/>estratégia real?</div>
+      </div>
+      <div id="tick-l3" class="clip" data-start="0" data-duration="10" data-track-index="15" style="top:690px;"></div>
+
+      <div id="row-l4" class="clip" data-start="0" data-duration="10" data-track-index="16" style="top:782px;">
+        <div class="row-txt">Falta de suporte quando<br/>você mais precisa?</div>
+      </div>
+      <div id="tick-l4" class="clip" data-start="0" data-duration="10" data-track-index="17" style="top:768px;"></div>
+
+      <div id="row-r1" class="clip" data-start="0" data-duration="10" data-track-index="18" style="top:548px;">
+        <div class="row-txt">Planejamento<br/>tributário incluso.</div>
+      </div>
+      <div id="tick-r1" class="clip" data-start="0" data-duration="10" data-track-index="19" style="top:534px;"></div>
+
+      <div id="row-r2" class="clip" data-start="0" data-duration="10" data-track-index="20" style="top:626px;">
+        <div class="row-txt">Consultoria<br/>contábil estratégica.</div>
+      </div>
+      <div id="tick-r2" class="clip" data-start="0" data-duration="10" data-track-index="21" style="top:612px;"></div>
+
+      <div id="row-r3" class="clip" data-start="0" data-duration="10" data-track-index="22" style="top:704px;">
+        <div class="row-txt">Menos burocracia,<br/>mais eficiência.</div>
+      </div>
+      <div id="tick-r3" class="clip" data-start="0" data-duration="10" data-track-index="23" style="top:690px;"></div>
+
+      <div id="row-r4" class="clip" data-start="0" data-duration="10" data-track-index="24" style="top:782px;">
+        <div class="row-txt"><b>Objetivo principal:</b><br/><span id="obj-sub">lucro da sua empresa</span></div>
+      </div>
+      <div id="tick-r4" class="clip" data-start="0" data-duration="10" data-track-index="25" style="top:768px;"></div>
+
+      <div id="cta-bar" class="clip" data-start="0" data-duration="10" data-track-index="26"></div>
+      <div id="av-2" class="clip" data-start="0" data-duration="10" data-track-index="27" data-layout-allow-occlusion="true">AT</div>
+      <div id="av-1" class="clip" data-start="0" data-duration="10" data-track-index="28">JV</div>
+      <div id="cta-pill" class="clip" data-start="0" data-duration="10" data-track-index="29">Fale com nosso time!</div>
+      <div id="cta-url" class="clip" data-start="0" data-duration="10" data-track-index="30">www.outtax.com.br</div>
+    </div>
+
+    <script>
+      window.__timelines = window.__timelines || {};
+      var tl = gsap.timeline({ paused: true });
+
+      gsap.set(["#header-card", "#panel", "#cta-bar"], { transformOrigin: "50% 50%" });
+      gsap.set(["#h-word1", "#h-word2", "#h-line2", "#logo", "#arrow"], { opacity: 0 });
+      gsap.set("#header-card", { opacity: 0, y: -18, scale: 0.97 });
+      gsap.set("#ban", { opacity: 0, scale: 0.4 });
+      gsap.set("#panel", { opacity: 0, scale: 0.96 });
+      gsap.set(["#panel-left", "#panel-right"], { xPercent: 0 });
+      gsap.set(["#head-left", "#head-right", "#rule-left", "#rule-right"], { opacity: 0 });
+      gsap.set(["#rule-left", "#rule-right"], { scaleX: 0 });
+      var rowIds = ["row-l1","row-l2","row-l3","row-l4","row-r1","row-r2","row-r3","row-r4"];
+      var tickIds = ["tick-l1","tick-l2","tick-l3","tick-l4","tick-r1","tick-r2","tick-r3","tick-r4"];
+      gsap.set(rowIds.map(function (i) { return "#" + i; }), { opacity: 0, y: 14 });
+      gsap.set(tickIds.map(function (i) { return "#" + i; }), { opacity: 0, scaleX: 0 });
+      gsap.set("#cta-bar", { opacity: 0, y: 24 });
+      gsap.set(["#av-1", "#av-2", "#cta-pill", "#cta-url"], { opacity: 0 });
+      gsap.set("#cta-pill", { scale: 0.85 });
+
+      // 0.0-0.6: the white card and its arrow settle in — the establishing beat.
+      tl.to("#header-card", { opacity: 1, y: 0, scale: 1, duration: 0.5, ease: "power3.out" }, 0.05);
+      tl.to("#arrow", { opacity: 1, duration: 0.34, ease: "power2.out" }, 0.28);
+
+      // 0.6-1.0: the wordmark settles top-right.
+      tl.to("#logo", { opacity: 1, duration: 0.4, ease: "power3.out" }, 0.62);
+
+      // 1.0-2.0: headline line 1, word by word, then the prohibition ring pops onto
+      // the O as its own emphasis beat — not before the words that carry it.
+      tl.fromTo("#h-word1", { y: 22 }, { opacity: 1, y: 0, duration: 0.4, ease: "power3.out" }, 1.0);
+      tl.fromTo("#h-word2", { y: 22 }, { opacity: 1, y: 0, duration: 0.4, ease: "power3.out" }, 1.18);
+      tl.to("#ban", { opacity: 1, scale: 1, duration: 0.42, ease: "back.out(2.4)" }, 1.5);
+
+      // 2.0-2.8: headline line 2 lands.
+      tl.fromTo("#h-line2", { y: 20 }, { opacity: 1, y: 0, duration: 0.46, ease: "power3.out" }, 2.05);
+
+      // 2.8-3.3: the comparison frame draws in, then its two halves sweep together
+      // from opposite wings to meet at the centre seam — the comparison-split signature.
+      tl.to("#panel", { opacity: 1, scale: 1, duration: 0.36, ease: "power3.out" }, 2.86);
+      tl.fromTo("#panel-left", { xPercent: -6 }, { xPercent: 0, duration: 0.46, ease: "power3.out" }, 2.9);
+      tl.fromTo("#panel-right", { xPercent: 6 }, { xPercent: 0, duration: 0.46, ease: "power3.out" }, 2.9);
+
+      // 3.3-3.7: column headers pop, underlines draw from the centre.
+      tl.fromTo(["#head-left", "#head-right"], { y: -10 },
+        { opacity: 1, y: 0, duration: 0.32, ease: "power3.out" }, 3.32);
+      tl.to(["#rule-left", "#rule-right"], { opacity: 1, scaleX: 1, duration: 0.32, ease: "power2.out" }, 3.5);
+
+      // 3.7-6.1: the eight rows cascade — a tick draws, then its line rises, each
+      // beat alternating the pain (left) and its answer (right) so the two columns
+      // read as one call-and-response rather than two separate lists.
+      var order = [0, 4, 1, 5, 2, 6, 3, 7]; // l1,r1,l2,r2,l3,r3,l4,r4
+      var t0 = 3.72, step = 0.3;
+      order.forEach(function (idx, i) {
+        var at = t0 + i * step;
+        tl.to("#" + tickIds[idx], { opacity: 1, scaleX: 1, duration: 0.18, ease: "power2.out" }, at);
+        tl.to("#" + rowIds[idx], { opacity: 1, y: 0, duration: 0.3, ease: "power3.out" }, at + 0.06);
+      });
+
+      // 6.1-6.7: hold on the completed comparison — a held read beats more motion.
+
+      // 6.7-7.3: the CTA bar rises.
+      tl.to("#cta-bar", { opacity: 1, y: 0, duration: 0.44, ease: "power3.out" }, 6.7);
+
+      // 7.3-7.8: the two avatars pop in, staggered.
+      tl.to("#av-2", { opacity: 1, duration: 0.3, ease: "back.out(2)" }, 7.32);
+      tl.to("#av-1", { opacity: 1, duration: 0.3, ease: "back.out(2)" }, 7.5);
+
+      // 7.8-8.3: the CTA pill springs to full size — the one solid action on the bar.
+      tl.to("#cta-pill", { opacity: 1, scale: 1, duration: 0.4, ease: "back.out(2.2)" }, 7.8);
+
+      // 8.3-8.7: the URL settles.
+      tl.fromTo("#cta-url", { y: 6 }, { opacity: 1, y: 0, duration: 0.34, ease: "power2.out" }, 8.3);
+
+      // 8.7-9.3: one closing pulse on the CTA pill — a single deliberate beat,
+      // never a loop, so the last thing the eye catches is the action itself.
+      tl.to("#cta-pill", { scale: 1.045, duration: 0.24, ease: "power2.out" }, 8.9);
+      tl.to("#cta-pill", { scale: 1, duration: 0.3, ease: "power2.inOut" }, 9.14);
+
+      // 9.3-10.0: hold, still.
+      window.__timelines["main"] = tl;
+    </script>
+  </body>
+</html>
