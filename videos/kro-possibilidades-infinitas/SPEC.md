@@ -4,8 +4,9 @@
 GOAL:   o espectador entende que a estrutura do site dele fica igual enquanto a mensagem
         pode virar infinitas versões, e clica para descobrir o KRO AI.
 OUTPUT: HyperFrames, 1080 x 1350, 30 fps
-TIME:   25,0 s x 30 = 750 frames. Sem música: a batida é o desenho de som
-        (impactos medidos em 9,58 / 10,18 / 20,18 s).
+TIME:   25,0 s x 30 = 750 frames. Trilha do cliente a 113 BPM: 1 batida = 0,531 s
+        = 15,9 frames; 1 compasso = 2,124 s = 63,7 frames. Janela do arquivo:
+        108,93 -> 133,93 s, começando num tempo forte dentro do breakdown.
 ```
 
 ## LOOK
@@ -100,12 +101,18 @@ Cenas: `hook` 0,00–5,80 · `magic` 5,80–10,70 · `power` 10,70–20,10 · `r
 | 4  | 8,50–9,50   | o logo nasce com o roxo subindo; a onda sobe e atravessa a página; headline e botão trocam de glifo | —                                                   | riser (pico em 9,58) |
 | 5  | 9,55–10,60  | 1 → 4 → 9 versões; caixa, sombra e botão idênticos em todas | —                                                 | 2 impactos |
 | 6  | 10,75–13,30 | 6 recuam com blur 14px a 5,5% de opacidade; 3 viram pilha vertical | **"Uma página. Possibilidades infinitas."** 11,62–13,30 (1,68s / 1,70) | — |
-| 7  | 13,30–17,00 | destaque alternado dos 3 cards **sem mover a câmera** (brilho + 4% de escala) | **"Uma oferta diferente."** 13,72→ · **"Um público diferente."** 15,32→ · **"Uma nova forma de vender."** 16,72→ (todos até 18,95) | 3 cliques |
+| 7  | 13,30–17,00 | destaque alternado dos 3 cards **sem mover a câmera** (brilho + 4% de escala), cada um num tempo forte da trilha (13,26 / 14,85 / 16,44) | **"Uma oferta diferente."** 13,72→ · **"Um público diferente."** 15,32→ · **"Uma nova forma de vender."** 16,86→ (todos até 18,95) | 3 cliques |
 | 8  | 17,00–19,05 | os 3 voltam a brilho pleno; nada mais se mexe      | **"Descubra qual funciona melhor."** 17,35–19,05 (1,70s / 1,70) | — |
 | 9  | 19,05–20,10 | 3 → 12 páginas; convergência num ponto roxo com 12 lascas no mesmo vetor | —                                     | whoosh + riser |
 | 10 | 20,15–25,00 | o logo nasce do ponto; o end card monta            | **texto principal** 21,18–25,00 (3,82s / 3,80) · **assinatura** 21,96–25,00 (3,04s / 2,90) · **CTA** 22,08–25,00 (2,92s / 2,85) | impacto + pop |
 
-Pôster final imóvel de 22,42s a 25,00s (2,58s).
+Pôster final imóvel de 22,42s a 25,00s (2,58s), com a trilha abrindo o fade em 23,4s.
+
+**A trilha é o relógio.** A volta do tema cai em 9,55s, na primeira multiplicação — é o
+"crescimento no momento da transformação" do roteiro. Os 13 eventos de imagem caem na
+grade de batida com erro médio de 0,075s (~2 frames). Tempos fortes aproveitados:
+0,00 · 8,49 (o logo surge) · 9,55 (multiplicação 1) · 13,26 · 14,85 · 16,44 (os três
+cards) · 19,10 (multiplicação final) · 20,19 (o logo nasce).
 
 ## BANNED
 

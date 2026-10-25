@@ -427,11 +427,11 @@ ${s3cardTweens}
         { opacity: 1, filter: "blur(0px)", duration: 0.22, ease: "expo.out" }, 4.4);
 
       tl.fromTo("#s3-slot-3", { scale: ${HI_K}, opacity: 1 },
-        { scale: ${CARD_K}, opacity: 0.38, duration: 0.32, ease: "power2.out", immediateRender: false }, 5.6);
+        { scale: ${CARD_K}, opacity: 0.38, duration: 0.32, ease: "power2.out", immediateRender: false }, 5.74);
       tl.fromTo("#s3-slot-6", { opacity: 0.38, scale: ${CARD_K} },
-        { opacity: 1, scale: ${HI_K}, duration: 0.32, ease: "power2.out", immediateRender: false }, 5.6);
+        { opacity: 1, scale: ${HI_K}, duration: 0.32, ease: "power2.out", immediateRender: false }, 5.74);
       tl.fromTo("#s3-lab-2", { opacity: 0, filter: "blur(8px)" },
-        { opacity: 1, filter: "blur(0px)", duration: 0.22, ease: "expo.out" }, 5.8);
+        { opacity: 1, filter: "blur(0px)", duration: 0.22, ease: "expo.out" }, 5.94);
 
       /* 6,55 — as três voltam a brilho pleno, com seus rótulos */
       tl.fromTo(["#s3-slot-0", "#s3-slot-3"], { opacity: 0.38 },

@@ -58,15 +58,26 @@ A ideia que precisa ficar: **a página é a mesma; a mensagem é que pode ser in
   seguidas. Com isso toda janela de leitura ficou entre **99% e 129%** do mínimo
   confortável — as onze janelas estão medidas no `REVIEW.md`. Nenhuma frase foi cortada.
   Um corte de ~28s daria folga real ao fechamento, e é uma mudança de uma linha.
-- **Trilha sonora não pôde ser obtida neste ambiente.** Não há sessão HeyGen nem modelo
-  local de música disponível (`media-use resolve --doctor`), e o acesso ao download de
-  modelos está bloqueado pela rede. A peça sai com **desenho de som** (impacto, whooshes,
-  riser, cliques, pop) usando a biblioteca local: o pico de cada efeito foi medido e cada
-  clipe está posicionado para cair um frame depois da imagem que o causa. O arquivo final
-  mede −16,2 LUFS integrado e −3,6 dBTP, sem clipping. O filme é construído para funcionar
-  **mudo**, que é como o feed do Meta dá autoplay. Para somar a trilha depois: arquivo em
-  `assets/bgm/`, um `<audio>` no `index.html` com `data-volume` ~0,2, e realinhar os
-  impactos de 9,58 / 10,18 / 20,18 s à batida.
+- **Trilha sonora: a faixa do cliente (`trilha-sonora.mp3`, 113 BPM, 3m28s).** A janela
+  de 25s foi escolhida pela análise do arranjo, não pelo começo do arquivo: entra em
+  **108,93s**, num tempo forte dentro do breakdown. Assim os 9,5s iniciais do filme correm
+  sobre o trecho esparso (o "início intrigante" que o roteiro pede) e **a volta do tema, em
+  118,475s do arquivo, cai em 9,55s do filme — exatamente na primeira multiplicação das
+  páginas**, que é a sincronia que o roteiro pede. Entrada com fade de 0,25s; saída com
+  fade de 1,6s começando em 23,4s, sobre a última divisa de compasso (23,35s).
+- **Sincronia medida.** Os 13 eventos de imagem caem na grade de batida com erro médio de
+  0,075s (~2 frames). O destaque do terceiro card foi movido de 16,30 para 16,44s para
+  encostar num tempo forte. O desenho de som (impacto, whooshes, riser, cliques, pop)
+  continua posicionado pelos picos medidos de cada arquivo, e agora reforça os acentos da
+  trilha em vez de competir com eles.
+- **Níveis.** Trilha em `data-volume="0.72"` — valor confirmado por `normalize-audio` como
+  o ganho que põe o elemento de música em −16 LUFS. A master do cliente satura (pico real
+  de +0,01 dBTP na janela escolhida); o ganho a traz para −2,7 dBTP. Mix final: **−17,7
+  LUFS integrado, −14,8 de short-term máximo, −1,3 dBTP, zero clipping**. O integrado fica
+  abaixo de −16 porque o primeiro terço é o breakdown de propósito; a metade alta do filme
+  mede −14 a −16. Tudo foi **medido, não ouvido**.
+- **O filme continua funcionando mudo**, que é como o feed do Meta dá autoplay: todo o
+  roteiro está na tela.
 - **Paleta estrita do roteiro:** `#7C3AED` roxo (marca e transformação) · `#06B6D4` ciano
   (sinal de visitante, destaque) · `#2B2B2B` grafite (chão) · `#FFFFFF` branco (texto) ·
   `#D8C0A7` areia (detalhe pontual, escasso).

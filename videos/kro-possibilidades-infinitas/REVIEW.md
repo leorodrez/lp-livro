@@ -76,22 +76,48 @@ real ao fechamento** e é uma mudança de uma linha, se o cliente quiser.
 - craft: 0 avisos — piso de tipo, leitura por linha, trecho morto, frame 0 e linha final
   todos dentro;
 - os picos de cada efeito sonoro foram medidos com `hyperframes audio --json` e cada clipe
-  está posicionado para que o pico caia **um frame depois** da imagem que o causa.
+  está posicionado para que o pico caia **um frame depois** da imagem que o causa;
+- a grade de batida da trilha (`hyperframes beats`, 113 BPM, confiança alta) contra os 13
+  eventos de imagem: erro médio de 0,075 s;
+- a mixagem do arquivo renderizado: −17,7 LUFS integrado, −14,8 de short-term máximo,
+  −1,3 dBTP, zero clipping, sem um único trecho mudo.
 
 **Olhado** (8 beat frames, 3 folhas de emenda, a folha de 360px e ~30 frames avulsos):
 cada cena no início e no meio, os três cortes a −0,2/−0,1/0/+0,1/+0,2 s, e a leitura de
 tudo em largura de telefone. As três emendas casam pixel a pixel (a grade de 4 em 5,80 s,
 a grade 3×3 em 10,70 s, o ponto roxo em 20,10 s) e nenhum texto some de repente num corte.
 
-**Ninguém ouviu nada.** O som foi medido, não escutado. Não há como escutar aqui.
+**A trilha é a do cliente, e a janela foi escolhida, não cortada do começo.**
+`trilha-sonora.mp3` tem 3m28s a 113 BPM e uma master muito comprimida — o nível RMS é
+quase plano do início ao fim, então o arco não dava para achar pelo volume. Achei pela
+banda de agudos (2–12 kHz), que revela o arranjo: há um breakdown entre 104 e 118,5s e a
+volta do tema em 118,5s. A janela entra em **108,93s**, num tempo forte dentro desse
+breakdown. O resultado é que os 9,5s iniciais do filme correm sobre o trecho esparso — o
+"início intrigante" do roteiro — e a volta do tema cai em **9,55s do filme, exatamente na
+primeira multiplicação das páginas**, que é a sincronia que o roteiro pede.
 
-**Não houve trilha musical.** Não existe sessão HeyGen nem modelo local de música neste
-ambiente (`media-use resolve --doctor`), e o download de modelos está bloqueado pela rede.
-A peça saiu com desenho de som (impacto, whooshes, riser, cliques, pop) usando a
-biblioteca local, sincronizado às multiplicações — e foi construída para funcionar
-**muda**, que é como o feed do Meta dá autoplay. Para somar a trilha depois: colocar o
-arquivo em `assets/bgm/`, adicionar um `<audio>` no `index.html` com `data-volume` por
-volta de 0,2 e realinhar os impactos de 9,58 / 10,18 / 20,18 s à batida.
+A grade de batida confirmou o encaixe: os 13 eventos de imagem caem nela com erro médio de
+**0,075s (~2 frames)**. Movi um único plano para melhorar isso — o destaque do terceiro
+card, de 16,30 para 16,44s, para encostar num tempo forte de força 0,81. Deixei de fora a
+convergência (19,48 vs 19,64) e o CTA (22,08 vs 22,31): mover o CTA derrubaria sua janela
+de leitura de 2,92 para 2,70s, abaixo do mínimo, e o que importa ali é onde a
+convergência **aterrissa** (o logo nascendo em 20,15, sobre a batida de 20,19).
+
+Os efeitos continuam posicionados pelos picos medidos de cada arquivo. Como eles agora
+caem sobre os acentos da trilha, reforçam a música em vez de disputar com ela — por isso
+não os separei em volume nem apliquei ducking.
+
+**Níveis.** Trilha em `data-volume="0.72"`, valor que o próprio `normalize-audio` confirma
+como o ganho que põe o elemento de música em −16 LUFS. A master do cliente satura (pico
+real de +0,01 dBTP na janela escolhida) e o ganho a traz para −2,7 dBTP. Mix final:
+**−17,7 LUFS integrado, −14,8 de short-term máximo, −1,3 dBTP, zero clipping.** O
+integrado fica 1,7 dB abaixo do alvo de social porque o primeiro terço é o breakdown de
+propósito; a metade alta do filme mede −14 a −16, dentro da faixa. Subir mais exigiria ou
+achatar o arco que o roteiro pediu, ou estourar o teto — o pico vem da soma da trilha com
+os impactos graves, não da trilha sozinha.
+
+**Ninguém ouviu nada.** Todo o áudio foi medido, não escutado. Não há como escutar aqui —
+isso vale para a sincronia, para a escolha da janela e para a mixagem.
 
 ## O plano mais fraco
 
